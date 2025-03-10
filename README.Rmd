@@ -1,0 +1,53 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# dockViewR
+
+<!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![CRAN status](https://www.r-pkg.org/badges/version/dockViewR)](https://CRAN.R-project.org/package=dockViewR)
+<!-- badges: end -->
+
+The goal of dockViewR is to ...
+
+## Installation
+
+You can install the development version of dockViewR like so:
+
+``` r
+# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+```
+
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r example}
+library(shiny)
+library(bslib)
+library(dockViewR)
+
+ui <- page_fillable(
+  dock_viewOutput("dock")
+)
+
+server <- function(input, output, session) {
+  output$dock <- renderDock_view({
+    dock_view("plop")
+  })
+}
+
+shinyApp(ui, server)
+```
