@@ -1,5 +1,5 @@
 Package: dockViewR
-Title:Layout Manager Widget for R and Shiny
+Title: Layout Manager Widget for R and Shiny
 Version: 0.0.0.9000
 Authors@R: 
     c(
@@ -14,3 +14,5 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports: 
     htmlwidgets
+URL: https://github.com/cynkra/dockViewR
+BugReports: https://github.com/cynkra/dockViewR/issues
