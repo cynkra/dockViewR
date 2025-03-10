@@ -10,11 +10,11 @@ class Panel {
 
   constructor() {
     this._element = document.createElement("div")
-    this._element.style.color = "white"
   }
 
-  init(parameters) {
-    this._element.textContent = "Hello World"
+  init(config) {
+    this._element.id = config.params.id
+    this._element.innerHTML = config.params.content.html
   }
 }
 
@@ -34,28 +34,43 @@ HTMLWidgets.widget({
 
         // TODO: code to render the widget, e.g.
         const api = createDockview(document.getElementById(id), {
-          className: "dockview-theme-abyss",
-          createComponent: options => {
+          className: x.theme,
+          createComponent: (options) => {
             switch (options.name) {
               case "default":
-                return new Panel()
+                return new Panel(options)
             }
           }
         })
 
-        api.addPanel({
-          id: "panel_1",
-          component: "default",
-          title: "Panel 1"
+        api.onDidAddPanel((e) => {
+          // callback
+          let pane = `#${e.params.id}`
+          Shiny.initializeInputs($(pane))
         })
 
-        api.addPanel({
-          id: "panel_2",
-          component: "default",
-          position: { referencePanel: "panel_1", direction: "right" },
-          title: "Panel 2"
+        api.onDidActivePanelChange((e) => {
+          let pane = `#${e.params.id}`
+          Shiny.bindAll($(pane))
         })
 
+        // Init panels
+        x.panels.map((panel) => {
+          return (api.addPanel({
+            id: panel.id,
+            component: "default",
+            title: panel.title,
+            params: {
+              content: panel.content,
+              id: panel.id
+            }
+            //position: panel.position
+          }))
+        });
+
+        Shiny.addCustomMessageHandler('add-panel', (m) => {
+          // TBD dynacally insert a panel
+        })
       },
 
       resize: function (width, height) {

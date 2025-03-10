@@ -7,7 +7,39 @@ ui <- page_fillable(
 
 server <- function(input, output, session) {
   output$dock <- renderDock_view({
-    dock_view("plop")
+    dock_view(
+      panels = list(
+        panel(
+          id = "1",
+          title = "Panel 1",
+          content = tagList(
+            sliderInput(
+              "obs",
+              "Number of observations:",
+              min = 0,
+              max = 1000,
+              value = 500
+            ),
+            plotOutput("distPlot")
+          )
+        ),
+        panel(
+          id = "2",
+          title = "Panel 2",
+          content = tagList(div("hello world")),
+          position = list(
+            referencePanel = "panel_1",
+            direction = "right"
+          )
+        )
+      ),
+      theme = "replit"
+    )
+  })
+
+  output$distPlot <- renderPlot({
+    req(input$obs)
+    hist(rnorm(input$obs))
   })
 }
 

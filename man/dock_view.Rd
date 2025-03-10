@@ -4,10 +4,22 @@
 \alias{dock_view}
 \title{Dock view widget}
 \usage{
-dock_view(message, width = NULL, height = NULL, elementId = NULL)
+dock_view(
+  panels,
+  ...,
+  theme = c("light", "abyss", "dark", "vs", "dracula", "replit"),
+  width = NULL,
+  height = NULL,
+  elementId = NULL
+)
 }
 \arguments{
-\item{message}{Widget configuration.}
+\item{panels}{Widget configuration.}
+
+\item{...}{Other options.}
+
+\item{theme}{Theme. One of
+\code{c("abyss", "dark", "light", "vs", "dracula", "replit")}.}
 
 \item{width}{Widget width.}
 

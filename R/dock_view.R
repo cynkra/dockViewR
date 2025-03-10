@@ -3,26 +3,62 @@
 #' Create a dock view widget
 #'
 #' @import htmlwidgets
-#' @param message Widget configuration.
+#' @param panels Widget configuration.
+#' @param ... Other options.
+#' @param theme Theme. One of
+#' \code{c("abyss", "dark", "light", "vs", "dracula", "replit")}.
 #' @param width Widget width.
 #' @param height Widget height.
 #' @param elementId When used outside Shiny.
 #'
 #' @export
-dock_view <- function(message, width = NULL, height = NULL, elementId = NULL) {
+dock_view <- function(
+  panels,
+  ...,
+  theme = c(
+    "light",
+    "abyss",
+    "dark",
+    "vs",
+    "dracula",
+    "replit"
+  ),
+  width = NULL,
+  height = NULL,
+  elementId = NULL
+) {
+  theme <- match.arg(theme)
+
+  deps <- lapply(panels, \(panel) {
+    panel$content$dependencies
+  })
+
   # forward options using x
-  x = list(
-    message = message
+  x <- list(
+    theme = sprintf("dockview-theme-%s", theme),
+    panels = panels,
+    ...
   )
 
   # create widget
   htmlwidgets::createWidget(
     name = 'dock_view',
     x,
+    dependencies = deps[[1]],
     width = width,
     height = height,
     package = 'dockViewR',
     elementId = elementId
+  )
+}
+
+panel <- function(id, title, content, active = TRUE, ...) {
+  list(
+    id = id,
+    title = title,
+    inactive = !active,
+    content = htmltools::renderTags(content),
+    ...
   )
 }
 
