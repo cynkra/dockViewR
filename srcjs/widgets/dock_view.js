@@ -54,18 +54,23 @@ HTMLWidgets.widget({
           Shiny.bindAll($(pane))
         })
 
+        // Resize panel content on layout change
+        // (useful so that plots or widgets resize correctly)
+        api.onDidLayoutChange((e) => {
+          window.dispatchEvent(new Event("resize"));
+        })
+
         // Init panels
         x.panels.map((panel) => {
-          return (api.addPanel({
-            id: panel.id,
+          let internals = {
             component: "default",
-            title: panel.title,
             params: {
               content: panel.content,
               id: panel.id
             }
-            //position: panel.position
-          }))
+          }
+          let props = { ...panel, ...internals }
+          return (api.addPanel(props))
         });
 
         Shiny.addCustomMessageHandler('add-panel', (m) => {

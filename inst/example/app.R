@@ -28,7 +28,7 @@ server <- function(input, output, session) {
           title = "Panel 2",
           content = tagList(div("hello world")),
           position = list(
-            referencePanel = "panel_1",
+            referencePanel = "1",
             direction = "right"
           )
         )
