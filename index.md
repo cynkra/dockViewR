@@ -29,10 +29,10 @@ To run the demo app:
 
 ``` r
 library(dockViewR)
-shinyAppDir(system.file("examples", package = "dockViewR"))
+shinyAppDir(system.file("examples/demo", package = "dockViewR"))
 ```
 
-<iframe class="border border-5 rounded shadow-lg" src="https://shinylive.io/r/app/#h=0&amp;code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YACZECAawBqLONSxDcAAgZxURdooC8ioQAtSpVO0QB6EwzbkGAMygE4GAOYtSugK50MLIuctwbdnAAtNRQ7DBBBAxQECZCAJQCENwsjFAMAJ58ohLSsliJHLpsGQCC6AAiLAx87BmccDAY1izccIJgcAAesKht7AqKqHbiUI5wWjoiYlIycgnxYAC+ALpAA" width="125%" height="900px"></iframe>
+<iframe class="border border-5 rounded shadow-lg" src="https://shinylive.io/r/app/#h=0&amp;code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YACZECAawBqLONSxDcAAgZxURdooC8ioQAtSpVO0QB6EwzbkGAMygE4GAOYtSugK50MLIuctwbdnAAtNRQ7DBBBAxQECZCAJQCENwsjFAMAJ58ohLSsliJHLpsGQCC6AAiLAx87BmccDAY1izccIJgcAAesKht7CbCjUQKiqh24lCOcFo6ImJSMnIJ8WAAvgC6QA" width="125%" height="900px"></iframe>
 
 ## Development
 

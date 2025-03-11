@@ -37,7 +37,7 @@ To run the demo app:
 
 ```{r dockview-demo, eval=FALSE, echo = TRUE}
 library(dockViewR)
-shinyAppDir(system.file("examples", package = "dockViewR"))
+shinyAppDir(system.file("examples/demo", package = "dockViewR"))
 ```
 
 ```{r shinylive_url, echo = FALSE, results = 'asis'}

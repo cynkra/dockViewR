@@ -12,6 +12,68 @@
 #' @param elementId When used outside Shiny.
 #'
 #' @export
+#' @examplesShinylive
+#' webr::install("dockViewR", repos = "https://rinterface.github.io/rinterface-wasm-cran/")
+#' library(shiny)
+#' library(bslib)
+#' library(dockViewR)
+#'
+#' ui <- page_fillable(
+#'   dock_viewOutput("dock")
+#' )
+#'
+#'server <- function(input, output, session) {
+#'  output$dock <- renderDock_view({
+#'    dock_view(
+#'      panels = list(
+#'        panel(
+#'          id = "1",
+#'          title = "Panel 1",
+#'          content = tagList(
+#'            sliderInput(
+#'              "obs",
+#'              "Number of observations:",
+#'              min = 0,
+#'              max = 1000,
+#'              value = 500
+#'            ),
+#'            plotOutput("distPlot")
+#'          )
+#'        ),
+#'        panel(
+#'          id = "2",
+#'          title = "Panel 2",
+#'          content = tagList(
+#'            selectInput(
+#'              "variable",
+#'              "Variable:",
+#'              c("Cylinders" = "cyl", "Transmission" = "am", "Gears" = "gear")
+#'            ),
+#'            tableOutput("data")
+#'          ),
+#'          position = list(
+#'            referencePanel = "1",
+#'            direction = "right"
+#'          )
+#'        )
+#'      ),
+#'      theme = "replit"
+#'    )
+#'  })
+#'
+#'  output$distPlot <- renderPlot({
+#'    req(input$obs)
+#'    hist(rnorm(input$obs))
+#'  })
+#'  output$data <- renderTable(
+#'    {
+#'      mtcars[, c("mpg", input$variable), drop = FALSE]
+#'    },
+#'    rownames = TRUE
+#'  )
+#'}
+
+#' shinyApp(ui, server)
 dock_view <- function(
   panels,
   ...,

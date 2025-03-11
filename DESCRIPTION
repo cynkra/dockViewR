@@ -10,11 +10,12 @@ Description: Provides R bindings to the 'dockview' JavaScript library.
     Create rearrangeable grid layouts in seconds.
 License: MIT + file LICENSE
 Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
+Roxygen: list(markdown = TRUE, packages = c("roxy.shinylive"))
 RoxygenNote: 7.3.2
 Imports: 
     htmlwidgets,
-    htmltools
+    htmltools,
+    roxy.shinylive
 Suggests:
     roxy.shinylive
 URL: https://github.com/cynkra/dockViewR
