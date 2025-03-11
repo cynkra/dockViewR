@@ -49,36 +49,33 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="dockviewr">dockViewR<a class="anchor" aria-label="anchor" href="#dockviewr"></a>
 </h1></div>
+<!-- index.md is generated from index.Rmd. Please edit that file -->
 <!-- badges: start -->
 
-<p>The goal of dockViewR is to …</p>
+<p>The goal of dockViewR is to provide a layout manager for Shiny apps and interactive R documents. It builds on top of <a href="https://dockview.dev/" class="external-link">dockview</a>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>You can install the development version of dockViewR like so:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"cynkra/dockViewR"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>This is a basic example which shows you how to solve a common problem:</p>
+<p>To run the demo app:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/cynkra/dockViewR" class="external-link">dockViewR</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rstudio.github.io/bslib/reference/page_fillable.html" class="external-link">page_fillable</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="reference/dock_view-shiny.html">dock_viewOutput</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">output</span><span class="op">$</span><span class="va">dock</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dock_view-shiny.html">renderDock_view</a></span><span class="op">(</span><span class="op">{</span></span>
-<span>    <span class="fu"><a href="reference/dock_view.html">dock_view</a></span><span class="op">(</span><span class="st">"plop"</span><span class="op">)</span></span>
-<span>  <span class="op">}</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="fu">shinyApp</span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/cynkra/dockViewR" class="external-link">dockViewR</a></span><span class="op">)</span></span>
+<span><span class="fu">shinyAppDir</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples"</span>, package <span class="op">=</span> <span class="st">"dockViewR"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<iframe class="border border-5 rounded shadow-lg" src="https://shinylive.io/r/app/#h=0&amp;code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YACZECAawBqLONSxDcAAgZxURdooC8ioQAtSpVO0QB6EwzbkGAMygE4GAOYtSugK50MLIuctwbdnAAtNRQ7DBBBAxQECZCAJQCENwsjFAMAJ58ohLSsliJHLpsGQCC6AAiLAx87BmccDAY1izccIJgcAAesKht7AqKqHbiUI5wWjoiYlIycgnxYAC+ALpAA" width="125%" height="900px">
+</iframe>
+</div>
+<div class="section level2">
+<h2 id="development">Development<a class="anchor" aria-label="anchor" href="#development"></a>
+</h2>
+<p>JS code is managed by <code>webpack</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">packer</span><span class="fu">::</span><span class="fu">bundle</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -117,7 +114,7 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
-<li><a href="https://CRAN.R-project.org/package=dockViewR" class="external-link"><img src="https://www.r-pkg.org/badges/version/dockViewR" alt="CRAN status"></a></li>
+<li><a href="https://CRAN.R-project.org/package=dockViewR" class="external-link"><img src="https://www.r-pkg.org/badges/version/dockViewR.png" alt="CRAN status"></a></li>
 <li><a href="https://github.com/cynkra/dockViewR/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/cynkra/dockViewR/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
