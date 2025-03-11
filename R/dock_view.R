@@ -29,9 +29,13 @@ dock_view <- function(
 ) {
   theme <- match.arg(theme)
 
-  deps <- lapply(panels, \(panel) {
-    panel$content$dependencies
-  })
+  deps <- dropNulls(lapply(panels, \(panel) {
+    if (length(panel$content$dependencies)) {
+      panel$content$dependencies
+    } else {
+      NULL
+    }
+  }))
 
   # forward options using x
   x <- list(
@@ -44,7 +48,7 @@ dock_view <- function(
   htmlwidgets::createWidget(
     name = 'dock_view',
     x,
-    dependencies = deps[[1]],
+    dependencies = unlist(deps, recursive = FALSE),
     width = width,
     height = height,
     package = 'dockViewR',

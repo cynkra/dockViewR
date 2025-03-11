@@ -15,6 +15,8 @@ class Panel {
   init(config) {
     this._element.id = config.params.id
     this._element.innerHTML = config.params.content.html
+    this._element.className = "dockview-panel"
+    this._element.style = "margin: 10px; padding: 10px;"
   }
 }
 

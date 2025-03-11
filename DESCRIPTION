@@ -15,5 +15,7 @@ RoxygenNote: 7.3.2
 Imports: 
     htmlwidgets,
     htmltools
+Suggests:
+    roxy.shinylive
 URL: https://github.com/cynkra/dockViewR
 BugReports: https://github.com/cynkra/dockViewR/issues
