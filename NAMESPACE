@@ -2,5 +2,6 @@
 
 export(dock_view)
 export(dock_viewOutput)
+export(panel)
 export(renderDock_view)
 import(htmlwidgets)

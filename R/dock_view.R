@@ -3,8 +3,8 @@
 #' Create a dock view widget
 #'
 #' @import htmlwidgets
-#' @param panels Widget configuration.
-#' @param ... Other options.
+#' @param panels Widget configuration. Slot for \link{panel}.
+#' @param ... Other options. See \url{https://dockview.dev/docs/api/dockview/options}.
 #' @param theme Theme. One of
 #' \code{c("abyss", "dark", "light", "vs", "dracula", "replit")}.
 #' @param width Widget width.
@@ -56,6 +56,19 @@ dock_view <- function(
   )
 }
 
+#' Dock panel
+#'
+#' Create a dock panel
+#'
+#' @import htmlwidgets
+#' @param id Panel unique id.
+#' @param title Panel title.
+#' @param content Panel content. Can be a list of Shiny tags.
+#' @param active Is active?
+#' @param ... Other options passed to the API.
+#' See \url{https://dockview.dev/docs/api/dockview/panelApi}.
+#'
+#' @export
 panel <- function(id, title, content, active = TRUE, ...) {
   list(
     id = id,

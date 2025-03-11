@@ -14,9 +14,9 @@ dock_view(
 )
 }
 \arguments{
-\item{panels}{Widget configuration.}
+\item{panels}{Widget configuration. Slot for \link{panel}.}
 
-\item{...}{Other options.}
+\item{...}{Other options. See \url{https://dockview.dev/docs/api/dockview/options}.}
 
 \item{theme}{Theme. One of
 \code{c("abyss", "dark", "light", "vs", "dracula", "replit")}.}
