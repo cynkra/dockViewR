@@ -17,5 +17,5 @@ Imports:
     htmltools
 Suggests:
     roxy.shinylive
-URL: https://github.com/cynkra/dockViewR
+URL: https://github.com/cynkra/dockViewR, https://cynkra.github.io/dockViewR/
 BugReports: https://github.com/cynkra/dockViewR/issues

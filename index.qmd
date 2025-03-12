@@ -40,6 +40,15 @@ library(dockViewR)
 shinyAppDir(system.file("examples/demo", package = "dockViewR"))
 ```
 
+<details>
+<summary>Toggle code</summary>
+```{r, results="asis", echo=FALSE, warning=FALSE, comment = ""}
+dockViewR:::print_r_code("examples/demo/app.R")
+```
+</details>
+
+<br/>
+
 ```{r shinylive_url, echo = FALSE, results = 'asis'}
 # extract the code from knitr code chunks by ID
 code <- paste0(
