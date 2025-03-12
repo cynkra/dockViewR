@@ -13,3 +13,5 @@
 ^docs$
 ^pkgdown$
 ^\.github$
+^index\.qmd$
+^index\.md$
