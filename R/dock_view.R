@@ -112,7 +112,11 @@ dock_view <- function(
   htmlwidgets::createWidget(
     name = 'dock_view',
     x,
-    dependencies = unlist(deps, recursive = FALSE),
+    dependencies = c(
+      unlist(deps, recursive = FALSE),
+      # Add fontawesome (avoids to get dependency on {fontawesome})
+      htmltools::findDependencies(icon("cogs"))
+    ),
     width = width,
     height = height,
     package = 'dockViewR',
