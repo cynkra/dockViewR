@@ -1,24 +1,9 @@
 import 'widgets';
+import 'dockview-core/dist/styles/dockview.css'
+import { createDockview } from "dockview-core";
 
-import "dockview-core/dist/styles/dockview.css"
-import { createDockview } from "dockview-core"
-
-class Panel {
-  get element() {
-    return this._element
-  }
-
-  constructor() {
-    this._element = document.createElement("div")
-  }
-
-  init(config) {
-    this._element.id = config.params.id
-    this._element.innerHTML = config.params.content.html
-    this._element.className = "dockview-panel"
-    this._element.style = "margin: 10px; padding: 10px;"
-  }
-}
+import { Panel, RightHeader } from './components'
+import { matchTheme } from './utils';
 
 HTMLWidgets.widget({
 
@@ -36,10 +21,13 @@ HTMLWidgets.widget({
 
         // TODO: code to render the widget, e.g.
         const api = createDockview(document.getElementById(id), {
-          className: x.theme,
+          theme: matchTheme(x.theme),
+          createRightHeaderActionComponent: (options) => {
+            return new RightHeader(options)
+          },
           createComponent: (options) => {
             switch (options.name) {
-              case "default":
+              case 'default':
                 return new Panel(options)
             }
           }
@@ -67,13 +55,13 @@ HTMLWidgets.widget({
         // Resize panel content on layout change
         // (useful so that plots or widgets resize correctly)
         api.onDidLayoutChange((e) => {
-          window.dispatchEvent(new Event("resize"));
+          window.dispatchEvent(new Event('resize'));
         })
 
         // Init panels
         x.panels.map((panel) => {
           let internals = {
-            component: "default",
+            component: 'default',
             params: {
               content: panel.content,
               id: panel.id
@@ -82,10 +70,6 @@ HTMLWidgets.widget({
           let props = { ...panel, ...internals }
           return (api.addPanel(props))
         });
-
-        Shiny.addCustomMessageHandler('add-panel', (m) => {
-          // TBD dynacally insert a panel
-        })
       },
 
       resize: function (width, height) {
@@ -97,3 +81,9 @@ HTMLWidgets.widget({
     };
   }
 });
+
+if (HTMLWidgets.shinyMode) {
+  Shiny.addCustomMessageHandler('add-panel', (m) => {
+    // TBD dynamically insert a panel
+  })
+}
