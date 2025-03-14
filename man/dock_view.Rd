@@ -8,7 +8,7 @@ dock_view(
   panels,
   ...,
   theme = c("light-spaced", "light", "abyss", "abyss-spaced", "dark", "vs", "dracula",
-    "replit", ),
+    "replit"),
   width = NULL,
   height = NULL,
   elementId = NULL
