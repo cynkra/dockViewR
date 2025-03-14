@@ -2,6 +2,33 @@ import 'widgets';
 
 import "dockview-core/dist/styles/dockview.css"
 import { createDockview } from "dockview-core"
+import { themeAbyss, themeDark, themeLight, themeVisualStudio, themeDracula, themeReplit, themeAbyssSpaced, themeLightSpaced } from "dockview-core";
+
+
+const matchTheme = (theme) => {
+  let res;
+  switch (theme) {
+    case 'light':
+      res = themeLight
+    case 'light-spaced':
+      res = themeLightSpaced
+    case 'abyss':
+      res = themeAbyss
+    case 'abyss/spaced':
+      res = themeAbyssSpaced
+    case 'vs':
+      res = themeVisualStudio
+    case 'dark':
+      res = themeDark
+    case 'dracula':
+      res = themeDracula
+    case 'replit':
+      res = themeReplit
+    default:
+      res = themeLightSpaced
+  }
+  return (res)
+}
 
 class Panel {
   get element() {
@@ -36,7 +63,7 @@ HTMLWidgets.widget({
 
         // TODO: code to render the widget, e.g.
         const api = createDockview(document.getElementById(id), {
-          className: x.theme,
+          theme: matchTheme(x.theme),
           createComponent: (options) => {
             switch (options.name) {
               case "default":

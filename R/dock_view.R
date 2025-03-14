@@ -78,8 +78,10 @@ dock_view <- function(
   panels,
   ...,
   theme = c(
+    "light-spaced",
     "light",
     "abyss",
+    "abyss-spaced",
     "dark",
     "vs",
     "dracula",
@@ -101,7 +103,7 @@ dock_view <- function(
 
   # forward options using x
   x <- list(
-    theme = sprintf("dockview-theme-%s", theme),
+    theme = theme,
     panels = panels,
     ...
   )
