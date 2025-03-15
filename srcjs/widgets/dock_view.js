@@ -58,6 +58,10 @@ HTMLWidgets.widget({
           window.dispatchEvent(new Event('resize'));
         })
 
+        api.onDidMaximizedGroupChange((e) => {
+          window.dispatchEvent(new Event('resize'));
+        })
+
         // Init panels
         x.panels.map((panel) => {
           let internals = {
