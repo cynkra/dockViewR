@@ -110,3 +110,83 @@ server <- function(input, output, session) {
 
 shinyApp(ui, server)
 ```
+
+## Contributing
+
+We welcome contributions! If you’d like to help improve `{dockViewR}`,
+feel free to submit issues, feature requests, or pull requests.
+
+### Knowledge pre-requisites
+
+`{dockViewR}` is an **htmlwidget**, an interactive widget for R, powered
+by a JS library. To get a minimum starting kit:
+
+- “Quick and Dirty” intro to JS for R devs:
+  <https://rsc.cynkra.com/js4Shiny/#/welcome>.
+- About htmlwidgets: <https://www.htmlwidgets.org/develop_intro.html>.
+
+### Software pre-requisite
+
+To contribute to this project, you’ll need `npm`, `node`, and the R
+package `{packer}` to compile the JavaScript code. Please follow the
+slides attached to help you get started
+[pre-requisites](https://rsc.cynkra.com/js4Shiny/#/software-pre-requisites).
+When you are in the project, do the following:
+
+``` r
+pak::pak("packer")
+# Restore JavaScript dependencies in package-lock.json (a bit like the renv.lock)
+packer::npm_install()
+```
+
+The JS code uses [ES6
+modules](https://rsc.cynkra.com/js4Shiny/#/modularisation-code-management),
+meaning that you can define a module in a `srcjs/component.js` script as
+follows:
+
+``` js
+export const blabla = () => {
+  console.log("Blabla");
+}
+```
+
+and use it in another script, let’s say `./otherscript.js` like so:
+
+``` js
+// ./otherscript.js
+import { blabla } from './components.js'
+```
+
+Whenever you are done with changing the JS script, you have to rebuild
+it:
+
+``` r
+# Change the code and then rebundle
+packer::bundle("development") # For developement mode
+packer::bundle() # For production. Defaut!
+```
+
+You may as well bundle for `dev` using `packer::bundle_dev()` when in
+developer mode and when ready for production use
+`packer::bundle_prod()`. You may also consider `watch()` which watches
+for changes in the `srcjs` and rebuilds if necessary, equivalent to
+`⁠npm run watch⁠`.
+
+### Debugging steps
+
+1.  Whenever you run an app using `{dockViewR}`, like in
+    `inst/examples/demo`, open the viewer on a web browser window
+    (preferably Chrome as it is used to illustrate the action in this
+    step, as other browser devtools differ in term of layout).
+2.  Right-click on the widget and navigate to the `inspect` option on
+    the drop-down menu.
+3.  At the top, where the tabs are displayed, navigate to the `Sources`
+    tab. Open from the sidepanel `dockviewer/srcjs/widgets/dockview.js`
+    script ![Inspector tabs are opened](inst/images/debug.png). Once the
+    `dockview.js` script is opened on the main panel. You can set a
+    breakpoint on any line number of the script and reload the page.
+
+## Acknowledgments
+
+This package is built on top of the amazing
+[dockview](https://dockview.dev/) JavaScript library.

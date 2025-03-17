@@ -1,1 +1,1 @@
-import './widgets/dock_view.js'
+import './widgets/dockview.js'
