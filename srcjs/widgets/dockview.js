@@ -2,12 +2,12 @@ import 'widgets';
 import 'dockview-core/dist/styles/dockview.css'
 import { createDockview } from "dockview-core";
 
-import { Panel, RightHeader } from './components'
-import { matchTheme } from './utils';
+import { Panel, RightHeader } from '../modules/components'
+import { matchTheme } from '../modules/utils';
 
 HTMLWidgets.widget({
 
-  name: 'dock_view',
+  name: 'dockview',
 
   type: 'output',
 

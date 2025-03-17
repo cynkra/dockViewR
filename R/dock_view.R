@@ -110,7 +110,7 @@ dock_view <- function(
 
   # create widget
   htmlwidgets::createWidget(
-    name = 'dock_view',
+    name = "dockview",
     x,
     dependencies = c(
       unlist(deps, recursive = FALSE),
@@ -119,7 +119,7 @@ dock_view <- function(
     ),
     width = width,
     height = height,
-    package = 'dockViewR',
+    package = "dockViewR",
     elementId = elementId
   )
 }
@@ -164,13 +164,13 @@ panel <- function(id, title, content, active = TRUE, ...) {
 #' @name dock_view-shiny
 #'
 #' @export
-dock_viewOutput <- function(outputId, width = '100%', height = '400px') {
+dock_viewOutput <- function(outputId, width = "100%", height = "400px") {
   htmlwidgets::shinyWidgetOutput(
     outputId,
-    'dock_view',
+    "dockview",
     width,
     height,
-    package = 'dockViewR'
+    package = "dockViewR"
   )
 }
 

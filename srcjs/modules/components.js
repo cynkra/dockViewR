@@ -25,17 +25,21 @@ class RightHeader {
   }
 
   init(config) {
-    this._element.style = 'height: 100%; padding: 0px 4px'
-    this._element.innerHTML = '<i class="fas fa-plus" role="presentation" aria-label="plus icon"></i>'
+    this._element.style = 'height: 100%; padding: 8px'
+    this._element.innerHTML = '<i class="fas fa-expand" role="presentation" aria-label="plus icon"></i>'
     this._element.addEventListener('click', (e) => {
       if (!config.api.isMaximized()) {
-        $(e.target).removeClass('fa-plus').addClass('fa-minus')
+        $(e.target).removeClass('fa-expand').addClass('fa-compress')
         config.api.maximize()
       } else {
         config.api.exitMaximized()
-        $(e.target).removeClass('fa-minus').addClass('fa-plus')
+        $(e.target).removeClass('fa-compress').addClass('fa-expand')
       }
     });
+  }
+  dispose() {
+    // Necessary to avoid a JS error when moving a panel
+    // inside another one to get nested tabs
   }
 }
 
