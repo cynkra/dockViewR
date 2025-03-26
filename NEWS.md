@@ -1,3 +1,4 @@
-# dockViewR 0.0.0.9000
+# dockViewR 0.1.0
 
-* Initial CRAN submission.
+* create add_panel to dynamically add a Panel to the DOM.
+* improve check in dock_view to catch duplicated ids.
