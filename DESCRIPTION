@@ -15,7 +15,8 @@ Roxygen: list(markdown = TRUE, packages = c("roxy.shinylive"))
 RoxygenNote: 7.3.2
 Imports: 
     htmlwidgets,
-    htmltools
+    htmltools,
+    shiny
 Suggests:
     roxy.shinylive
 URL: https://github.com/cynkra/dockViewR, https://cynkra.github.io/dockViewR/
