@@ -100,7 +100,10 @@ dock_view <- function(
       NULL
     }
   }))
-
+  # check ids
+  ids <- vapply(panels, \(x) x$id, FUN.VALUE = character(1))
+  dupes <- which(duplicated(ids))
+  if (length(dupes)) stop("you have some duplicated ids FIXME!!")
   # forward options using x
   x <- list(
     theme = theme,
