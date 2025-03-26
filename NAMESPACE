@@ -3,6 +3,8 @@
 export(add_panel)
 export(dock_view)
 export(dock_viewOutput)
+export(list_panels)
 export(panel)
+export(remove_panel)
 export(renderDock_view)
 import(htmlwidgets)
