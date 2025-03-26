@@ -1,10 +1,11 @@
 Package: dockViewR
 Title: Layout Manager Widget for R and Shiny
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: 
     c(
     person("David", "Granjon", , "dgranjon@ymail.com", role = c("aut", "cre")),
-    person("mathuo", email = "github.mathuo@gmail.com", role = "cph")
+    person("mathuo", email = "github.mathuo@gmail.com", role = "cph"),
+    person("nelson", email = "nelson.stevens92@gmail.com", role = "aut")
     )
 Description: Provides R bindings to the 'dockview' JavaScript library.
     Create rearrangeable grid layouts in seconds.
@@ -14,7 +15,8 @@ Roxygen: list(markdown = TRUE, packages = c("roxy.shinylive"))
 RoxygenNote: 7.3.2
 Imports: 
     htmlwidgets,
-    htmltools
+    htmltools,
+    shiny
 Suggests:
     roxy.shinylive
 URL: https://github.com/cynkra/dockViewR, https://cynkra.github.io/dockViewR/

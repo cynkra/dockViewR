@@ -42,4 +42,16 @@ const matchTheme = (theme) => {
   return (res)
 }
 
-export { matchTheme };
+const addPanel = (api, panel) => {
+  let internals = {
+    component: 'default',
+    params: {
+      content: panel.content,
+      id: panel.id
+    }
+  }
+  let props = { ...panel, ...internals }
+  return (api.addPanel(props))
+}
+
+export { matchTheme, addPanel };

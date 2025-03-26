@@ -3,7 +3,7 @@ import 'dockview-core/dist/styles/dockview.css'
 import { createDockview } from "dockview-core";
 
 import { Panel, RightHeader } from '../modules/components'
-import { matchTheme } from '../modules/utils';
+import { matchTheme, addPanel } from '../modules/utils';
 
 HTMLWidgets.widget({
 
@@ -64,16 +64,17 @@ HTMLWidgets.widget({
 
         // Init panels
         x.panels.map((panel) => {
-          let internals = {
-            component: 'default',
-            params: {
-              content: panel.content,
-              id: panel.id
-            }
-          }
-          let props = { ...panel, ...internals }
-          return (api.addPanel(props))
+          addPanel(api, panel)
         });
+
+        Shiny.setInputValue(id+"_panel_ids", x.panels.map((panel) => {return(panel.id)}))
+
+        if (HTMLWidgets.shinyMode) {
+          Shiny.addCustomMessageHandler('add-panel', (m) => {
+            addPanel(api, m)
+          })
+        }
+
       },
 
       resize: function (width, height) {
@@ -86,8 +87,4 @@ HTMLWidgets.widget({
   }
 });
 
-if (HTMLWidgets.shinyMode) {
-  Shiny.addCustomMessageHandler('add-panel', (m) => {
-    // TBD dynamically insert a panel
-  })
-}
+
