@@ -118,7 +118,7 @@ dock_view <- function(
     dependencies = c(
       unlist(deps, recursive = FALSE),
       # Add fontawesome (avoids to get dependency on {fontawesome})
-      htmltools::findDependencies(icon("cogs"))
+      htmltools::findDependencies(shiny::icon("cogs"))
     ),
     width = width,
     height = height,
