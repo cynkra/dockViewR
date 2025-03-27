@@ -5,7 +5,7 @@ Authors@R:
     c(
     person("David", "Granjon", , "dgranjon@ymail.com", role = c("aut", "cre")),
     person("mathuo", email = "github.mathuo@gmail.com", role = "cph"),
-    person("nelson", email = "nelson.stevens92@gmail.com", role = "aut")
+    person("Nelson", "Stevens", email = "nelson.stevens92@gmail.com", role = "aut")
     )
 Description: Provides R bindings to the 'dockview' JavaScript library.
     Create rearrangeable grid layouts in seconds.
