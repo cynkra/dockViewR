@@ -18,6 +18,9 @@ Imports:
     htmltools,
     shiny
 Suggests:
-    roxy.shinylive
+    roxy.shinylive,
+    shinytest2,
+    testthat,
+    visNetwork
 URL: https://github.com/cynkra/dockViewR, https://cynkra.github.io/dockViewR/
 BugReports: https://github.com/cynkra/dockViewR/issues

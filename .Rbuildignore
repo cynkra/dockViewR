@@ -15,3 +15,5 @@
 ^\.github$
 ^index\.qmd$
 ^index\.md$
+_\.new\.png$
+^\.vscode$
