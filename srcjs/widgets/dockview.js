@@ -76,12 +76,12 @@ HTMLWidgets.widget({
 
         // Init panels
         x.panels.map((panel) => {
-          addPanel(api, panel, x, id);
+          addPanel(api, panel);
         });
 
         if (HTMLWidgets.shinyMode) {
-          Shiny.addCustomMessageHandler('add-panel', (m) => {
-            addPanel(api, m, x, id)
+          Shiny.addCustomMessageHandler('add-panel', (panel) => {
+            addPanel(api, panel);
           });
 
           Shiny.addCustomMessageHandler('rm-panel', (id) => {
