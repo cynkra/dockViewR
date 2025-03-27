@@ -1,6 +1,7 @@
 library(shiny)
 library(bslib)
 library(visNetwork)
+library(dockViewR)
 
 nodes <- data.frame(id = 1:3)
 edges <- data.frame(from = c(1, 2), to = c(1, 3))
