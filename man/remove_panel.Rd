@@ -7,14 +7,10 @@
 remove_panel(id, session = shiny::getDefaultReactiveDomain())
 }
 \arguments{
+\item{id}{Id of the panel that ought to be removed.}
+
 \item{session}{shiny session object.
 See \url{https://dockview.dev/docs/api/dockview/panelApi}.}
-
-\item{proxy}{Result of \code{\link[=dock_view]{dock_view()}} or a character with the ID of the dockview.}
-
-\item{panel}{A panel object}
-
-\item{...}{Other options passed to the API.}
 }
 \description{
 Remove Panel dynamically

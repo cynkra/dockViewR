@@ -1,7 +1,5 @@
 #' Remove Panel dynamically
-#' @param proxy Result of [dock_view()] or a character with the ID of the dockview.
-#' @param panel A panel object
-#' @param ... Other options passed to the API.
+#' @param id Id of the panel that ought to be removed.
 #' @param session shiny session object.
 #' See \url{https://dockview.dev/docs/api/dockview/panelApi}.
 #' @export
