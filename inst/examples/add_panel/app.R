@@ -1,3 +1,4 @@
+library(dockViewR)
 library(shiny)
 library(bslib)
 library(visNetwork)
