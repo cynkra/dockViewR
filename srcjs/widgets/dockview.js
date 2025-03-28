@@ -34,9 +34,21 @@ HTMLWidgets.widget({
         })
 
         api.onDidAddPanel((e) => {
-          // callback
-          let pane = `#${e.params.id}`
-          Shiny.initializeInputs($(pane))
+          let pane = `#${e.params.id}`;
+          Shiny.initializeInputs($(pane));
+          let inp = Shiny.shinyapp.$inputValues[id + "_panel_ids"];
+          if (inp === undefined) {
+            Shiny.setInputValue(id + "_panel_ids", [e.params.id], {priority: "event"});
+          } else {
+            inp.push(e.params.id);
+            Shiny.setInputValue(id + "_panel_ids", inp, {priority: "event"});
+          }
+        })
+
+        api.onDidRemovePanel((e) => {
+          let inp = Shiny.shinyapp.$inputValues[id + "_panel_ids"];
+          inp.splice(inp.indexOf(e.id), 1);
+          Shiny.setInputValue(id + "_panel_ids", inp, {priority: "event"});
         })
 
         // Bind input/output only once, when they 
@@ -64,14 +76,16 @@ HTMLWidgets.widget({
 
         // Init panels
         x.panels.map((panel) => {
-          addPanel(api, panel)
+          addPanel(api, panel);
         });
 
-        Shiny.setInputValue(id+"_panel_ids", x.panels.map((panel) => {return(panel.id)}))
-
         if (HTMLWidgets.shinyMode) {
-          Shiny.addCustomMessageHandler('add-panel', (m) => {
-            addPanel(api, m)
+          Shiny.addCustomMessageHandler('add-panel', (panel) => {
+            addPanel(api, panel);
+          });
+
+          Shiny.addCustomMessageHandler('rm-panel', (id) => {
+            api.removePanel(api.getPanel(id));
           })
         }
 
@@ -86,5 +100,3 @@ HTMLWidgets.widget({
     };
   }
 });
-
-

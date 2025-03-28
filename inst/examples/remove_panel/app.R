@@ -7,11 +7,20 @@ nodes <- data.frame(id = 1:3)
 edges <- data.frame(from = c(1, 2), to = c(1, 3))
 
 ui <- page_fillable(
-  actionButton("btn", "add Panel"),
+  selectInput("selinp", "Panel ids", choices = NULL),
+  actionButton("btn", "remove Panel"),
   dock_viewOutput("dock")
 )
 
 server <- function(input, output, session) {
+  observeEvent(list_panels("dock"), {
+    updateSelectInput(
+      session = session,
+      inputId = "selinp",
+      choices = list_panels("dock")
+    )
+  })
+  
   output$dock <- renderDock_view({
     dock_view(
       panels = list(
@@ -91,31 +100,10 @@ server <- function(input, output, session) {
   })
 
   observeEvent(input$btn, {
-    pnl <- panel(
-      id = "new_1",
-      title = "Dynamic panel",
-      content = tagList(
-        radioButtons(
-          "dist", "Distribution type:",
-          c(
-            "Normal" = "norm",
-            "Uniform" = "unif",
-            "Log-normal" = "lnorm",
-            "Exponential" = "exp"
-          )
-        ),
-        plotOutput("plot")
-      ),
-      position = list(
-        referencePanel = "1",
-        direction = "within"
-      )
-    )
-    add_panel(
-      "dock",
-      pnl
-    )
+    req(input$selinp)
+    remove_panel(input$selinp)
   })
+ 
 }
 
 shinyApp(ui, server)
