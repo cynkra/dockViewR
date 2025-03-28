@@ -7,7 +7,7 @@ nodes <- data.frame(id = 1:3)
 edges <- data.frame(from = c(1, 2), to = c(1, 3))
 
 ui <- page_fillable(
-  selectInput("sel", "Panel ids", choices = NULL),
+  selectInput("selinp", "Panel ids", choices = NULL),
   actionButton("btn", "remove Panel"),
   dock_viewOutput("dock")
 )
@@ -16,10 +16,11 @@ server <- function(input, output, session) {
   observeEvent(list_panels("dock"), {
     updateSelectInput(
       session = session,
-      inputId = "sel",
+      inputId = "selinp",
       choices = list_panels("dock")
     )
   })
+  
   output$dock <- renderDock_view({
     dock_view(
       panels = list(
@@ -99,8 +100,8 @@ server <- function(input, output, session) {
   })
 
   observeEvent(input$btn, {
-    req(input$sel)
-    remove_panel(input$sel)
+    req(input$selinp)
+    remove_panel(input$selinp)
   })
  
 }
