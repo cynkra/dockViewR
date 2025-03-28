@@ -1,0 +1,17 @@
+{
+  "input": {
+    "btn": 0,
+    "dock_panel_ids": [
+      "1",
+      "2",
+      "3"
+    ],
+    "network_initialized": true,
+    "obs": 500,
+    "selinp": "1",
+    "variable": "cyl"
+  },
+  "export": {
+
+  }
+}
