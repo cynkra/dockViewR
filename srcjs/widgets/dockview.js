@@ -87,6 +87,11 @@ HTMLWidgets.widget({
           Shiny.addCustomMessageHandler('rm-panel', (id) => {
             api.removePanel(api.getPanel(id));
           })
+
+          Shiny.addCustomMessageHandler('move-panel', (m) => {
+            let panel = api.getPanel(`${m.id}`);
+            panel.api.moveTo(m.moveTo);
+          })
         }
 
       },
