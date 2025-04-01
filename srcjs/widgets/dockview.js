@@ -51,17 +51,10 @@ HTMLWidgets.widget({
           Shiny.setInputValue(id + "_panel_ids", inp, {priority: "event"});
         })
 
-        // Bind input/output only once, when they 
-        // are in the DOM
+        // Bind input/output
         api.onDidActivePanelChange((e) => {
           let pane = `#${e.params.id}`
-          let isBound = $(pane)
-            .find('.shiny-bound-input, .shiny-bound-output')
-            .length > 0
-          if (!isBound) {
-            console.log(`Binding panel ${e.params.id}.`)
-            Shiny.bindAll($(pane))
-          }
+          Shiny.bindAll($(pane))
         })
 
         // Resize panel content on layout change

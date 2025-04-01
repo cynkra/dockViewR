@@ -12,6 +12,7 @@ server <- function(input, output, session) {
         panel(
           id = "1",
           title = "Panel 1",
+          group = 1,
           content = tagList(
             sliderInput(
               "obs",
@@ -25,6 +26,7 @@ server <- function(input, output, session) {
         ),
         panel(
           id = "2",
+          group = 1,
           title = "Panel 2",
           content = tagList(
             selectInput(
@@ -34,6 +36,16 @@ server <- function(input, output, session) {
             ),
             tableOutput("data")
           ),
+          position = list(
+            referencePanel = "1",
+            direction = "within"
+          )
+        ),
+        panel(
+          id = "3",
+          group = 2,
+          title = "Panel 3",
+          content = h1("Panel 3"),
           position = list(
             referencePanel = "1",
             direction = "right"
@@ -59,10 +71,10 @@ server <- function(input, output, session) {
     move_panel(
       "dock",
       id = "1",
-      #group = 1,
+      group = 2,
       position = list(
-        referencePanel = "2",
-        direction = "left"
+       #referencePanel = "2",
+       direction = "bottom"
       ),
       index = 2
     )
