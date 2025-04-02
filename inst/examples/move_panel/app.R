@@ -43,11 +43,7 @@ server <- function(input, output, session) {
         panel(
           id = "3",
           title = "Panel 3",
-          content = h1("Panel 3"),
-          #position = list(
-          #  referencePanel = "1",
-          #  direction = "right"
-          #)
+          content = h1("Panel 3")
         )
       ),
       theme = "light-spaced"
