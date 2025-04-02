@@ -1,8 +1,12 @@
 library(shiny)
 
 ui <- fluidPage(
+  h1("Panels within the same group"),
   actionButton("move", "Move Panel 1"),
-  dock_viewOutput("dock")
+  dock_viewOutput("dock"),
+  h1("Panels with different groups"),
+  actionButton("move2", "Move Panel 1"),
+  dock_viewOutput("dock2"),
 )
 
 server <- function(input, output, session) {
@@ -12,7 +16,6 @@ server <- function(input, output, session) {
         panel(
           id = "1",
           title = "Panel 1",
-          group = "1",
           content = tagList(
             sliderInput(
               "obs",
@@ -26,7 +29,6 @@ server <- function(input, output, session) {
         ),
         panel(
           id = "2",
-          group = "1",
           title = "Panel 2",
           content = tagList(
             selectInput(
@@ -36,18 +38,44 @@ server <- function(input, output, session) {
             ),
             tableOutput("data")
           ),
-          position = list(
-            referencePanel = "1",
-            direction = "within"
-          )
         ),
         panel(
           id = "3",
-          group = "2",
+          title = "Panel 3",
+          content = h1("Panel 3"),
+          #position = list(
+          #  referencePanel = "1",
+          #  direction = "right"
+          #)
+        )
+      ),
+      theme = "light-spaced"
+    )
+  })
+
+  output$dock2 <- renderDock_view({
+    dock_view(
+      panels = list(
+        panel(
+          id = "4",
+          title = "Panel 1",
+          content = "Panel 1"
+        ),
+        panel(
+          id = "5",
+          title = "Panel 2",
+          content = "Panel 2",
+          position = list(
+            referencePanel = "4",
+            direction = "top"
+          )
+        ),
+        panel(
+          id = "6",
           title = "Panel 3",
           content = h1("Panel 3"),
           position = list(
-            referencePanel = "1",
+            referencePanel = "4",
             direction = "right"
           )
         )
@@ -71,12 +99,16 @@ server <- function(input, output, session) {
     move_panel(
       "dock",
       id = "1",
-      group = "2",
-      position = list(
-        #referenceGroup = "2",
-       direction = "bottom"
-      ),
-      index = "2"
+      index = 3
+    )
+  })
+
+  observeEvent(input$move2, {
+    move_panel(
+      "dock2",
+      id = "4",
+      group = "6",
+      position = "bottom"
     )
   })
 }

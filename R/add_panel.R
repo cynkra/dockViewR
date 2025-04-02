@@ -5,8 +5,13 @@
 #' @param session shiny session object.
 #' See \url{https://dockview.dev/docs/api/dockview/panelApi}.
 #' @export
-add_panel <- function(proxy, panel, ..., session = shiny::getDefaultReactiveDomain()) {
-  if (panel$id %in% list_panels(proxy, session)) stop("The panel ID you used is already in use!")
-  session$sendCustomMessage("add-panel", panel)
+add_panel <- function(
+  proxy,
+  panel,
+  ...,
+  session = shiny::getDefaultReactiveDomain()
+) {
+  if (panel$id %in% list_panels(proxy, session))
+    stop("The panel ID you used is already in use!")
+  session$sendCustomMessage(sprintf("%s_add-panel", proxy), panel)
 }
-

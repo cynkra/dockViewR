@@ -20,7 +20,7 @@ server <- function(input, output, session) {
       choices = list_panels("dock")
     )
   })
-  
+
   output$dock <- renderDock_view({
     dock_view(
       panels = list(
@@ -88,7 +88,8 @@ server <- function(input, output, session) {
   )
 
   output$plot <- renderPlot({
-    dist <- switch(input$dist,
+    dist <- switch(
+      input$dist,
       norm = rnorm,
       unif = runif,
       lnorm = rlnorm,
@@ -101,9 +102,8 @@ server <- function(input, output, session) {
 
   observeEvent(input$btn, {
     req(input$selinp)
-    remove_panel(input$selinp)
+    remove_panel(proxy = "dock", input$selinp)
   })
- 
 }
 
 shinyApp(ui, server)

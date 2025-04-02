@@ -7,7 +7,7 @@
 move_panel(
   proxy,
   id,
-  position,
+  position = NULL,
   group = NULL,
   index = NULL,
   session = shiny::getDefaultReactiveDomain()
@@ -18,11 +18,13 @@ move_panel(
 
 \item{id}{Panel id.}
 
-\item{position}{Panel position options. A list with \code{referencePanel} and \code{direction}.}
+\item{position}{Panel position options: one of \code{"left", "right", "top", "bottom", "center"}.}
 
-\item{group}{Panel group.}
+\item{group}{ID of the panel you want to move the target to. They must belong
+to different groups.}
 
-\item{index}{Panel index.}
+\item{index}{Panel index. If panels belong to the same group, you can use index to move the target
+panel at the desired position.}
 
 \item{session}{shiny session object.
 See \url{https://dockview.dev/docs/api/dockview/panelApi}.}
