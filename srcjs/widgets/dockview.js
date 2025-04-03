@@ -38,30 +38,23 @@ HTMLWidgets.widget({
           Shiny.initializeInputs($(pane));
           let inp = Shiny.shinyapp.$inputValues[id + "_panel_ids"];
           if (inp === undefined) {
-            Shiny.setInputValue(id + "_panel_ids", [e.params.id], {priority: "event"});
+            Shiny.setInputValue(id + "_panel_ids", [e.params.id], { priority: "event" });
           } else {
             inp.push(e.params.id);
-            Shiny.setInputValue(id + "_panel_ids", inp, {priority: "event"});
+            Shiny.setInputValue(id + "_panel_ids", inp, { priority: "event" });
           }
         })
 
         api.onDidRemovePanel((e) => {
           let inp = Shiny.shinyapp.$inputValues[id + "_panel_ids"];
           inp.splice(inp.indexOf(e.id), 1);
-          Shiny.setInputValue(id + "_panel_ids", inp, {priority: "event"});
+          Shiny.setInputValue(id + "_panel_ids", inp, { priority: "event" });
         })
 
-        // Bind input/output only once, when they 
-        // are in the DOM
+        // Bind input/output
         api.onDidActivePanelChange((e) => {
           let pane = `#${e.params.id}`
-          let isBound = $(pane)
-            .find('.shiny-bound-input, .shiny-bound-output')
-            .length > 0
-          if (!isBound) {
-            console.log(`Binding panel ${e.params.id}.`)
-            Shiny.bindAll($(pane))
-          }
+          Shiny.bindAll($(pane))
         })
 
         // Resize panel content on layout change
@@ -80,12 +73,27 @@ HTMLWidgets.widget({
         });
 
         if (HTMLWidgets.shinyMode) {
-          Shiny.addCustomMessageHandler('add-panel', (panel) => {
+          Shiny.addCustomMessageHandler(el.id + '_add-panel', (panel) => {
             addPanel(api, panel);
           });
 
-          Shiny.addCustomMessageHandler('rm-panel', (id) => {
+          Shiny.addCustomMessageHandler(el.id + '_rm-panel', (id) => {
             api.removePanel(api.getPanel(id));
+          })
+
+          Shiny.addCustomMessageHandler(el.id + '_move-panel', (m) => {
+            let panel = api.getPanel(`${m.id}`);
+            // Move relative to another group
+            if (m.options.group !== undefined) {
+              let groupTarget = api.getPanel(`${m.options.group}`)
+              panel.api.moveTo({
+                group: groupTarget.api.group,
+                position: m.options.position,
+              })
+              return null;
+            }
+            // Moce panel inside the same group using 'index' only
+            panel.api.moveTo(m.options);
           })
         }
 
