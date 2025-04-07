@@ -2,7 +2,7 @@ library(shiny)
 library(dockViewR)
 
 ui <- fluidPage(
-  actionButton("move2", "Move Panel 1"),
+  actionButton("move2", "Move Group that contains Panel 1"),
   dock_viewOutput("dock2"),
 )
 
@@ -31,6 +31,15 @@ server <- function(input, output, session) {
           position = list(
             referencePanel = "1",
             direction = "right"
+          )
+        ),
+        panel(
+          id = "4",
+          title = "Panel 4",
+          content = h1("Panel 4"),
+          position = list(
+            referencePanel = "3",
+            direction = "within"
           )
         )
       ),
