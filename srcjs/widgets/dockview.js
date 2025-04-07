@@ -102,6 +102,7 @@ HTMLWidgets.widget({
             panel.group.api.moveTo({
               group: groupTarget.api.group,
               position: m.options.position,
+              index: m.options.index
             })
             return null;
           })
