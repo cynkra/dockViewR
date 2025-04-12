@@ -1,3 +1,4 @@
+import { addPanel } from './utils';
 class Panel {
   get element() {
     return this._element
@@ -43,4 +44,35 @@ class RightHeader {
   }
 }
 
-export { RightHeader, Panel };
+class LeftHeader {
+  get element() {
+    return this._element
+  }
+
+  constructor() {
+    this._element = document.createElement('div')
+  }
+
+  init(config) {
+    this._element.style = 'height: 100%; padding: 8px'
+    this._element.innerHTML = '<i class="fas fa-plus" role="presentation" aria-label="plus icon"></i>'
+    this._element.addEventListener('click', (e) => {
+      addPanel(
+        config.containerApi, 
+        { 
+          id: `panel-${e.timeStamp}`,
+           title: "Panel new",
+            inactive: false,
+             content: { head: "", singletons: [], dependencies: [], html: "<div></div>" },
+              position: {referencePanel: config.group.id, direction: "within"} 
+        }
+      );
+    });
+  }
+  dispose() {
+    // Necessary to avoid a JS error when moving a panel
+    // inside another one to get nested tabs
+  }
+}
+
+export { RightHeader, LeftHeader, Panel };
