@@ -17,20 +17,19 @@ move_panel <- function(
   index = NULL,
   session = shiny::getDefaultReactiveDomain()
 ) {
+  id <- as.character(id)
   if (!(id %in% list_panels(proxy, session)))
-    stop(sprintf("The panel ID: `%s` cannot be found.", id))
+    stop(sprintf("<Panel (ID: %s)>: `id` cannot be found.", id))
 
   if (!is.null(group)) {
     if (!(group %in% list_panels(proxy, session)))
-      stop(sprintf("The group ID:`%s` cannot be found.", id))
+      stop(sprintf("<PanelGroup (ID: %s)>: `id` cannot be found.", id))
     options <- list(group = group, position = position)
   } else {
     if (is.null(index)) index <- 1
     # JS starts from 0 ... and R from 1 ...
     options <- list(index = index - 1)
   }
-
-  id <- as.character(id)
 
   session$sendCustomMessage(
     sprintf("%s_move-panel", proxy),
