@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN status](https://www.r-pkg.org/badges/version/dockViewR)](https://CRAN.R-project.org/package=dockViewR)
 [![R-CMD-check](https://github.com/cynkra/dockViewR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/cynkra/dockViewR/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/cynkra/dockViewR/graph/badge.svg)](https://app.codecov.io/gh/cynkra/dockViewR)
 <!-- badges: end -->
 
 The goal of dockViewR is to provide a layout manager for Shiny apps and interactive R documents. It builds on top of [dockview](https://dockview.dev/).

@@ -10,6 +10,8 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 [![CRAN
 status](https://www.r-pkg.org/badges/version/dockViewR)](https://CRAN.R-project.org/package=dockViewR)
 [![R-CMD-check](https://github.com/cynkra/dockViewR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/cynkra/dockViewR/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/cynkra/dockViewR/graph/badge.svg)](https://app.codecov.io/gh/cynkra/dockViewR)
 <!-- badges: end -->
 
 The goal of dockViewR is to provide a layout manager for Shiny apps and
@@ -32,6 +34,7 @@ This is a basic example which shows you how to solve a common problem:
 library(shiny)
 library(bslib)
 library(visNetwork)
+library(dockViewR)
 
 nodes <- data.frame(id = 1:3)
 edges <- data.frame(from = c(1, 2), to = c(1, 3))

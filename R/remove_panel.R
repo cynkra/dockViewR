@@ -9,5 +9,7 @@ remove_panel <- function(
   id,
   session = shiny::getDefaultReactiveDomain()
 ) {
+  if (!(id %in% list_panels(proxy, session)))
+    stop(sprintf("The panel ID: `%s` cannot be found.", id))
   session$sendCustomMessage(sprintf("%s_rm-panel", proxy), id)
 }

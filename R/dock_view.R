@@ -101,9 +101,10 @@ dock_view <- function(
     }
   }))
   # check ids
-  ids <- vapply(panels, \(x) x$id, FUN.VALUE = character(1))
+  ids <- unlist(lapply(panels, \(x) x$id))
   dupes <- unique(ids[duplicated(ids)])
-  if (length(dupes)) stop(sprintf("you have duplicated ids: %s", paste(dupes, collapse = ", ")))
+  if (length(dupes))
+    stop(sprintf("you have duplicated ids: %s", paste(dupes, collapse = ", ")))
   # forward options using x
   x <- list(
     theme = theme,
@@ -127,6 +128,21 @@ dock_view <- function(
   )
 }
 
+#' @keywords internal
+valid_directions <- c("above", "below", "left", "right", "within")
+
+#' @keywords internal
+process_panel_position <- function(position) {
+  position[["referencePanel"]] <- as.character(position[["referencePanel"]])
+  if (!(position[["direction"]] %in% valid_directions)) {
+    stop(sprintf(
+      "direction must be one of %s.",
+      paste(valid_directions, collapse = ", ")
+    ))
+  }
+  position
+}
+
 #' Dock panel
 #'
 #' Create a dock panel
@@ -138,16 +154,32 @@ dock_view <- function(
 #' @param active Is active?
 #' @param ... Other options passed to the API.
 #' See \url{https://dockview.dev/docs/api/dockview/panelApi}.
+#' If you pass position, it must be a list with 2 fields:
+#' - referencePanel: reference panel id.
+#' - direction: one of `above`, `below`, `left`, `right` or `within`
+#' (`above`, `below`, `left`, `right` put the panel in a new group, while `within` puts the panel
+#' after its reference panel in the same group).
+#' Position is relative to the reference panel target.
 #'
 #' @export
 panel <- function(id, title, content, active = TRUE, ...) {
-  list(
+  id <- as.character(id)
+
+  panel_opts <- list(
     id = id,
     title = title,
     inactive = !active,
-    content = htmltools::renderTags(content),
-    ...
+    content = htmltools::renderTags(content)
   )
+
+  pars <- list(...)
+  if (length(pars)) {
+    if (!is.null(pars[["position"]])) {
+      pars[["position"]] <- process_panel_position(pars[["position"]])
+    }
+    panel_opts <- c(panel_opts, pars)
+  }
+  panel_opts
 }
 
 #' Shiny bindings for dock_view
