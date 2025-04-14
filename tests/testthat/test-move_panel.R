@@ -18,7 +18,13 @@ test_that("move_panel works", {
   expect_snapshot(
     error = TRUE,
     {
+      # Wrong id
       move_panel("dock", 4, session = session)
+      # Index error
+      move_panel("dock", 3, session = session)
+      move_panel("dock", 3, index = -2, session = session)
+      move_panel("dock", 3, index = 20, session = session)
+      # Group does not exist
       move_panel("dock", 3, group = 4, session = session)
     }
   )
