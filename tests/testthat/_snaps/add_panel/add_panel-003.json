@@ -1,7 +1,7 @@
 {
   "input": {
     "btn": 1,
-    "dist": "norm",
+    "dist": "unif",
     "dock_panel_ids": [
       "1",
       "2",

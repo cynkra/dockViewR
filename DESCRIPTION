@@ -4,8 +4,9 @@ Version: 0.1.0
 Authors@R: 
     c(
     person("David", "Granjon", , "dgranjon@ymail.com", role = c("aut", "cre")),
-    person("mathuo", email = "github.mathuo@gmail.com", role = "cph"),
-    person("Nelson", "Stevens", email = "nelson.stevens92@gmail.com", role = "aut")
+    person("Nelson", "Stevens", email = "nelson.stevens92@gmail.com", role = "aut"),
+    person("Nicolas", "Bennett", email = "nicolas@cynkra.com", role = "aut"),
+    person("mathuo", email = "github.mathuo@gmail.com", role = "cph")
     )
 Description: Provides R bindings to the 'dockview' JavaScript library.
     Create rearrangeable grid layouts in seconds.
@@ -20,7 +21,8 @@ Imports:
 Suggests:
     roxy.shinylive,
     shinytest2,
-    testthat,
+    testthat (>= 3.0.0),
     visNetwork
 URL: https://github.com/cynkra/dockViewR, https://cynkra.github.io/dockViewR/
 BugReports: https://github.com/cynkra/dockViewR/issues
+Config/testthat/edition: 3

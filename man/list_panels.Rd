@@ -14,3 +14,7 @@ list_panels(proxy, session = shiny::getDefaultReactiveDomain())
 \description{
 list all available panels
 }
+\note{
+Only works with server side functions like \link{add_panel}. Don't call it
+from the UI.
+}
