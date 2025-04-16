@@ -63,7 +63,7 @@ class LeftHeader {
           title: "Panel new",
           inactive: false,
           content: { head: "", singletons: [], dependencies: [], html: defaultPanel(pnId) },
-          position: {referencePanel: config.group.id, direction: "within"} 
+          position: {referenceGroup: config.group.id, direction: "within"} 
       });
     });
   }
