@@ -9,7 +9,6 @@ move_group(
   id,
   group,
   position = NULL,
-  index = NULL,
   session = shiny::getDefaultReactiveDomain()
 )
 }
@@ -22,9 +21,6 @@ move_group(
 to different groups.}
 
 \item{position}{Panel position options: one of \code{"left", "right", "top", "bottom", "center"}.}
-
-\item{index}{Panel index. If panels belong to the same group, you can use index to move the target
-panel at the desired position.}
 
 \item{session}{shiny session object.
 See \url{https://dockview.dev/docs/api/dockview/panelApi}.}

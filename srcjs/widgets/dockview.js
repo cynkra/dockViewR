@@ -98,12 +98,11 @@ HTMLWidgets.widget({
           Shiny.addCustomMessageHandler(el.id + '_move-group', (m) => {
             let panel = api.getPanel(`${m.id}`);
             // Move relative to another group
-            let groupTarget = api.getPanel(`${m.options.group}`)
+            let groupTarget = api.getPanel(`${m.options.group}`);
             panel.group.api.moveTo({
               group: groupTarget.api.group,
-              position: m.options.position,
-              index: m.options.index
-            })
+              position: m.options.position
+            });
             return null;
           })
         }
