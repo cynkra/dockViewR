@@ -25,7 +25,7 @@ to different groups.}
 
 \item{index}{Panel index. If panels belong to the same group, you can use index to move the target
 panel at the desired position. When group is left NULL, index must be passed and cannot exceed the
-total number of panel or be negative.}
+total number of panels or be negative.}
 
 \item{session}{shiny session object.
 See \url{https://dockview.dev/docs/api/dockview/panelApi}.}
