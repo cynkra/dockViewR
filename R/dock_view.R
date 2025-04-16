@@ -93,17 +93,13 @@ dock_view <- function(
 ) {
   theme <- match.arg(theme)
 
-  deps <- dropNulls(lapply(panels, \(panel) {
-    if (length(panel$content$dependencies)) {
-      panel$content$dependencies
-    } else {
-      NULL
-    }
-  }))
+  deps <- extract_panel_deps(panels)
+
   # check ids
-  ids <- vapply(panels, \(x) x$id, FUN.VALUE = character(1))
-  dupes <- unique(ids[duplicated(ids)])
-  if (length(dupes)) stop(sprintf("you have duplicated ids: %s", paste(dupes, collapse = ", ")))
+  ids <- check_panel_ids(panels)
+  # check reference panels ids
+  check_panel_refs(panels, ids)
+
   # forward options using x
   x <- list(
     theme = theme,
@@ -138,16 +134,35 @@ dock_view <- function(
 #' @param active Is active?
 #' @param ... Other options passed to the API.
 #' See \url{https://dockview.dev/docs/api/dockview/panelApi}.
+#' If you pass position, it must be a list with 2 fields:
+#' - referencePanel: reference panel id.
+#' - direction: one of `above`, `below`, `left`, `right` or `within`
+#' (`above`, `below`, `left`, `right` put the panel in a new group, while `within` puts the panel
+#' after its reference panel in the same group).
+#' Position is relative to the reference panel target.
 #'
 #' @export
 panel <- function(id, title, content, active = TRUE, ...) {
-  list(
+  # We can't check id uniqueness here because panel has no
+  # idea of other existing panel ids at that point.
+  id <- as.character(id)
+
+  panel_opts <- list(
     id = id,
     title = title,
     inactive = !active,
-    content = htmltools::renderTags(content),
-    ...
+    content = htmltools::renderTags(content)
   )
+
+  # Extract extra parameters and process
+  pars <- list(...)
+  if (length(pars)) {
+    if (!is.null(pars[["position"]])) {
+      pars[["position"]] <- process_panel_position(id, pars[["position"]])
+    }
+    panel_opts <- c(panel_opts, pars)
+  }
+  panel_opts
 }
 
 #' Shiny bindings for dock_view
@@ -168,6 +183,7 @@ panel <- function(id, title, content, active = TRUE, ...) {
 #'
 #' @export
 dock_viewOutput <- function(outputId, width = "100%", height = "400px") {
+  #nocov start
   htmlwidgets::shinyWidgetOutput(
     outputId,
     "dockview",
@@ -175,13 +191,14 @@ dock_viewOutput <- function(outputId, width = "100%", height = "400px") {
     height,
     package = "dockViewR"
   )
-}
+} #nocov end
 
 #' @rdname dock_view-shiny
 #' @export
 renderDock_view <- function(expr, env = parent.frame(), quoted = FALSE) {
+  #nocov start
   if (!quoted) {
     expr <- substitute(expr)
   } # force quoted
   htmlwidgets::shinyRenderWidget(expr, dock_viewOutput, env, quoted = TRUE)
-}
+} #nocov end

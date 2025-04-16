@@ -9,13 +9,16 @@ add_panel(proxy, panel, ..., session = shiny::getDefaultReactiveDomain())
 \arguments{
 \item{proxy}{Result of \code{\link[=dock_view]{dock_view()}} or a character with the ID of the dockview.}
 
-\item{panel}{A panel object}
+\item{panel}{A panel object. See \link{panel} for the different parameters.}
 
-\item{...}{Other options passed to the API.}
+\item{...}{Other options passed to the API. Not used yet.}
 
 \item{session}{shiny session object.
 See \url{https://dockview.dev/docs/api/dockview/panelApi}.}
 }
 \description{
 Add Panel dynamically
+}
+\seealso{
+\code{\link[=panel]{panel()}}
 }
