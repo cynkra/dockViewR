@@ -57,16 +57,13 @@ class LeftHeader {
     this._element.style = 'height: 100%; padding: 8px'
     this._element.innerHTML = '<i class="fas fa-plus" role="presentation" aria-label="plus icon"></i>'
     this._element.addEventListener('click', (e) => {
-      addPanel(
-        config.containerApi, 
-        { 
+      addPanel(config.containerApi, { 
           id: `panel-${e.timeStamp}`,
-           title: "Panel new",
-            inactive: false,
-             content: { head: "", singletons: [], dependencies: [], html: "<div></div>" },
-              position: {referencePanel: config.group.id, direction: "within"} 
-        }
-      );
+          title: "Panel new",
+          inactive: false,
+          content: { head: "", singletons: [], dependencies: [], html: "<div></div>" },
+          position: {referencePanel: config.group.id, direction: "within"} 
+      });
     });
   }
   dispose() {
