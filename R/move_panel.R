@@ -5,7 +5,8 @@
 #' @param group ID of the panel you want to move the target to. They must belong
 #' to different groups.
 #' @param index Panel index. If panels belong to the same group, you can use index to move the target
-#' panel at the desired position.
+#' panel at the desired position. When group is left NULL, index must be passed and cannot exceed the
+#' total number of panels or be negative.
 #' @param session shiny session object.
 #' See \url{https://dockview.dev/docs/api/dockview/panelApi}.
 #' @export
@@ -17,15 +18,25 @@ move_panel <- function(
   index = NULL,
   session = shiny::getDefaultReactiveDomain()
 ) {
-  if (!(id %in% list_panels(proxy, session)))
-    stop("The panel ID cannot be found!")
+  id <- as.character(id)
+  panel_ids <- list_panels(proxy, session)
+  if (!(id %in% panel_ids))
+    stop(sprintf("<Panel (ID: %s)>: `id` cannot be found.", id))
 
   if (!is.null(group)) {
-    if (!(group %in% list_panels(proxy, session)))
-      stop("The panel ID cannot be found!")
+    if (!(group %in% panel_ids))
+      stop(sprintf("<PanelGroup (ID: %s)>: `id` cannot be found.", id))
     options <- list(group = group, position = position)
   } else {
-    if (is.null(index)) index <- 1
+    if (is.null(index))
+      stop(sprintf("<Panel (ID: %s)>: `index` cannot be NULL.", id))
+    if (index > length(panel_ids) || index < 1)
+      stop(sprintf(
+        "<Panel (ID: %s)>: `index` (value: %s) should belong to [%s].",
+        id,
+        index,
+        paste(c(1, length(panel_ids)), collapse = ", ")
+      ))
     # JS starts from 0 ... and R from 1 ...
     options <- list(index = index - 1)
   }

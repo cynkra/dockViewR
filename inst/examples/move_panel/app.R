@@ -64,7 +64,7 @@ server <- function(input, output, session) {
           content = "Panel 2",
           position = list(
             referencePanel = "1",
-            direction = "top"
+            direction = "within"
           )
         ),
         panel(
