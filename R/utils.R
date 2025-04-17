@@ -55,14 +55,22 @@ check_panel_ids <- function(panels) {
 
 #' @keywords internal
 check_panel_refs <- function(panels, ids) {
-  refs <- unlist(lapply(panels, \(x) x[["position"]][["referencePanel"]]))
+  refs <- unlist(lapply(
+    panels,
+    \(x) {
+      res <- c(x[["position"]][["referencePanel"]])
+      if (!is.null(res)) names(res) <- x[["id"]]
+      res
+    }
+  ))
+  if (is.null(refs)) return(NULL)
   if (any(!(refs %in% ids))) {
     wrong_id <- which(!(refs %in% ids))
     stop(
       sprintf(
         "<Panel (ID: %s)>: invalid value (%s) for `referencePanel`. Valid ids are: %s.",
-        wrong_id,
-        refs[[wrong_id]],
+        names(refs)[wrong_id],
+        refs[wrong_id],
         paste(ids, collapse = ", ")
       )
     )
