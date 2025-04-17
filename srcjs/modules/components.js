@@ -57,13 +57,13 @@ class LeftHeader {
     this._element.style = 'height: 100%; padding: 8px'
     this._element.innerHTML = '<i class="fas fa-plus" role="presentation" aria-label="plus icon"></i>'
     this._element.addEventListener('click', (e) => {
-      const pnId = `panel-${e.timeStamp}`
-      addPanel(config.containerApi, { 
-          id: pnId,
-          title: "Panel new",
-          inactive: false,
-          content: { head: "", singletons: [], dependencies: [], html: defaultPanel(pnId) },
-          position: {referenceGroup: config.group.id, direction: "within"} 
+      const pnId = `panel-${Date.now()}`
+      addPanel(config.containerApi, {
+        id: pnId,
+        title: "Panel new",
+        inactive: false,
+        content: { head: "", singletons: [], dependencies: [], html: defaultPanel(pnId) },
+        position: { referenceGroup: config.group.id, direction: "within" }
       });
     });
   }

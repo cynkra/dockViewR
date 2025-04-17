@@ -55,8 +55,12 @@ const addPanel = (api, panel) => {
 }
 
 const defaultPanel = (pnId) => {
-  return(`
+  return (`
     <p>Exchange me by running:</p>
+    <p>removeUI(<br>
+      &nbsp;&nbsp;selector = "#${pnId} > *",<br>
+      &nbsp;&nbsp;multiple = TRUE<br>
+    )</p>
     <p>shiny::insertUI(<br>
           &nbsp;&nbsp;selector = "#${pnId}",<br>
           &nbsp;&nbsp;where = "beforeEnd",<br>
