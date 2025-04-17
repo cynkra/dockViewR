@@ -68,3 +68,19 @@ get_groups_panels <- function(proxy, session = getDefaultReactiveDomain()) {
     get_groups_ids(proxy, session)
   )
 }
+
+#' save a dock
+#' @rdname dock-state
+#' @export
+save_dock <- function(proxy, session = getDefaultReactiveDomain()) {
+  session$sendCustomMessage(sprintf("#%s_save-dock", proxy), list())
+}
+
+#' restore a dock
+#' @rdname dock-state
+#' @param data Data representing a serialised dock object.
+#' @export
+restore_dock <- function(proxy, data, session = getDefaultReactiveDomain()) {
+  stopifnot(is.list(data))
+  session$sendCustomMessage(sprintf("#%s_restore-dock", proxy), data)
+}

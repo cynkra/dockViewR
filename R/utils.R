@@ -120,7 +120,7 @@ validate_position_names <- function(id, position) {
 #' @keywords internal
 validate_position_ref <- function(id, position, proxy, session) {
   if (!is.null(proxy)) {
-    panel_ids <- list_panels(proxy, session)
+    panel_ids <- get_panels_ids(proxy, session)
     if (!(position[["referencePanel"]] %in% panel_ids))
       stop(
         sprintf(

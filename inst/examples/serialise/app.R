@@ -3,10 +3,34 @@ library(dockViewR)
 
 ui <- fluidPage(
   h1("Serialise dock state"),
+  div(
+    class = "d-flex justify-content-center",
+    actionButton("save", "Save layout"),
+    actionButton("restore", "Restore saved layout"),
+    selectInput("states", "Select a state", NULL)
+  ),
   dock_viewOutput("dock")
 )
 
 server <- function(input, output, session) {
+  dock_states <- reactiveVal(NULL)
+  observeEvent(input$save, {
+    save_dock("dock")
+  })
+
+  observeEvent(req(input$dock_state), {
+    states <- c(dock_states(), list(input$dock_state))
+    dock_states(setNames(states, seq_along(states)))
+  })
+
+  observeEvent(dock_states(), {
+    updateSelectInput(session, "states", choices = names(dock_states()))
+  })
+
+  observeEvent(input$restore, {
+    restore_dock("dock", dock_states()[[input$states]])
+  })
+
   output$dock <- renderDock_view({
     dock_view(
       panels = list(
@@ -48,21 +72,6 @@ server <- function(input, output, session) {
     },
     rownames = TRUE
   )
-
-  observeEvent(req(get_dock("dock")), {
-    test_dock <- get_dock("dock")
-    usethis::use_data(test_dock, internal = TRUE, overwrite = TRUE)
-  })
-  #observe(print(get_panels("dock")))
-  #observe(print(get_panels_ids("dock")))
-  #observe(print(get_active_group("dock")))
-  #observe(print(get_groups("dock")))
-  #observe(print(get_groups_ids("dock")))
-  #observe(print(get_groups_panels("dock")))
-
-  #observeEvent(input$dock_state, {
-  #  print(input$dock_state)
-  #})
 }
 
 shinyApp(ui, server)

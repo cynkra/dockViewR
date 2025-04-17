@@ -3,7 +3,7 @@ import 'dockview-core/dist/styles/dockview.css'
 import { createDockview } from "dockview-core";
 
 import { Panel, RightHeader, LeftHeader } from '../modules/components'
-import { matchTheme, addPanel } from '../modules/utils';
+import { matchTheme, addPanel, saveDock } from '../modules/utils';
 
 HTMLWidgets.widget({
 
@@ -19,7 +19,7 @@ HTMLWidgets.widget({
 
       renderValue: function (x, id = el.id) {
 
-        // TODO: code to render the widget, e.g.
+        // Instantiate dockView
         const api = createDockview(document.getElementById(id), {
           theme: matchTheme(x.theme),
           createRightHeaderActionComponent: (options) => {
@@ -36,36 +36,11 @@ HTMLWidgets.widget({
           }
         })
 
-        api.onDidAddPanel((e) => {
-          let pane = `#${e.params.id}`;
-          Shiny.initializeInputs($(pane));
-          let inp = Shiny.shinyapp.$inputValues[id + "_panel_ids"];
-          if (inp === undefined) {
-            Shiny.setInputValue(id + "_panel_ids", [e.params.id], { priority: "event" });
-          } else {
-            inp.push(e.params.id);
-            Shiny.setInputValue(id + "_panel_ids", inp, { priority: "event" });
-          }
-        })
-
-        api.onDidRemovePanel((e) => {
-          let inp = Shiny.shinyapp.$inputValues[id + "_panel_ids"];
-          inp.splice(inp.indexOf(e.id), 1);
-          Shiny.setInputValue(id + "_panel_ids", inp, { priority: "event" });
-        })
-
-        // Bind input/output
-        api.onDidActivePanelChange((e) => {
-          let pane = `#${e.params.id}`
-          Shiny.bindAll($(pane))
-        })
-
         // Resize panel content on layout change
         // (useful so that plots or widgets resize correctly)
         api.onDidLayoutChange((e) => {
           window.dispatchEvent(new Event('resize'));
-          const state = api.toJSON();
-          Shiny.setInputValue(id + "_state", state, { priority: 'event' });
+          if (HTMLWidgets.shinyMode) saveDock(id, api)
         })
 
         api.onDidMaximizedGroupChange((e) => {
@@ -76,6 +51,21 @@ HTMLWidgets.widget({
         x.panels.map((panel) => {
           addPanel(api, panel);
         });
+
+        api.onDidAddPanel((e) => {
+          if (HTMLWidgets.shinyMode) {
+            let pane = `#${e.params.id}`;
+            Shiny.initializeInputs($(pane));
+          }
+        })
+
+        // Bind input/output
+        api.onDidActivePanelChange((e) => {
+          if (HTMLWidgets.shinyMode) {
+            let pane = `#${e.params.id}`
+            Shiny.bindAll($(pane))
+          }
+        })
 
         if (HTMLWidgets.shinyMode) {
           Shiny.addCustomMessageHandler(el.id + '_add-panel', (panel) => {
@@ -99,6 +89,16 @@ HTMLWidgets.widget({
             }
             // Moce panel inside the same group using 'index' only
             panel.api.moveTo(m.options);
+          })
+
+          // Force save dock
+          Shiny.addCustomMessageHandler(el.id + '_save-dock', (m) => {
+            saveDock(id, api)
+          })
+
+          // Restore layout
+          Shiny.addCustomMessageHandler(el.id + '_restore-dock', (m) => {
+            api.fromJSON(m)
           })
         }
 

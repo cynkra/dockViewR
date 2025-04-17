@@ -44,4 +44,9 @@ test_that("dock state", {
   expect_length(groups_panels[[1]], 2)
   expect_length(groups_panels[[2]], 1)
   expect_named(groups_panels, groups_ids)
+
+  save_dock("dock", session)
+  expect_identical(session$lastCustomMessage$type, "dock_save-dock")
+
+  expect_error(restore_dock("dock", c(), session))
 })

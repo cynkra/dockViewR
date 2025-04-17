@@ -9,6 +9,8 @@
 \alias{get_groups}
 \alias{get_groups_ids}
 \alias{get_groups_panels}
+\alias{save_dock}
+\alias{restore_dock}
 \title{get dock}
 \usage{
 get_dock(proxy, session = getDefaultReactiveDomain())
@@ -26,11 +28,17 @@ get_groups(proxy, session = getDefaultReactiveDomain())
 get_groups_ids(proxy, session = getDefaultReactiveDomain())
 
 get_groups_panels(proxy, session = getDefaultReactiveDomain())
+
+save_dock(proxy, session = getDefaultReactiveDomain())
+
+restore_dock(proxy, data, session = getDefaultReactiveDomain())
 }
 \arguments{
 \item{proxy}{Result of \code{\link[=dock_view]{dock_view()}} or a character with the ID of the dockview.}
 
 \item{session}{shiny session object.}
+
+\item{data}{Data representing a serialised dock object.}
 }
 \description{
 get dock
@@ -48,6 +56,10 @@ get dock groups
 get dock groups ids
 
 get dock groups panels
+
+save a dock
+
+restore a dock
 }
 \note{
 Only works with server side functions like \link{add_panel}. Don't call it

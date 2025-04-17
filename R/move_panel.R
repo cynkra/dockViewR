@@ -19,7 +19,7 @@ move_panel <- function(
   session = shiny::getDefaultReactiveDomain()
 ) {
   id <- as.character(id)
-  panel_ids <- list_panels(proxy, session)
+  panel_ids <- get_panels_ids(proxy, session)
   if (!(id %in% panel_ids))
     stop(sprintf("<Panel (ID: %s)>: `id` cannot be found.", id))
 

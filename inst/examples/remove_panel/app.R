@@ -13,11 +13,11 @@ ui <- page_fillable(
 )
 
 server <- function(input, output, session) {
-  observeEvent(list_panels("dock"), {
+  observeEvent(get_panels_ids("dock"), {
     updateSelectInput(
       session = session,
       inputId = "selinp",
-      choices = list_panels("dock")
+      choices = get_panels_ids("dock")
     )
   })
 

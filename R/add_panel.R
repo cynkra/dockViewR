@@ -13,7 +13,7 @@ add_panel <- function(
   session = shiny::getDefaultReactiveDomain()
 ) {
   panel$id <- as.character(panel$id)
-  if (panel$id %in% list_panels(proxy, session))
+  if (panel$id %in% get_panels_ids(proxy, session))
     stop(sprintf("<Panel (ID: %s)>: `id` already in use.", panel$id))
 
   # Make sure position is a valid list with right properties

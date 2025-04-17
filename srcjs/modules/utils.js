@@ -69,4 +69,9 @@ const defaultPanel = (pnId) => {
   `)
 }
 
-export { matchTheme, addPanel, defaultPanel };
+const saveDock = (id, api) => {
+  const state = api.toJSON();
+  Shiny.setInputValue(id + "_state", state, { priority: 'event' });
+}
+
+export { matchTheme, addPanel, defaultPanel, saveDock };
