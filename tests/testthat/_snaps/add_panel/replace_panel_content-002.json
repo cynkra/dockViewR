@@ -1,0 +1,15 @@
+{
+  "input": {
+    "dist": "norm",
+    "dock_panel_ids": [
+      "1",
+      "panel-1744849259220"
+    ],
+    "insert": 1,
+    "obs": 500,
+    "selinp": "panel-1744849259220"
+  },
+  "export": {
+
+  }
+}
