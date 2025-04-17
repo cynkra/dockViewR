@@ -2,7 +2,7 @@ import 'widgets';
 import 'dockview-core/dist/styles/dockview.css'
 import { createDockview } from "dockview-core";
 
-import { Panel, RightHeader } from '../modules/components'
+import { Panel, RightHeader, LeftHeader } from '../modules/components'
 import { matchTheme, addPanel } from '../modules/utils';
 
 HTMLWidgets.widget({
@@ -24,6 +24,9 @@ HTMLWidgets.widget({
           theme: matchTheme(x.theme),
           createRightHeaderActionComponent: (options) => {
             return new RightHeader(options)
+          },
+          createLeftHeaderActionComponent: (options) => {
+            return new LeftHeader(options)
           },
           createComponent: (options) => {
             switch (options.name) {

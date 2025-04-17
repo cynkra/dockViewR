@@ -54,4 +54,19 @@ const addPanel = (api, panel) => {
   return (api.addPanel(props))
 }
 
-export { matchTheme, addPanel };
+const defaultPanel = (pnId) => {
+  return (`
+    <p>Exchange me by running:</p>
+    <p>removeUI(<br>
+      &nbsp;&nbsp;selector = "#${pnId} > *",<br>
+      &nbsp;&nbsp;multiple = TRUE<br>
+    )</p>
+    <p>shiny::insertUI(<br>
+          &nbsp;&nbsp;selector = "#${pnId}",<br>
+          &nbsp;&nbsp;where = "beforeEnd",<br>
+          &nbsp;&nbsp;ui = "your ui code here"<br>
+    )</p>
+  `)
+}
+
+export { matchTheme, addPanel, defaultPanel };
