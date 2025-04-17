@@ -64,8 +64,8 @@ HTMLWidgets.widget({
         // (useful so that plots or widgets resize correctly)
         api.onDidLayoutChange((e) => {
           window.dispatchEvent(new Event('resize'));
-          const layout = api.toJSON();
-          Shiny.setInputValue(id + "_layout", layout, { priority: 'event' });
+          const state = api.toJSON();
+          Shiny.setInputValue(id + "_state", state, { priority: 'event' });
         })
 
         api.onDidMaximizedGroupChange((e) => {
