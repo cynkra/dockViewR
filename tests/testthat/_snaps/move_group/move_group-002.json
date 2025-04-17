@@ -3,17 +3,10 @@
     "dock2_panel_ids": [
       "1",
       "2",
-      "3"
+      "3",
+      "4"
     ],
-    "dock_panel_ids": [
-      "1",
-      "2",
-      "3"
-    ],
-    "move": 0,
-    "move2": 0,
-    "obs": 500,
-    "variable": "cyl"
+    "move2": 1
   },
   "export": {
 
