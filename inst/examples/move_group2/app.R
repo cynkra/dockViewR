@@ -48,10 +48,10 @@ server <- function(input, output, session) {
   })
 
   observeEvent(input$move2, {
-    move_group(
+    move_group2(
       "dock2",
-      id = "1",
-      group = "3",
+      source = "1",
+      destination = "3",
       position = "right"
     )
   })
