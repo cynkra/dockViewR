@@ -34,7 +34,7 @@ server <- function(input, output, session) {
   })
 
   exportTestValues(
-    states = dock_states(),
+    n_states = length(dock_states()),
     panel_ids = get_panels_ids("dock"),
     active_group = get_active_group("dock"),
     grid = get_grid("dock")
