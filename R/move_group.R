@@ -21,10 +21,10 @@ move_group <- function(
     position = NULL,
     session = shiny::getDefaultReactiveDomain()) {
   if (!(source %in% list_panels(proxy, session))) {
-    stop("The source panel-id cannot be found!")
+    stop("The source group-id cannot be found!")
   }
   if (!(destination %in% list_panels(proxy, session))) {
-    stop("destination does not refer to an existing panel-id!")
+    stop("destination does not refer to an existing group-id!")
   }
   options <- list(destination = destination, position = position)
   session$sendCustomMessage(
