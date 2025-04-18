@@ -82,6 +82,9 @@ check_panel_refs <- function(panels, ids) {
 valid_directions <- c("above", "below", "left", "right", "within")
 
 #' @keywords internal
+valid_positions <- c("left", "right", "top", "bottom", "center")
+
+#' @keywords internal
 valid_position_names <- c(
   "referencePanel",
   "direction",

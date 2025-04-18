@@ -73,7 +73,7 @@ get_groups_panels <- function(proxy, session = getDefaultReactiveDomain()) {
 #' @rdname dock-state
 #' @export
 save_dock <- function(proxy, session = getDefaultReactiveDomain()) {
-  session$sendCustomMessage(sprintf("#%s_save-dock", proxy), list())
+  session$sendCustomMessage(sprintf("%s_save-state", proxy), list())
 }
 
 #' restore a dock
@@ -82,5 +82,5 @@ save_dock <- function(proxy, session = getDefaultReactiveDomain()) {
 #' @export
 restore_dock <- function(proxy, data, session = getDefaultReactiveDomain()) {
   stopifnot(is.list(data))
-  session$sendCustomMessage(sprintf("#%s_restore-dock", proxy), data)
+  session$sendCustomMessage(sprintf("%s_restore-state", proxy), data)
 }

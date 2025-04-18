@@ -36,29 +36,19 @@ HTMLWidgets.widget({
           }
         })
 
-        // This event must be registered before adding the panels
-        api.onDidAddPanel((e) => {
-          if (HTMLWidgets.shinyMode) {
-            let pane = `#${e.params.id}`;
-            Shiny.initializeInputs($(pane));
-          }
-        })
-
-        // This event must be registered before adding the panels.
-        // Bind input/output
-        api.onDidActivePanelChange((e) => {
-          if (HTMLWidgets.shinyMode) {
-            let pane = `#${e.params.id}`
-            Shiny.bindAll($(pane))
-          }
-        })
-
         // Resize panel content on layout change
         // (useful so that plots or widgets resize correctly)
         // Also update the dock state.
         api.onDidLayoutChange(() => {
           window.dispatchEvent(new Event('resize'));
-          if (HTMLWidgets.shinyMode) saveDock(id, api)
+          if (HTMLWidgets.shinyMode) {
+            saveDock(id, api)
+            api.panels.map((panel) => {
+              let pane = `#${panel.id}`;
+              Shiny.initializeInputs($(pane));
+              Shiny.bindAll($(pane));
+            })
+          }
         })
 
         api.onDidMaximizedGroupChange((e) => {
@@ -67,12 +57,12 @@ HTMLWidgets.widget({
 
         // Init panels
         x.panels.map((panel) => {
-          addPanel(api, panel);
+          addPanel(panel, api);
         });
 
         if (HTMLWidgets.shinyMode) {
           Shiny.addCustomMessageHandler(el.id + '_add-panel', (panel) => {
-            addPanel(api, panel);
+            addPanel(panel, api);
           });
 
           Shiny.addCustomMessageHandler(el.id + '_rm-panel', (id) => {
@@ -84,12 +74,14 @@ HTMLWidgets.widget({
           })
 
           // Force save dock
-          Shiny.addCustomMessageHandler(el.id + '_save-dock', (m) => {
+          Shiny.addCustomMessageHandler(el.id + '_save-state', (m) => {
             saveDock(id, api)
           })
 
           // Restore layout
-          Shiny.addCustomMessageHandler(el.id + '_restore-dock', (m) => {
+          Shiny.addCustomMessageHandler(el.id + '_restore-state', (m) => {
+            // Avoid duplicate input/output warning when rebinding
+            Shiny.unbindAll($(`#${id} .dockview-panel`))
             api.fromJSON(m)
           })
         }

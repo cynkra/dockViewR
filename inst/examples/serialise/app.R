@@ -1,4 +1,5 @@
 library(shiny)
+library(bslib)
 library(dockViewR)
 
 ui <- fluidPage(
@@ -14,6 +15,15 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   dock_states <- reactiveVal(NULL)
+
+  observeEvent(
+    req(input$dock_state),
+    {
+      move_panel("dock", id = "test", group = "3", position = "top")
+    },
+    once = TRUE
+  )
+
   observeEvent(input$save, {
     save_dock("dock")
   })
@@ -22,6 +32,8 @@ server <- function(input, output, session) {
     states <- c(dock_states(), list(input$dock_state))
     dock_states(setNames(states, seq_along(states)))
   })
+
+  exportTestValues(states = dock_states())
 
   observeEvent(dock_states(), {
     updateSelectInput(session, "states", choices = names(dock_states()))
@@ -37,7 +49,16 @@ server <- function(input, output, session) {
         panel(
           id = "test",
           title = "Panel 1",
-          content = "Panel 1"
+          content = tagList(
+            sliderInput(
+              "obs",
+              "Number of observations:",
+              min = 0,
+              max = 1000,
+              value = 500
+            ),
+            plotOutput("distPlot")
+          )
         ),
         panel(
           id = 2,
@@ -66,12 +87,6 @@ server <- function(input, output, session) {
     req(input$obs)
     hist(rnorm(input$obs))
   })
-  output$data <- renderTable(
-    {
-      mtcars[, c("mpg", input$variable), drop = FALSE]
-    },
-    rownames = TRUE
-  )
 }
 
 shinyApp(ui, server)

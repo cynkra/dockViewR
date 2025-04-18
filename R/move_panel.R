@@ -23,6 +23,14 @@ move_panel <- function(
   if (!(id %in% panel_ids))
     stop(sprintf("<Panel (ID: %s)>: `id` cannot be found.", id))
 
+  if (!is.null(position) && !(position %in% valid_positions)) {
+    stop(sprintf(
+      "<Panel (ID: %s)>: invalid position parameter. `position` must be one of %s.",
+      id,
+      paste(valid_positions, collapse = ", ")
+    ))
+  }
+
   if (!is.null(group)) {
     if (!(group %in% panel_ids))
       stop(sprintf("<PanelGroup (ID: %s)>: `id` cannot be found.", id))

@@ -9,7 +9,7 @@ class Panel {
   }
 
   init(config) {
-    this._element.id = config.params.id
+    this._element.id = config.api.id
     this._element.innerHTML = config.params.content.html
     this._element.className = 'dockview-panel'
     this._element.style = 'margin: 10px; padding: 10px;'
@@ -58,13 +58,13 @@ class LeftHeader {
     this._element.innerHTML = '<i class="fas fa-plus" role="presentation" aria-label="plus icon"></i>'
     this._element.addEventListener('click', (e) => {
       const pnId = `panel-${Date.now()}`
-      addPanel(config.containerApi, {
+      addPanel({
         id: pnId,
         title: "Panel new",
         inactive: false,
         content: { head: "", singletons: [], dependencies: [], html: defaultPanel(pnId) },
         position: { referenceGroup: config.group.id, direction: "within" }
-      });
+      }, config.containerApi);
     });
   }
   dispose() {

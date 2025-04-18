@@ -1,3 +1,5 @@
+library(shinytest2)
+
 session <- as.environment(
   list(
     ns = identity,
@@ -49,4 +51,23 @@ test_that("dock state", {
   expect_identical(session$lastCustomMessage$type, "dock_save-dock")
 
   expect_error(restore_dock("dock", c(), session))
+})
+
+test_that("dock state app works", {
+  skip_on_cran()
+
+  appdir <- system.file(package = "dockViewR", "examples", "serialise")
+
+  app <- AppDriver$new(
+    appdir,
+    name = "dock_state",
+    seed = 121,
+    height = 752,
+    width = 1211
+  )
+  app$wait_for_idle()
+  app$expect_values(input = TRUE, output = FALSE, export = TRUE)
+  app$click("restore")
+  app$wait_for_idle()
+  app$expect_values(input = TRUE, output = FALSE, export = TRUE)
 })

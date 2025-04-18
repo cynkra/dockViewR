@@ -20,6 +20,14 @@ test_that("move_panel works", {
     {
       # Wrong id
       move_panel("dock", 4, session = session)
+      # Wrong position
+      move_panel(
+        "dock",
+        id = 1,
+        index = 3,
+        position = "testposition",
+        session = session
+      )
       # Index error
       move_panel("dock", 3, session = session)
       move_panel("dock", 3, index = -2, session = session)

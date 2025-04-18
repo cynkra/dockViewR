@@ -42,12 +42,11 @@ const matchTheme = (theme) => {
   return (res)
 }
 
-const addPanel = (api, panel) => {
+const addPanel = (panel, api) => {
   let internals = {
     component: 'default',
     params: {
-      content: panel.content,
-      id: panel.id
+      content: panel.content
     }
   }
   let props = { ...panel, ...internals }
