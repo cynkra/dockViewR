@@ -48,9 +48,11 @@ test_that("dock state", {
   expect_named(groups_panels, groups_ids)
 
   save_dock("dock", session)
-  expect_identical(session$lastCustomMessage$type, "dock_save-dock")
+  expect_identical(session$lastCustomMessage$type, "dock_save-state")
 
   expect_error(restore_dock("dock", c(), session))
+  restore_dock("dock", test_dock, session)
+  expect_identical(session$lastCustomMessage$type, "dock_restore-state")
 })
 
 test_that("dock state app works", {

@@ -1,0 +1,467 @@
+{
+  "input": {
+    "dock_state": {
+      "grid": {
+        "root": {
+          "type": "branch",
+          "data": [
+            {
+              "type": "leaf",
+              "data": {
+                "views": [
+                  "2"
+                ],
+                "activeView": "2",
+                "id": "1"
+              },
+              "size": 581
+            },
+            {
+              "type": "branch",
+              "data": [
+                {
+                  "type": "leaf",
+                  "data": {
+                    "views": [
+                      "test"
+                    ],
+                    "activeView": "test",
+                    "id": "3"
+                  },
+                  "size": 185
+                },
+                {
+                  "type": "leaf",
+                  "data": {
+                    "views": [
+                      "3"
+                    ],
+                    "activeView": "3",
+                    "id": "2"
+                  },
+                  "size": 185
+                }
+              ],
+              "size": 570
+            }
+          ],
+          "size": 380
+        },
+        "width": 1161,
+        "height": 380,
+        "orientation": "HORIZONTAL"
+      },
+      "panels": {
+        "2": {
+          "id": "2",
+          "contentComponent": "default",
+          "params": {
+            "content": {
+              "head": "",
+              "singletons": [
+
+              ],
+              "dependencies": [
+
+              ],
+              "html": "Panel 2"
+            }
+          },
+          "title": "Panel 2"
+        },
+        "3": {
+          "id": "3",
+          "contentComponent": "default",
+          "params": {
+            "content": {
+              "head": "",
+              "singletons": [
+
+              ],
+              "dependencies": [
+
+              ],
+              "html": "<h1>Panel 3<\/h1>"
+            }
+          },
+          "title": "Panel 3"
+        },
+        "test": {
+          "id": "test",
+          "contentComponent": "default",
+          "params": {
+            "content": {
+              "head": "",
+              "singletons": [
+
+              ],
+              "dependencies": [
+                {
+                  "name": "ionrangeslider-javascript",
+                  "version": "2.3.1",
+                  "src": {
+                    "file": "/Users/davidgranjon/Library/R/arm64/4.4/library/shiny/www/shared/ionrangeslider"
+                  },
+                  "meta": null,
+                  "script": "js/ion.rangeSlider.min.js",
+                  "stylesheet": null,
+                  "head": null,
+                  "attachment": null,
+                  "all_files": true
+                },
+                {
+                  "name": "strftime",
+                  "version": "0.9.2",
+                  "src": {
+                    "file": "/Users/davidgranjon/Library/R/arm64/4.4/library/shiny/www/shared/strftime"
+                  },
+                  "meta": null,
+                  "script": "strftime-min.js",
+                  "stylesheet": null,
+                  "head": null,
+                  "attachment": null,
+                  "all_files": true
+                },
+                {
+                  "name": "ionrangeslider-css",
+                  "version": "2.3.1",
+                  "src": {
+                    "file": "/Users/davidgranjon/Library/R/arm64/4.4/library/shiny/www/shared/ionrangeslider"
+                  },
+                  "meta": null,
+                  "script": null,
+                  "stylesheet": "css/ion.rangeSlider.css",
+                  "head": null,
+                  "attachment": null,
+                  "all_files": true
+                },
+                {
+                  "name": "htmltools-fill",
+                  "version": "0.5.8.1",
+                  "src": {
+                    "file": "/Users/davidgranjon/Library/R/arm64/4.4/library/htmltools/fill"
+                  },
+                  "meta": null,
+                  "script": null,
+                  "stylesheet": "fill.css",
+                  "head": null,
+                  "attachment": null,
+                  "all_files": true
+                }
+              ],
+              "html": "<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label\" id=\"obs-label\" for=\"obs\">Number of observations:<\/label>\n  <input class=\"js-range-slider\" id=\"obs\" data-skin=\"shiny\" data-min=\"0\" data-max=\"1000\" data-from=\"500\" data-step=\"1\" data-grid=\"true\" data-grid-num=\"10\" data-grid-snap=\"false\" data-prettify-separator=\",\" data-prettify-enabled=\"true\" data-keyboard=\"true\" data-data-type=\"number\"/>\n<\/div>\n<div class=\"shiny-plot-output html-fill-item\" id=\"distPlot\" style=\"width:100%;height:400px;\"><\/div>"
+            }
+          },
+          "title": "Panel 1"
+        }
+      },
+      "activeGroup": "3"
+    },
+    "obs": 500,
+    "restore": 0,
+    "save": 0,
+    "states": "1"
+  },
+  "export": {
+    "states": {
+      "1": {
+        "grid": {
+          "root": {
+            "type": "branch",
+            "data": [
+              {
+                "type": "leaf",
+                "data": {
+                  "views": [
+                    "test",
+                    "2"
+                  ],
+                  "activeView": "2",
+                  "id": "1"
+                },
+                "size": 95
+              },
+              {
+                "type": "leaf",
+                "data": {
+                  "views": [
+                    "3"
+                  ],
+                  "activeView": "3",
+                  "id": "2"
+                },
+                "size": 95
+              }
+            ],
+            "size": 0
+          },
+          "width": 0,
+          "height": 0,
+          "orientation": "HORIZONTAL"
+        },
+        "panels": {
+          "2": {
+            "id": "2",
+            "contentComponent": "default",
+            "params": {
+              "content": {
+                "head": "",
+                "singletons": [
+
+                ],
+                "dependencies": [
+
+                ],
+                "html": "Panel 2"
+              }
+            },
+            "title": "Panel 2"
+          },
+          "3": {
+            "id": "3",
+            "contentComponent": "default",
+            "params": {
+              "content": {
+                "head": "",
+                "singletons": [
+
+                ],
+                "dependencies": [
+
+                ],
+                "html": "<h1>Panel 3<\/h1>"
+              }
+            },
+            "title": "Panel 3"
+          },
+          "test": {
+            "id": "test",
+            "contentComponent": "default",
+            "params": {
+              "content": {
+                "head": "",
+                "singletons": [
+
+                ],
+                "dependencies": [
+                  {
+                    "name": "ionrangeslider-javascript",
+                    "version": "2.3.1",
+                    "src": {
+                      "file": "/Users/davidgranjon/Library/R/arm64/4.4/library/shiny/www/shared/ionrangeslider"
+                    },
+                    "meta": null,
+                    "script": "js/ion.rangeSlider.min.js",
+                    "stylesheet": null,
+                    "head": null,
+                    "attachment": null,
+                    "all_files": true
+                  },
+                  {
+                    "name": "strftime",
+                    "version": "0.9.2",
+                    "src": {
+                      "file": "/Users/davidgranjon/Library/R/arm64/4.4/library/shiny/www/shared/strftime"
+                    },
+                    "meta": null,
+                    "script": "strftime-min.js",
+                    "stylesheet": null,
+                    "head": null,
+                    "attachment": null,
+                    "all_files": true
+                  },
+                  {
+                    "name": "ionrangeslider-css",
+                    "version": "2.3.1",
+                    "src": {
+                      "file": "/Users/davidgranjon/Library/R/arm64/4.4/library/shiny/www/shared/ionrangeslider"
+                    },
+                    "meta": null,
+                    "script": null,
+                    "stylesheet": "css/ion.rangeSlider.css",
+                    "head": null,
+                    "attachment": null,
+                    "all_files": true
+                  },
+                  {
+                    "name": "htmltools-fill",
+                    "version": "0.5.8.1",
+                    "src": {
+                      "file": "/Users/davidgranjon/Library/R/arm64/4.4/library/htmltools/fill"
+                    },
+                    "meta": null,
+                    "script": null,
+                    "stylesheet": "fill.css",
+                    "head": null,
+                    "attachment": null,
+                    "all_files": true
+                  }
+                ],
+                "html": "<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label\" id=\"obs-label\" for=\"obs\">Number of observations:<\/label>\n  <input class=\"js-range-slider\" id=\"obs\" data-skin=\"shiny\" data-min=\"0\" data-max=\"1000\" data-from=\"500\" data-step=\"1\" data-grid=\"true\" data-grid-num=\"10\" data-grid-snap=\"false\" data-prettify-separator=\",\" data-prettify-enabled=\"true\" data-keyboard=\"true\" data-data-type=\"number\"/>\n<\/div>\n<div class=\"shiny-plot-output html-fill-item\" id=\"distPlot\" style=\"width:100%;height:400px;\"><\/div>"
+              }
+            },
+            "title": "Panel 1"
+          }
+        },
+        "activeGroup": "2"
+      },
+      "2": {
+        "grid": {
+          "root": {
+            "type": "branch",
+            "data": [
+              {
+                "type": "leaf",
+                "data": {
+                  "views": [
+                    "2"
+                  ],
+                  "activeView": "2",
+                  "id": "1"
+                },
+                "size": 581
+              },
+              {
+                "type": "branch",
+                "data": [
+                  {
+                    "type": "leaf",
+                    "data": {
+                      "views": [
+                        "test"
+                      ],
+                      "activeView": "test",
+                      "id": "3"
+                    },
+                    "size": 185
+                  },
+                  {
+                    "type": "leaf",
+                    "data": {
+                      "views": [
+                        "3"
+                      ],
+                      "activeView": "3",
+                      "id": "2"
+                    },
+                    "size": 185
+                  }
+                ],
+                "size": 570
+              }
+            ],
+            "size": 380
+          },
+          "width": 1161,
+          "height": 380,
+          "orientation": "HORIZONTAL"
+        },
+        "panels": {
+          "2": {
+            "id": "2",
+            "contentComponent": "default",
+            "params": {
+              "content": {
+                "head": "",
+                "singletons": [
+
+                ],
+                "dependencies": [
+
+                ],
+                "html": "Panel 2"
+              }
+            },
+            "title": "Panel 2"
+          },
+          "3": {
+            "id": "3",
+            "contentComponent": "default",
+            "params": {
+              "content": {
+                "head": "",
+                "singletons": [
+
+                ],
+                "dependencies": [
+
+                ],
+                "html": "<h1>Panel 3<\/h1>"
+              }
+            },
+            "title": "Panel 3"
+          },
+          "test": {
+            "id": "test",
+            "contentComponent": "default",
+            "params": {
+              "content": {
+                "head": "",
+                "singletons": [
+
+                ],
+                "dependencies": [
+                  {
+                    "name": "ionrangeslider-javascript",
+                    "version": "2.3.1",
+                    "src": {
+                      "file": "/Users/davidgranjon/Library/R/arm64/4.4/library/shiny/www/shared/ionrangeslider"
+                    },
+                    "meta": null,
+                    "script": "js/ion.rangeSlider.min.js",
+                    "stylesheet": null,
+                    "head": null,
+                    "attachment": null,
+                    "all_files": true
+                  },
+                  {
+                    "name": "strftime",
+                    "version": "0.9.2",
+                    "src": {
+                      "file": "/Users/davidgranjon/Library/R/arm64/4.4/library/shiny/www/shared/strftime"
+                    },
+                    "meta": null,
+                    "script": "strftime-min.js",
+                    "stylesheet": null,
+                    "head": null,
+                    "attachment": null,
+                    "all_files": true
+                  },
+                  {
+                    "name": "ionrangeslider-css",
+                    "version": "2.3.1",
+                    "src": {
+                      "file": "/Users/davidgranjon/Library/R/arm64/4.4/library/shiny/www/shared/ionrangeslider"
+                    },
+                    "meta": null,
+                    "script": null,
+                    "stylesheet": "css/ion.rangeSlider.css",
+                    "head": null,
+                    "attachment": null,
+                    "all_files": true
+                  },
+                  {
+                    "name": "htmltools-fill",
+                    "version": "0.5.8.1",
+                    "src": {
+                      "file": "/Users/davidgranjon/Library/R/arm64/4.4/library/htmltools/fill"
+                    },
+                    "meta": null,
+                    "script": null,
+                    "stylesheet": "fill.css",
+                    "head": null,
+                    "attachment": null,
+                    "all_files": true
+                  }
+                ],
+                "html": "<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label\" id=\"obs-label\" for=\"obs\">Number of observations:<\/label>\n  <input class=\"js-range-slider\" id=\"obs\" data-skin=\"shiny\" data-min=\"0\" data-max=\"1000\" data-from=\"500\" data-step=\"1\" data-grid=\"true\" data-grid-num=\"10\" data-grid-snap=\"false\" data-prettify-separator=\",\" data-prettify-enabled=\"true\" data-keyboard=\"true\" data-data-type=\"number\"/>\n<\/div>\n<div class=\"shiny-plot-output html-fill-item\" id=\"distPlot\" style=\"width:100%;height:400px;\"><\/div>"
+              }
+            },
+            "title": "Panel 1"
+          }
+        },
+        "activeGroup": "3"
+      }
+    }
+  }
+}

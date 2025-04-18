@@ -1,13 +1,31 @@
 {
   "input": {
-    "btn": 2,
-    "dock_panel_ids": "1",
-    "network_initialized": true,
-    "obs": 731,
-    "selinp": "1",
-    "variable": "cyl"
+    "obs": 731
   },
   "export": {
-
+    "active_group": "1",
+    "grid": {
+      "root": {
+        "type": "branch",
+        "data": [
+          {
+            "type": "leaf",
+            "data": {
+              "views": [
+                "1"
+              ],
+              "activeView": "1",
+              "id": "1"
+            },
+            "size": 1143
+          }
+        ],
+        "size": 520.5
+      },
+      "width": 1143,
+      "height": 520.5,
+      "orientation": "HORIZONTAL"
+    },
+    "panel_ids": "1"
   }
 }

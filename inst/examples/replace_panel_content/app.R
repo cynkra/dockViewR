@@ -12,6 +12,10 @@ ui <- page_fillable(
 )
 
 server <- function(input, output, session) {
+  exportTestValues(
+    n_panels = length(get_panels_ids("dock"))
+  )
+
   observeEvent(get_panels_ids("dock"), {
     updateSelectInput(
       session = session,
