@@ -10,7 +10,7 @@ add_panel <- function(
   proxy,
   panel,
   ...,
-  session = shiny::getDefaultReactiveDomain()
+  session = getDefaultReactiveDomain()
 ) {
   panel$id <- as.character(panel$id)
   if (panel$id %in% get_panels_ids(proxy, session))

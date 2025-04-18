@@ -16,7 +16,7 @@ move_panel <- function(
   position = NULL,
   group = NULL,
   index = NULL,
-  session = shiny::getDefaultReactiveDomain()
+  session = getDefaultReactiveDomain()
 ) {
   id <- as.character(id)
   panel_ids <- get_panels_ids(proxy, session)

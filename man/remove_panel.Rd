@@ -4,7 +4,7 @@
 \alias{remove_panel}
 \title{Remove Panel dynamically}
 \usage{
-remove_panel(proxy, id, session = shiny::getDefaultReactiveDomain())
+remove_panel(proxy, id, session = getDefaultReactiveDomain())
 }
 \arguments{
 \item{proxy}{Result of \code{\link[=dock_view]{dock_view()}} or a character with the ID of the dockview.}

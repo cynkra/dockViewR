@@ -17,17 +17,6 @@ print_r_code <- function(path) {
   code_chunk(cat(paste(lines, collapse = "\n")))
 }
 
-#' list all available panels
-#' @param proxy Result of [dock_view()] or a character with the ID of the dockview.
-#' @param session shiny session object.
-#' @export
-#' @note Only works with server side functions like \link{add_panel}. Don't call it
-#' from the UI.
-list_panels <- function(proxy, session = shiny::getDefaultReactiveDomain()) {
-  ID <- session$ns(proxy)
-  session$input[[sprintf("%s_panel_ids", ID)]]
-}
-
 #' @keywords internal
 extract_panel_deps <- function(panels) {
   dropNulls(

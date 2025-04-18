@@ -10,7 +10,7 @@ move_panel(
   position = NULL,
   group = NULL,
   index = NULL,
-  session = shiny::getDefaultReactiveDomain()
+  session = getDefaultReactiveDomain()
 )
 }
 \arguments{

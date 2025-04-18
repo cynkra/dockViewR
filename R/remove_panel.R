@@ -7,7 +7,7 @@
 remove_panel <- function(
   proxy,
   id,
-  session = shiny::getDefaultReactiveDomain()
+  session = getDefaultReactiveDomain()
 ) {
   if (!(id %in% get_panels_ids(proxy, session)))
     stop(sprintf("<Panel (ID: %s)>: `id` cannot be found.", id))
