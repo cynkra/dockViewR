@@ -42,16 +42,30 @@ const matchTheme = (theme) => {
   return (res)
 }
 
-const addPanel = (api, panel) => {
+const addPanel = (panel, api) => {
   let internals = {
     component: 'default',
     params: {
-      content: panel.content,
-      id: panel.id
+      content: panel.content
     }
   }
   let props = { ...panel, ...internals }
   return (api.addPanel(props))
+}
+
+const movePanel = (m, api) => {
+  let panel = api.getPanel(`${m.id}`);
+  // Move relative to another group
+  if (m.options.group !== undefined) {
+    let groupTarget = api.getPanel(`${m.options.group}`)
+    panel.api.moveTo({
+      group: groupTarget.api.group,
+      position: m.options.position,
+    })
+    return null;
+  }
+  // Moce panel inside the same group using 'index' only
+  panel.api.moveTo(m.options);
 }
 
 const defaultPanel = (pnId) => {
@@ -69,4 +83,9 @@ const defaultPanel = (pnId) => {
   `)
 }
 
-export { matchTheme, addPanel, defaultPanel };
+const saveDock = (id, api) => {
+  const state = api.toJSON();
+  Shiny.setInputValue(id + "_state", state, { priority: 'event' });
+}
+
+export { matchTheme, addPanel, movePanel, defaultPanel, saveDock };

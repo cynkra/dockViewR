@@ -1,7 +1,6 @@
 {
   "input": {
-    "obs": 781,
-    "variable": "am"
+    "obs": 500
   },
   "export": {
     "active_group": "3",
@@ -13,12 +12,12 @@
             "type": "leaf",
             "data": {
               "views": [
-                "1"
+                "2"
               ],
-              "activeView": "1",
+              "activeView": "2",
               "id": "1"
             },
-            "size": 95
+            "size": 581
           },
           {
             "type": "branch",
@@ -27,12 +26,12 @@
                 "type": "leaf",
                 "data": {
                   "views": [
-                    "2"
+                    "test"
                   ],
-                  "activeView": "2",
-                  "id": "2"
+                  "activeView": "test",
+                  "id": "3"
                 },
-                "size": 95
+                "size": 185
               },
               {
                 "type": "leaf",
@@ -41,24 +40,25 @@
                     "3"
                   ],
                   "activeView": "3",
-                  "id": "3"
+                  "id": "2"
                 },
-                "size": 95
+                "size": 185
               }
             ],
-            "size": -5
+            "size": 570
           }
         ],
-        "size": 0
+        "size": 380
       },
-      "width": 0,
-      "height": 0,
+      "width": 1161,
+      "height": 380,
       "orientation": "HORIZONTAL"
     },
+    "n_states": 2,
     "panel_ids": [
-      "1",
       "2",
-      "3"
+      "3",
+      "test"
     ]
   }
 }

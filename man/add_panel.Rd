@@ -4,7 +4,7 @@
 \alias{add_panel}
 \title{Add Panel dynamically}
 \usage{
-add_panel(proxy, panel, ..., session = shiny::getDefaultReactiveDomain())
+add_panel(proxy, panel, ..., session = getDefaultReactiveDomain())
 }
 \arguments{
 \item{proxy}{Result of \code{\link[=dock_view]{dock_view()}} or a character with the ID of the dockview.}

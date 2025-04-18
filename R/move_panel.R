@@ -16,12 +16,20 @@ move_panel <- function(
   position = NULL,
   group = NULL,
   index = NULL,
-  session = shiny::getDefaultReactiveDomain()
+  session = getDefaultReactiveDomain()
 ) {
   id <- as.character(id)
-  panel_ids <- list_panels(proxy, session)
+  panel_ids <- get_panels_ids(proxy, session)
   if (!(id %in% panel_ids))
     stop(sprintf("<Panel (ID: %s)>: `id` cannot be found.", id))
+
+  if (!is.null(position) && !(position %in% valid_positions)) {
+    stop(sprintf(
+      "<Panel (ID: %s)>: invalid position parameter. `position` must be one of %s.",
+      id,
+      paste(valid_positions, collapse = ", ")
+    ))
+  }
 
   if (!is.null(group)) {
     if (!(group %in% panel_ids))

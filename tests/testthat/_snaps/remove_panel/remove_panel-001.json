@@ -1,17 +1,64 @@
 {
   "input": {
-    "btn": 0,
-    "dock_panel_ids": [
-      "1",
-      "2",
-      "3"
-    ],
-    "network_initialized": true,
     "obs": 500,
-    "selinp": "1",
     "variable": "cyl"
   },
   "export": {
-
+    "active_group": "3",
+    "grid": {
+      "root": {
+        "type": "branch",
+        "data": [
+          {
+            "type": "leaf",
+            "data": {
+              "views": [
+                "1"
+              ],
+              "activeView": "1",
+              "id": "1"
+            },
+            "size": 95
+          },
+          {
+            "type": "branch",
+            "data": [
+              {
+                "type": "leaf",
+                "data": {
+                  "views": [
+                    "2"
+                  ],
+                  "activeView": "2",
+                  "id": "2"
+                },
+                "size": 95
+              },
+              {
+                "type": "leaf",
+                "data": {
+                  "views": [
+                    "3"
+                  ],
+                  "activeView": "3",
+                  "id": "3"
+                },
+                "size": 95
+              }
+            ],
+            "size": -5
+          }
+        ],
+        "size": 0
+      },
+      "width": 0,
+      "height": 0,
+      "orientation": "HORIZONTAL"
+    },
+    "panel_ids": [
+      "1",
+      "2",
+      "3"
+    ]
   }
 }

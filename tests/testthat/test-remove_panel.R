@@ -14,7 +14,7 @@ session <- as.environment(
 )
 
 test_that("remove_panel works", {
-  session$input[["dock_panel_ids"]] <- c(1, 2, 3)
+  session$input[["dock_state"]] <- test_dock
   expect_snapshot(
     error = TRUE,
     {
@@ -22,9 +22,9 @@ test_that("remove_panel works", {
     }
   )
 
-  remove_panel("dock", id = 1, session = session)
+  remove_panel("dock", id = "test", session = session)
   expect_identical(session$lastCustomMessage$type, "dock_rm-panel")
-  expect_identical(session$lastCustomMessage$message, 1)
+  expect_identical(session$lastCustomMessage$message, "test")
 })
 
 test_that("remove_panel app works", {
@@ -41,16 +41,32 @@ test_that("remove_panel app works", {
     width = 1211
   )
   app$wait_for_idle()
-  app$expect_values(input = TRUE, output = FALSE, export = TRUE)
+  app$expect_values(
+    input = c("obs", "variable", "selimp"),
+    output = FALSE,
+    export = TRUE
+  )
   app$set_inputs(selinp = "2")
   app$click("btn")
   app$wait_for_idle()
-  app$expect_values(input = TRUE, output = FALSE, export = TRUE)
+  app$expect_values(
+    input = c("obs", "variable", "selimp"),
+    output = FALSE,
+    export = TRUE
+  )
   app$set_inputs(obs = 731)
   app$wait_for_idle()
-  app$expect_values(input = TRUE, output = FALSE, export = TRUE)
+  app$expect_values(
+    input = c("obs", "variable", "selimp"),
+    output = FALSE,
+    export = TRUE
+  )
   app$set_inputs(selinp = "3")
   app$click("btn")
   app$wait_for_idle()
-  app$expect_values(input = TRUE, output = FALSE, export = TRUE)
+  app$expect_values(
+    input = c("obs", "selimp"),
+    output = FALSE,
+    export = TRUE
+  )
 })

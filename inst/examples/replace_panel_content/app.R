@@ -12,11 +12,15 @@ ui <- page_fillable(
 )
 
 server <- function(input, output, session) {
-  observeEvent(list_panels("dock"), {
+  exportTestValues(
+    n_panels = length(get_panels_ids("dock"))
+  )
+
+  observeEvent(get_panels_ids("dock"), {
     updateSelectInput(
       session = session,
       inputId = "selinp",
-      choices = list_panels("dock")
+      choices = get_panels_ids("dock")
     )
   })
 
@@ -62,11 +66,11 @@ server <- function(input, output, session) {
 
   observeEvent(input$insert, {
     removeUI(
-      selector = sprintf("#%s > *", input$selinp),
+      selector = sprintf("#dock-%s > *", input$selinp),
       multiple = TRUE
     )
     insertUI(
-      selector = sprintf("#%s", input$selinp),
+      selector = sprintf("#dock-%s", input$selinp),
       where = "beforeEnd",
       ui = tagList(
         radioButtons(

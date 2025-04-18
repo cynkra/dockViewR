@@ -17,17 +17,6 @@ print_r_code <- function(path) {
   code_chunk(cat(paste(lines, collapse = "\n")))
 }
 
-#' list all available panels
-#' @param proxy Result of [dock_view()] or a character with the ID of the dockview.
-#' @param session shiny session object.
-#' @export
-#' @note Only works with server side functions like \link{add_panel}. Don't call it
-#' from the UI.
-list_panels <- function(proxy, session = shiny::getDefaultReactiveDomain()) {
-  ID <- session$ns(proxy)
-  session$input[[sprintf("%s_panel_ids", ID)]]
-}
-
 #' @keywords internal
 extract_panel_deps <- function(panels) {
   dropNulls(
@@ -82,6 +71,9 @@ check_panel_refs <- function(panels, ids) {
 valid_directions <- c("above", "below", "left", "right", "within")
 
 #' @keywords internal
+valid_positions <- c("left", "right", "top", "bottom", "center")
+
+#' @keywords internal
 valid_position_names <- c(
   "referencePanel",
   "direction",
@@ -120,7 +112,7 @@ validate_position_names <- function(id, position) {
 #' @keywords internal
 validate_position_ref <- function(id, position, proxy, session) {
   if (!is.null(proxy)) {
-    panel_ids <- list_panels(proxy, session)
+    panel_ids <- get_panels_ids(proxy, session)
     if (!(position[["referencePanel"]] %in% panel_ids))
       stop(
         sprintf(

@@ -3,7 +3,7 @@
     "obs": 500
   },
   "export": {
-    "active_group": "1",
+    "active_group": "2",
     "grid": {
       "root": {
         "type": "branch",
@@ -12,14 +12,24 @@
             "type": "leaf",
             "data": {
               "views": [
-                "2",
-                "3",
-                "1"
+                "test",
+                "2"
               ],
-              "activeView": "1",
+              "activeView": "2",
               "id": "1"
             },
-            "size": 1161
+            "size": 576
+          },
+          {
+            "type": "leaf",
+            "data": {
+              "views": [
+                "3"
+              ],
+              "activeView": "3",
+              "id": "2"
+            },
+            "size": 575
           }
         ],
         "size": 380
@@ -28,10 +38,11 @@
       "height": 380,
       "orientation": "HORIZONTAL"
     },
+    "n_states": 3,
     "panel_ids": [
-      "1",
       "2",
-      "3"
+      "3",
+      "test"
     ]
   }
 }

@@ -1,21 +1,37 @@
 {
   "input": {
-    "dock2_panel_ids": [
-      "1",
-      "2",
-      "3"
-    ],
-    "dock_panel_ids": [
-      "1",
-      "2",
-      "3"
-    ],
-    "move": 1,
-    "move2": 1,
-    "obs": 500,
-    "variable": "cyl"
+    "obs": 500
   },
   "export": {
-
+    "active_group": "1",
+    "grid": {
+      "root": {
+        "type": "branch",
+        "data": [
+          {
+            "type": "leaf",
+            "data": {
+              "views": [
+                "2",
+                "3",
+                "1"
+              ],
+              "activeView": "1",
+              "id": "1"
+            },
+            "size": 1161
+          }
+        ],
+        "size": 380
+      },
+      "width": 1161,
+      "height": 380,
+      "orientation": "HORIZONTAL"
+    },
+    "panel_ids": [
+      "1",
+      "2",
+      "3"
+    ]
   }
 }

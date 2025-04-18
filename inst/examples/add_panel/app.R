@@ -12,6 +12,12 @@ ui <- page_fillable(
 )
 
 server <- function(input, output, session) {
+  exportTestValues(
+    panel_ids = get_panels_ids("dock"),
+    active_group = get_active_group("dock"),
+    grid = get_grid("dock")
+  )
+
   output$dock <- renderDock_view({
     dock_view(
       panels = list(
@@ -79,7 +85,8 @@ server <- function(input, output, session) {
   )
 
   output$plot <- renderPlot({
-    dist <- switch(input$dist,
+    dist <- switch(
+      input$dist,
       norm = rnorm,
       unif = runif,
       lnorm = rlnorm,
@@ -96,7 +103,8 @@ server <- function(input, output, session) {
       title = "Dynamic panel",
       content = tagList(
         radioButtons(
-          "dist", "Distribution type:",
+          "dist",
+          "Distribution type:",
           c(
             "Normal" = "norm",
             "Uniform" = "unif",
