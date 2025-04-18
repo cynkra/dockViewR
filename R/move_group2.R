@@ -1,7 +1,7 @@
 #' Move a group dynamically
 #' @param proxy Result of [dock_view()] or a character with the ID of the dockview.
 #' @param source Panel-id of a panel within the group that should be moved.
-#' @param position Panel position options: one of \code{"left", "right", "top", "bottom", "center"}.
+#' @param position Group position options: one of \code{"left", "right", "top", "bottom", "center"}.
 #' @param destination Panel-id of a panel within the group you want as a destination.
 #' @param session shiny session object.
 #' See \url{https://dockview.dev/docs/api/dockview/panelApi}.
