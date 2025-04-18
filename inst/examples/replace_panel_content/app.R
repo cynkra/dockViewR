@@ -66,11 +66,11 @@ server <- function(input, output, session) {
 
   observeEvent(input$insert, {
     removeUI(
-      selector = sprintf("#%s > *", input$selinp),
+      selector = sprintf("#dock-%s > *", input$selinp),
       multiple = TRUE
     )
     insertUI(
-      selector = sprintf("#%s", input$selinp),
+      selector = sprintf("#dock-%s", input$selinp),
       where = "beforeEnd",
       ui = tagList(
         radioButtons(

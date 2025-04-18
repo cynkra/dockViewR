@@ -44,7 +44,7 @@ HTMLWidgets.widget({
           if (HTMLWidgets.shinyMode) {
             saveDock(id, api)
             api.panels.map((panel) => {
-              let pane = `#${panel.id}`;
+              let pane = `#${id}-${panel.id}`;
               Shiny.initializeInputs($(pane));
               Shiny.bindAll($(pane));
             })
