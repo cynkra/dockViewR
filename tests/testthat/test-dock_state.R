@@ -68,8 +68,8 @@ test_that("dock state app works", {
     width = 1211
   )
   app$wait_for_idle()
-  app$expect_values(input = TRUE, output = FALSE, export = TRUE)
+  app$expect_values(input = "obs", output = FALSE, export = TRUE)
   app$click("restore")
   app$wait_for_idle()
-  app$expect_values(input = TRUE, output = FALSE, export = TRUE)
+  app$expect_values(input = "obs", output = FALSE, export = TRUE)
 })

@@ -1,4 +1,5 @@
 library(shiny)
+library(bslib)
 library(dockViewR)
 
 ui <- fluidPage(

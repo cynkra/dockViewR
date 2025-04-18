@@ -33,7 +33,12 @@ server <- function(input, output, session) {
     dock_states(setNames(states, seq_along(states)))
   })
 
-  exportTestValues(states = dock_states())
+  exportTestValues(
+    states = dock_states(),
+    panel_ids = get_panels_ids("dock"),
+    active_group = get_active_group("dock"),
+    grid = get_grid("dock")
+  )
 
   observeEvent(dock_states(), {
     updateSelectInput(session, "states", choices = names(dock_states()))
