@@ -6,8 +6,8 @@
 \usage{
 move_group2(
   proxy,
-  source,
-  destination,
+  from,
+  to,
   position = NULL,
   session = shiny::getDefaultReactiveDomain()
 )
@@ -15,9 +15,9 @@ move_group2(
 \arguments{
 \item{proxy}{Result of \code{\link[=dock_view]{dock_view()}} or a character with the ID of the dockview.}
 
-\item{source}{Panel-id of a panel within the group that should be moved.}
+\item{from}{Panel-id of a panel within the group that should be moved.}
 
-\item{destination}{Panel-id of a panel within the group you want as a destination.}
+\item{to}{Panel-id of a panel within the group you want as a to.}
 
 \item{position}{Group position options: one of \code{"left", "right", "top", "bottom", "center"}.}
 
@@ -26,9 +26,9 @@ See \url{https://dockview.dev/docs/api/dockview/panelApi}.}
 }
 \description{
 move_group2 moves a group to a different position from withing a shiny server function.
-The parameter source refers to a panel-id of a panel within the group you want to move.
-Likewise destination refers to a panel-id of a panel within the group you want to
-select as destination.
+The parameter from refers to a panel-id of a panel within the group you want to move.
+Likewise to refers to a panel-id of a panel within the group you want to
+select as to.
 The difference between move_group2 and move_group is that move_group2 selects both
-source and destination by panel-id, whereas move_group selects by group-id.
+from and to by panel-id, whereas move_group selects by group-id.
 }

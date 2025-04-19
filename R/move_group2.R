@@ -1,36 +1,36 @@
 #' Move a group dynamically
 #' @param proxy Result of [dock_view()] or a character with the ID of the dockview.
-#' @param source Panel-id of a panel within the group that should be moved.
+#' @param from Panel-id of a panel within the group that should be moved.
 #' @param position Group position options: one of \code{"left", "right", "top", "bottom", "center"}.
-#' @param destination Panel-id of a panel within the group you want as a destination.
+#' @param to Panel-id of a panel within the group you want as a to.
 #' @param session shiny session object.
 #' See \url{https://dockview.dev/docs/api/dockview/panelApi}.
 #' 
 #' @description
 #' move_group2 moves a group to a different position from withing a shiny server function. 
-#' The parameter source refers to a panel-id of a panel within the group you want to move. 
-#' Likewise destination refers to a panel-id of a panel within the group you want to 
-#' select as destination.
+#' The parameter from refers to a panel-id of a panel within the group you want to move. 
+#' Likewise to refers to a panel-id of a panel within the group you want to 
+#' select as to.
 #' The difference between move_group2 and move_group is that move_group2 selects both 
-#' source and destination by panel-id, whereas move_group selects by group-id.
+#' from and to by panel-id, whereas move_group selects by group-id.
 #' @export
 move_group2 <- function(
     proxy,
-    source,
-    destination,
+    from,
+    to,
     position = NULL,
     session = shiny::getDefaultReactiveDomain()) {
-  if (!(source %in% list_panels(proxy, session))) {
-    stop("The source panel-id cannot be found!")
+  if (!(from %in% list_panels(proxy, session))) {
+    stop("The 'from' panel-id cannot be found!")
   }
-  if (!(destination %in% list_panels(proxy, session))) {
-    stop("destination does not refer to an existing panel-id!")
+  if (!(to %in% list_panels(proxy, session))) {
+    stop("'to' does not refer to an existing panel-id!")
   }
-  options <- list(destination = destination, position = position)
+  options <- list(to = to, position = position)
   session$sendCustomMessage(
     sprintf("%s_move-group2", proxy),
     list(
-      id = source,
+      id = from,
       options = dropNulls(options)
     )
   )

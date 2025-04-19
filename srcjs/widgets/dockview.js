@@ -101,7 +101,7 @@ HTMLWidgets.widget({
           Shiny.addCustomMessageHandler(el.id + '_move-group2', (m) => {
             let panel = api.getPanel(`${m.id}`);
             // Move relative to another group
-            let groupTarget = api.getPanel(`${m.options.destination}`);
+            let groupTarget = api.getPanel(`${m.options.to}`);
             panel.group.api.moveTo({
               group: groupTarget.api.group,
               position: m.options.position
@@ -110,11 +110,10 @@ HTMLWidgets.widget({
           })
 
           Shiny.addCustomMessageHandler(el.id + '_move-group', (m) => {
-            debugger;
-            let source = api.getGroup(`${m.id}`);
+            let from = api.getGroup(`${m.id}`);
             // Move relative to another group
-            let target = api.getGroup(`${m.options.destination}`);
-            source.api.moveTo({
+            let target = api.getGroup(`${m.options.to}`);
+            from.api.moveTo({
               group: target,
               position: m.options.position
             });
