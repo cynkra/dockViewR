@@ -13,7 +13,10 @@ add_panel <- function(
   session = getDefaultReactiveDomain()
 ) {
   panel$id <- as.character(panel$id)
-  if (panel$id %in% get_panels_ids(proxy, session))
+  if (
+    length(get_panels_ids(proxy, session)) &&
+      panel$id %in% get_panels_ids(proxy, session)
+  )
     stop(sprintf(
       "<Panel (ID: %s)>: `id` %s already in use.",
       panel$id,
