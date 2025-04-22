@@ -68,6 +68,28 @@ const movePanel = (m, api) => {
   panel.api.moveTo(m.options);
 }
 
+const moveGroup = (m, api) => {
+  let from = api.getGroup(`${m.id}`);
+  // Move relative to another group
+  let target = api.getGroup(`${m.options.to}`);
+  from.api.moveTo({
+    group: target,
+    position: m.options.position
+  });
+  return null;
+}
+
+const moveGroup2 = (m, api) => {
+  let panel = api.getPanel(`${m.id}`);
+  // Move relative to another group
+  let groupTarget = api.getPanel(`${m.options.to}`);
+  panel.group.api.moveTo({
+    group: groupTarget.api.group,
+    position: m.options.position
+  });
+  return null;
+}
+
 const defaultPanel = (pnId) => {
   return (`
     <p>Exchange me by running:</p>
@@ -88,4 +110,4 @@ const saveDock = (id, api) => {
   Shiny.setInputValue(id + "_state", state, { priority: 'event' });
 }
 
-export { matchTheme, addPanel, movePanel, defaultPanel, saveDock };
+export { matchTheme, addPanel, movePanel, defaultPanel, saveDock, moveGroup, moveGroup2 };

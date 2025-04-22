@@ -19,7 +19,7 @@ add_panel <- function(
       panel$id %in% get_panels_ids(dock_id, session)
   )
     stop(sprintf(
-      "<Panel (ID: %s)>: `id` %s already in use.",
+      "<Panel (ID: %s)>: invalid value (%s) for `id`: already in use.",
       panel$id,
       panel$id
     ))

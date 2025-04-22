@@ -4,7 +4,7 @@
       add_panel("dock", panel(id = "test", "plop", "Panel 1"), session = session)
     Condition
       Error in `add_panel()`:
-      ! <Panel (ID: test)>: `id` test already in use.
+      ! <Panel (ID: test)>: invalid value (test) for `id`: already in use.
     Code
       add_panel("dock", panel(id = 4, "plop", "Panel 4", position = list(pouet = 3,
         plop = "test")), session = session)

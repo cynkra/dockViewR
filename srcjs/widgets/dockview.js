@@ -3,7 +3,7 @@ import 'dockview-core/dist/styles/dockview.css'
 import { createDockview } from "dockview-core";
 
 import { Panel, RightHeader, LeftHeader } from '../modules/components'
-import { matchTheme, addPanel, movePanel, saveDock } from '../modules/utils';
+import { matchTheme, addPanel, movePanel, saveDock, moveGroup, moveGroup2 } from '../modules/utils';
 
 HTMLWidgets.widget({
 
@@ -83,6 +83,13 @@ HTMLWidgets.widget({
             // Avoid duplicate input/output warning when rebinding
             Shiny.unbindAll($(`#${id} .dockview-panel`))
             api.fromJSON(m)
+          })
+          Shiny.addCustomMessageHandler(el.id + '_move-group2', (m) => {
+            moveGroup2(m, api)
+          })
+
+          Shiny.addCustomMessageHandler(el.id + '_move-group', (m) => {
+            moveGroup(m, api)
           })
         }
 

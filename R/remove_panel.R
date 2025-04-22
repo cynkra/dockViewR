@@ -10,7 +10,13 @@ remove_panel <- function(
   id,
   session = getDefaultReactiveDomain()
 ) {
-  if (!(id %in% get_panels_ids(dock_id, session)))
-    stop(sprintf("<Panel (ID: %s)>: `id` cannot be found.", id))
+  panel_ids <- get_panels_ids(dock_id, session)
+  if (!(id %in% panel_ids))
+    stop(sprintf(
+      "<Panel (ID: %s)>: invalid value (%s) for `id`. Valid ids are: %s.",
+      id,
+      id,
+      paste(panel_ids, collapse = ", ")
+    ))
   session$sendCustomMessage(sprintf("%s_rm-panel", session$ns(dock_id)), id)
 }

@@ -1,0 +1,60 @@
+{
+  "export": {
+    "active_group": "3",
+    "grid": {
+      "root": {
+        "type": "branch",
+        "data": [
+          {
+            "type": "leaf",
+            "data": {
+              "views": [
+                "1",
+                "2"
+              ],
+              "activeView": "2",
+              "id": "1"
+            },
+            "size": 93.33333333333333
+          },
+          {
+            "type": "leaf",
+            "data": {
+              "views": [
+                "3",
+                "4"
+              ],
+              "activeView": "4",
+              "id": "2"
+            },
+            "size": 93.33333333333333
+          },
+          {
+            "type": "leaf",
+            "data": {
+              "views": [
+                "5",
+                "6"
+              ],
+              "activeView": "6",
+              "id": "3"
+            },
+            "size": 93.33333333333333
+          }
+        ],
+        "size": 0
+      },
+      "width": 0,
+      "height": 0,
+      "orientation": "HORIZONTAL"
+    },
+    "panel_ids": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6"
+    ]
+  }
+}
