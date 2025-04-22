@@ -21,5 +21,5 @@
         referencePanel = 10, direction = "above"))))
     Condition
       Error in `check_panel_refs()`:
-      ! <Panel (ID: 1)>: invalid value (10) for `referencePanel`. Valid ids are: 4.
+      ! <Panel (ID: 4)>: invalid value (10) for `referencePanel`. Valid ids are: 4.
 

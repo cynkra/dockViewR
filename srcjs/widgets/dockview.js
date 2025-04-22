@@ -98,6 +98,27 @@ HTMLWidgets.widget({
             // Moce panel inside the same group using 'index' only
             panel.api.moveTo(m.options);
           })
+          Shiny.addCustomMessageHandler(el.id + '_move-group2', (m) => {
+            let panel = api.getPanel(`${m.id}`);
+            // Move relative to another group
+            let groupTarget = api.getPanel(`${m.options.to}`);
+            panel.group.api.moveTo({
+              group: groupTarget.api.group,
+              position: m.options.position
+            });
+            return null;
+          })
+
+          Shiny.addCustomMessageHandler(el.id + '_move-group', (m) => {
+            let from = api.getGroup(`${m.id}`);
+            // Move relative to another group
+            let target = api.getGroup(`${m.options.to}`);
+            from.api.moveTo({
+              group: target,
+              position: m.options.position
+            });
+            return null;
+          })
         }
 
       },
