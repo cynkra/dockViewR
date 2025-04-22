@@ -1,10 +1,10 @@
 # add_panel works
 
     Code
-      add_panel("dock", panel(id = 1, "plop", "Panel 1"), session = session)
+      add_panel("dock", panel(id = "test", "plop", "Panel 1"), session = session)
     Condition
       Error in `add_panel()`:
-      ! <Panel (ID: 1)>: `id` already in use.
+      ! <Panel (ID: test)>: invalid value (test) for `id`: already in use.
     Code
       add_panel("dock", panel(id = 4, "plop", "Panel 4", position = list(pouet = 3,
         plop = "test")), session = session)
@@ -23,5 +23,5 @@
         referencePanel = 10, direction = "above")), session = session)
     Condition
       Error in `validate_position_ref()`:
-      ! <Panel (ID: 4)>: invalid value (10) for `referencePanel`. Valid ids are: 1, 2, 3.
+      ! <Panel (ID: 4)>: invalid value (10) for `referencePanel`. Valid ids are: 2, 3, test.
 

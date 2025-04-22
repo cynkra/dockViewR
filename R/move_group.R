@@ -22,11 +22,35 @@ move_group <- function(
   position = NULL,
   session = shiny::getDefaultReactiveDomain()
 ) {
-  if (!(from %in% list_panels(dock_id, session))) {
-    stop("The 'from' group-id cannot be found!")
+  group_ids <- get_groups_ids(dock_id, session)
+  if (!(from %in% group_ids)) {
+    stop(sprintf(
+      "<PanelGroup (ID: %s)>: invalid value (%s) for `from`. Valid group ids are: %s.",
+      from,
+      from,
+      paste(group_ids, collapse = ", ")
+    ))
   }
-  if (!(to %in% list_panels(dock_id, session))) {
-    stop("'to' does not refer to an existing group-id!")
+  if (!(to %in% group_ids)) {
+    stop(sprintf(
+      "<PanelGroup (ID: %s)>: invalid value (%s) for `to`. Valid group ids are: %s.",
+      from,
+      to,
+      paste(group_ids, collapse = ", ")
+    ))
+  }
+  if (from == to) {
+    stop(sprintf(
+      "<PanelGroup (ID: %s)>: `from` and `to` must be different group ids.",
+      from
+    ))
+  }
+  if (!is.null(position) && !(position %in% valid_positions)) {
+    stop(sprintf(
+      "<PanelGroup (ID: %s)>: invalid value for `position`. `position` must be one of %s.",
+      from,
+      paste(valid_positions, collapse = ", ")
+    ))
   }
   options <- list(to = to, position = position)
   session$sendCustomMessage(

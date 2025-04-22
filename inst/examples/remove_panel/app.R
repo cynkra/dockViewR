@@ -13,11 +13,16 @@ ui <- page_fillable(
 )
 
 server <- function(input, output, session) {
-  observeEvent(list_panels("dock"), {
+  exportTestValues(
+    panel_ids = get_panels_ids("dock"),
+    active_group = get_active_group("dock"),
+    grid = get_grid("dock")
+  )
+  observeEvent(get_panels_ids("dock"), {
     updateSelectInput(
       session = session,
       inputId = "selinp",
-      choices = list_panels("dock")
+      choices = get_panels_ids("dock")
     )
   })
 
@@ -102,7 +107,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$btn, {
     req(input$selinp)
-    remove_panel(proxy = "dock", input$selinp)
+    remove_panel("dock", input$selinp)
   })
 }
 

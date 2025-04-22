@@ -14,14 +14,14 @@ session <- as.environment(
 )
 
 test_that("add_panel works", {
-  session$input[["dock_panel_ids"]] <- c(1, 2, 3)
+  session$input[["dock_state"]] <- test_dock
   expect_snapshot(
     error = TRUE,
     {
       # Duplicated id
       add_panel(
         "dock",
-        panel(id = 1, "plop", "Panel 1"),
+        panel(id = "test", "plop", "Panel 1"),
         session = session
       )
 
@@ -69,7 +69,7 @@ test_that("add_panel works", {
       id = 4,
       "plop",
       "Panel 4",
-      position = list(referencePanel = 1, direction = "above")
+      position = list(referencePanel = "test", direction = "above")
     ),
     session = session
   )
@@ -83,7 +83,7 @@ test_that("add_panel works", {
   expect_type(session$lastCustomMessage$message$position, "list")
   expect_identical(
     session$lastCustomMessage$message$position$referencePanel,
-    "1"
+    "test"
   )
   expect_identical(
     session$lastCustomMessage$message$position$direction,
@@ -105,14 +105,22 @@ test_that("add_panel app works", {
     width = 1211
   )
   app$wait_for_idle()
-  app$expect_values(input = TRUE, output = FALSE, export = TRUE)
+  app$expect_values(input = c("obs", "variable"), output = FALSE, export = TRUE)
   app$click("btn")
   app$set_inputs(dist = "norm")
   app$wait_for_idle()
-  app$expect_values(input = TRUE, output = FALSE, export = TRUE)
+  app$expect_values(
+    input = c("obs", "variable", "dist"),
+    output = FALSE,
+    export = TRUE
+  )
   app$set_inputs(dist = "unif")
   app$wait_for_idle()
-  app$expect_values(input = TRUE, output = FALSE, export = TRUE)
+  app$expect_values(
+    input = c("obs", "variable", "dist"),
+    output = FALSE,
+    export = TRUE
+  )
 })
 
 test_that("add_panel with + leftheader button works", {
@@ -133,15 +141,31 @@ test_that("add_panel with + leftheader button works", {
     width = 1211
   )
   app$wait_for_idle()
-  app$expect_values(input = TRUE, output = FALSE, export = TRUE)
+  app$expect_values(
+    input = c("obs", "selimp"),
+    output = FALSE,
+    export = TRUE
+  )
   app$click(selector = ".dv-left-actions-container .fas.fa-plus")
   app$set_inputs(
-    selinp = app$get_js("Shiny.shinyapp.$inputValues['dock_panel_ids']")[[2]]
+    selinp = app$get_js(
+      "Object.getOwnPropertyNames(Shiny.shinyapp.$inputValues['dock_state']['panels'])"
+    )[[
+      2
+    ]]
   )
   app$click("insert")
   app$wait_for_idle()
-  app$expect_values(input = TRUE, output = FALSE, export = TRUE)
+  app$expect_values(
+    input = c("obs", "dist", "selimp"),
+    output = FALSE,
+    export = TRUE
+  )
   app$set_inputs(dist = "unif")
   app$wait_for_idle()
-  app$expect_values(input = TRUE, output = FALSE, export = TRUE)
+  app$expect_values(
+    input = c("obs", "dist", "selimp"),
+    output = FALSE,
+    export = TRUE
+  )
 })

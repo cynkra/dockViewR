@@ -2,12 +2,20 @@ library(shiny)
 library(dockViewR)
 
 ui <- fluidPage(
-  actionButton("move2", "Move Group with group-id 1 to the righ of group with group-id 2"),
-  dock_viewOutput("dock2"),
+  actionButton(
+    "move",
+    "Move Group with group-id 1 to the righ of group with group-id 2"
+  ),
+  dock_viewOutput("dock"),
 )
 
 server <- function(input, output, session) {
-  output$dock2 <- renderDock_view({
+  exportTestValues(
+    panel_ids = get_panels_ids("dock"),
+    active_group = get_active_group("dock"),
+    grid = get_grid("dock")
+  )
+  output$dock <- renderDock_view({
     dock_view(
       panels = list(
         panel(
@@ -65,9 +73,9 @@ server <- function(input, output, session) {
     )
   })
 
-  observeEvent(input$move2, {
+  observeEvent(input$move, {
     move_group(
-      "dock2",
+      "dock",
       from = "1",
       to = "2",
       position = "right"

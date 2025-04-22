@@ -1,4 +1,5 @@
 library(shiny)
+library(bslib)
 library(dockViewR)
 
 ui <- fluidPage(
@@ -11,6 +12,12 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
+  exportTestValues(
+    panel_ids = get_panels_ids("dock"),
+    active_group = get_active_group("dock"),
+    grid = get_grid("dock")
+  )
+
   output$dock <- renderDock_view({
     dock_view(
       panels = list(

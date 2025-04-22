@@ -9,7 +9,10 @@ class Panel {
   }
 
   init(config) {
-    this._element.id = config.params.id
+    let dockId = $(config.containerApi.component.gridview.element)
+      .closest(".dockview")
+      .attr("id");
+    this._element.id = dockId + '-' + config.api.id;
     this._element.innerHTML = config.params.content.html
     this._element.className = 'dockview-panel'
     this._element.style = 'margin: 10px; padding: 10px;'
@@ -54,17 +57,25 @@ class LeftHeader {
   }
 
   init(config) {
+    let dockId = $(config.containerApi.component.gridview.element)
+      .closest(".dockview")
+      .attr("id");
     this._element.style = 'height: 100%; padding: 8px'
     this._element.innerHTML = '<i class="fas fa-plus" role="presentation" aria-label="plus icon"></i>'
     this._element.addEventListener('click', (e) => {
       const pnId = `panel-${Date.now()}`
-      addPanel(config.containerApi, {
+      addPanel({
         id: pnId,
         title: "Panel new",
         inactive: false,
-        content: { head: "", singletons: [], dependencies: [], html: defaultPanel(pnId) },
+        content: {
+          head: "",
+          singletons: [],
+          dependencies: [],
+          html: defaultPanel(dockId + '-' + pnId)
+        },
         position: { referenceGroup: config.group.id, direction: "within" }
-      });
+      }, config.containerApi);
     });
   }
   dispose() {

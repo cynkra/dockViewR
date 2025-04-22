@@ -114,12 +114,23 @@ dock_view <- function(
     dependencies = c(
       unlist(deps, recursive = FALSE),
       # Add fontawesome (avoids to get dependency on {fontawesome})
-      htmltools::findDependencies(shiny::icon("cogs"))
+      htmltools::findDependencies(icon("cogs"))
     ),
     width = width,
     height = height,
     package = "dockViewR",
-    elementId = elementId
+    elementId = elementId,
+    sizingPolicy = htmlwidgets::sizingPolicy(
+      defaultWidth = "100%",
+      viewer.defaultHeight = "100%",
+      viewer.defaultWidth = "100%",
+      viewer.fill = FALSE,
+      knitr.figure = FALSE,
+      viewer.suppress = FALSE,
+      browser.external = TRUE,
+      browser.fill = FALSE,
+      padding = 5
+    )
   )
 }
 

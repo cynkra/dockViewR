@@ -1,5 +1,6 @@
 #' Move Panel dynamically
-#' @param proxy Result of [dock_view()] or a character with the ID of the dockview.
+#' @param dock_id Dock unique id. When using modules the namespace is automatically
+#' added.
 #' @param id Panel id.
 #' @param position Panel position options: one of \code{"left", "right", "top", "bottom", "center"}.
 #' @param group ID of the panel you want to move the target to. They must belong
@@ -11,28 +12,47 @@
 #' See \url{https://dockview.dev/docs/api/dockview/panelApi}.
 #' @export
 move_panel <- function(
-  proxy,
+  dock_id,
   id,
   position = NULL,
   group = NULL,
   index = NULL,
-  session = shiny::getDefaultReactiveDomain()
+  session = getDefaultReactiveDomain()
 ) {
   id <- as.character(id)
-  panel_ids <- list_panels(proxy, session)
+  panel_ids <- get_panels_ids(dock_id, session)
   if (!(id %in% panel_ids))
-    stop(sprintf("<Panel (ID: %s)>: `id` cannot be found.", id))
+    stop(sprintf(
+      "<Panel (ID: %s)>: invalid value (%s) for `id`. Valid ids are: %s.",
+      id,
+      id,
+      paste(panel_ids, collapse = ", ")
+    ))
+
+  if (!is.null(position) && !(position %in% valid_positions)) {
+    stop(sprintf(
+      "<Panel (ID: %s)>: invalid value (%s) for `position`. `position` must be one of %s.",
+      id,
+      position,
+      paste(valid_positions, collapse = ", ")
+    ))
+  }
 
   if (!is.null(group)) {
     if (!(group %in% panel_ids))
-      stop(sprintf("<PanelGroup (ID: %s)>: `id` cannot be found.", id))
+      stop(sprintf(
+        "<PanelGroup (ID: %s)>: invalid value (%s) for `id`. Valid ids are: %s.",
+        id,
+        id,
+        paste(panel_ids, collapse = ", ")
+      ))
     options <- list(group = group, position = position)
   } else {
     if (is.null(index))
       stop(sprintf("<Panel (ID: %s)>: `index` cannot be NULL.", id))
     if (index > length(panel_ids) || index < 1)
       stop(sprintf(
-        "<Panel (ID: %s)>: `index` (value: %s) should belong to [%s].",
+        "<Panel (ID: %s)>: invalid value (%s) for `index`. `index` should belong to [%s].",
         id,
         index,
         paste(c(1, length(panel_ids)), collapse = ", ")
@@ -42,7 +62,7 @@ move_panel <- function(
   }
 
   session$sendCustomMessage(
-    sprintf("%s_move-panel", proxy),
+    sprintf("%s_move-panel", session$ns(dock_id)),
     list(
       id = id,
       options = dropNulls(options)

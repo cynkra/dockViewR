@@ -1,15 +1,22 @@
 #' Remove Panel dynamically
-#' @param proxy Result of [dock_view()] or a character with the ID of the dockview.
+#' @param dock_id Dock unique id. When using modules the namespace is automatically
+#' added.
 #' @param id Id of the panel that ought to be removed.
 #' @param session shiny session object.
 #' See \url{https://dockview.dev/docs/api/dockview/panelApi}.
 #' @export
 remove_panel <- function(
-  proxy,
+  dock_id,
   id,
-  session = shiny::getDefaultReactiveDomain()
+  session = getDefaultReactiveDomain()
 ) {
-  if (!(id %in% list_panels(proxy, session)))
-    stop(sprintf("<Panel (ID: %s)>: `id` cannot be found.", id))
-  session$sendCustomMessage(sprintf("%s_rm-panel", proxy), id)
+  panel_ids <- get_panels_ids(dock_id, session)
+  if (!(id %in% panel_ids))
+    stop(sprintf(
+      "<Panel (ID: %s)>: invalid value (%s) for `id`. Valid ids are: %s.",
+      id,
+      id,
+      paste(panel_ids, collapse = ", ")
+    ))
+  session$sendCustomMessage(sprintf("%s_rm-panel", session$ns(dock_id)), id)
 }

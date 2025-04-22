@@ -1,15 +1,9 @@
 {
   "input": {
     "dist": "unif",
-    "dock_panel_ids": [
-      "1",
-      "panel-1745010821946"
-    ],
-    "insert": 1,
-    "obs": 500,
-    "selinp": "panel-1745010821946"
+    "obs": 500
   },
   "export": {
-
+    "n_panels": 2
   }
 }
