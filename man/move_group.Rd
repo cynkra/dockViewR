@@ -5,7 +5,7 @@
 \title{Move a group dynamically}
 \usage{
 move_group(
-  proxy,
+  dock_id,
   from,
   to,
   position = NULL,
@@ -13,7 +13,8 @@ move_group(
 )
 }
 \arguments{
-\item{proxy}{Result of \code{\link[=dock_view]{dock_view()}} or a character with the ID of the dockview.}
+\item{dock_id}{Dock unique id. When using modules the namespace is automatically
+added.}
 
 \item{from}{Group-id of a panel within the group that should be moved.}
 
