@@ -5,10 +5,10 @@ library(dockViewR)
 ui <- fluidPage(
   h1("Panels within the same group"),
   actionButton("move", "Move Panel 1"),
-  dock_viewOutput("dock"),
+  dockViewOutput("dock"),
   h1("Panels with different groups"),
   actionButton("move2", "Move Panel 1"),
-  dock_viewOutput("dock2"),
+  dockViewOutput("dock2"),
 )
 
 server <- function(input, output, session) {
@@ -18,7 +18,7 @@ server <- function(input, output, session) {
     grid = get_grid("dock")
   )
 
-  output$dock <- renderDock_view({
+  output$dock <- renderDockView({
     dock_view(
       panels = list(
         panel(
@@ -57,7 +57,7 @@ server <- function(input, output, session) {
     )
   })
 
-  output$dock2 <- renderDock_view({
+  output$dock2 <- renderDockView({
     dock_view(
       panels = list(
         panel(

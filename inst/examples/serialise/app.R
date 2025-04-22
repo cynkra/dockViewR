@@ -10,7 +10,7 @@ ui <- fluidPage(
     actionButton("restore", "Restore saved layout"),
     selectInput("states", "Select a state", NULL)
   ),
-  dock_viewOutput("dock")
+  dockViewOutput("dock")
 )
 
 server <- function(input, output, session) {
@@ -48,7 +48,7 @@ server <- function(input, output, session) {
     restore_dock("dock", dock_states()[[input$states]])
   })
 
-  output$dock <- renderDock_view({
+  output$dock <- renderDockView({
     dock_view(
       panels = list(
         panel(

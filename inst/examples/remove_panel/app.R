@@ -9,7 +9,7 @@ edges <- data.frame(from = c(1, 2), to = c(1, 3))
 ui <- page_fillable(
   selectInput("selinp", "Panel ids", choices = NULL),
   actionButton("btn", "remove Panel"),
-  dock_viewOutput("dock")
+  dockViewOutput("dock")
 )
 
 server <- function(input, output, session) {
@@ -26,7 +26,7 @@ server <- function(input, output, session) {
     )
   })
 
-  output$dock <- renderDock_view({
+  output$dock <- renderDockView({
     dock_view(
       panels = list(
         panel(

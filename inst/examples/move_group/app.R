@@ -6,7 +6,7 @@ ui <- fluidPage(
     "move",
     "Move Group with group-id 1 to the righ of group with group-id 2"
   ),
-  dock_viewOutput("dock"),
+  dockViewOutput("dock"),
 )
 
 server <- function(input, output, session) {
@@ -15,7 +15,7 @@ server <- function(input, output, session) {
     active_group = get_active_group("dock"),
     grid = get_grid("dock")
   )
-  output$dock <- renderDock_view({
+  output$dock <- renderDockView({
     dock_view(
       panels = list(
         panel(

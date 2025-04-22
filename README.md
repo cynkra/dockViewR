@@ -40,11 +40,17 @@ nodes <- data.frame(id = 1:3)
 edges <- data.frame(from = c(1, 2), to = c(1, 3))
 
 ui <- page_fillable(
-  dock_viewOutput("dock")
+  dockViewOutput("dock")
 )
 
 server <- function(input, output, session) {
-  output$dock <- renderDock_view({
+  exportTestValues(
+    panel_ids = get_panels_ids("dock"),
+    active_group = get_active_group("dock"),
+    grid = get_grid("dock")
+  )
+
+  output$dock <- renderDockView({
     dock_view(
       panels = list(
         panel(

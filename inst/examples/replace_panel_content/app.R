@@ -8,7 +8,7 @@ ui <- page_fillable(
     actionButton("insert", "Insert inside panel"),
     selectInput("selinp", "Panel ids", choices = NULL)
   ),
-  dock_viewOutput("dock")
+  dockViewOutput("dock")
 )
 
 server <- function(input, output, session) {
@@ -24,7 +24,7 @@ server <- function(input, output, session) {
     )
   })
 
-  output$dock <- renderDock_view({
+  output$dock <- renderDockView({
     dock_view(
       panels = list(
         panel(

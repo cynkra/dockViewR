@@ -19,11 +19,11 @@
 #' library(dockViewR)
 #'
 #' ui <- page_fillable(
-#'   dock_viewOutput("dock")
+#'   dockViewOutput("dock")
 #' )
 #'
 #'server <- function(input, output, session) {
-#'  output$dock <- renderDock_view({
+#'  output$dock <- renderDockView({
 #'    dock_view(
 #'      panels = list(
 #'        panel(
@@ -190,10 +190,10 @@ panel <- function(id, title, content, active = TRUE, ...) {
 #' @param quoted Is \code{expr} a quoted expression (with \code{quote()})? This
 #'   is useful if you want to save an expression in a variable.
 #'
-#' @name dock_view-shiny
+#' @rdname dock_view-shiny
 #'
 #' @export
-dock_viewOutput <- function(outputId, width = "100%", height = "400px") {
+dockViewOutput <- function(outputId, width = "100%", height = "400px") {
   #nocov start
   htmlwidgets::shinyWidgetOutput(
     outputId,
@@ -204,12 +204,22 @@ dock_viewOutput <- function(outputId, width = "100%", height = "400px") {
   )
 } #nocov end
 
+#' Alias to \link{dockViewOutput}
+#' @export
+#' @rdname dock_view-shiny
+dock_view_output <- dockViewOutput
+
 #' @rdname dock_view-shiny
 #' @export
-renderDock_view <- function(expr, env = parent.frame(), quoted = FALSE) {
+renderDockView <- function(expr, env = parent.frame(), quoted = FALSE) {
   #nocov start
   if (!quoted) {
     expr <- substitute(expr)
   } # force quoted
-  htmlwidgets::shinyRenderWidget(expr, dock_viewOutput, env, quoted = TRUE)
+  htmlwidgets::shinyRenderWidget(expr, dockViewOutput, env, quoted = TRUE)
 } #nocov end
+
+#' Alias to \link{renderDockView}
+#' @export
+#' @rdname dock_view-shiny
+render_dock_view <- renderDockView
