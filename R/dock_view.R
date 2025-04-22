@@ -119,7 +119,18 @@ dock_view <- function(
     width = width,
     height = height,
     package = "dockViewR",
-    elementId = elementId
+    elementId = elementId,
+    sizingPolicy = htmlwidgets::sizingPolicy(
+      defaultWidth = "100%",
+      viewer.defaultHeight = "100%",
+      viewer.defaultWidth = "100%",
+      viewer.fill = FALSE,
+      knitr.figure = FALSE,
+      viewer.suppress = FALSE,
+      browser.external = TRUE,
+      browser.fill = FALSE,
+      padding = 5
+    )
   )
 }
 

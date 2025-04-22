@@ -13,14 +13,14 @@ HTMLWidgets.widget({
 
   factory: function (el, width, height) {
 
-    // TODO: define shared variables for this instance
+    let api;
 
     return {
 
       renderValue: function (x, id = el.id) {
 
         // Instantiate dockView
-        const api = createDockview(document.getElementById(id), {
+        api = createDockview(document.getElementById(id), {
           theme: matchTheme(x.theme),
           createRightHeaderActionComponent: (options) => {
             return new RightHeader(options)
@@ -87,7 +87,9 @@ HTMLWidgets.widget({
         }
 
       },
-
+      getWidget: function () {
+        return api;
+      },
       resize: function (width, height) {
 
         // TODO: code to re-render the widget with a new size

@@ -13,28 +13,29 @@
 \alias{restore_dock}
 \title{get dock}
 \usage{
-get_dock(proxy, session = getDefaultReactiveDomain())
+get_dock(dock_id, session = getDefaultReactiveDomain())
 
-get_panels(proxy, session = getDefaultReactiveDomain())
+get_panels(dock_id, session = getDefaultReactiveDomain())
 
-get_panels_ids(proxy, session = getDefaultReactiveDomain())
+get_panels_ids(dock_id, session = getDefaultReactiveDomain())
 
-get_active_group(proxy, session = getDefaultReactiveDomain())
+get_active_group(dock_id, session = getDefaultReactiveDomain())
 
-get_grid(proxy, session = getDefaultReactiveDomain())
+get_grid(dock_id, session = getDefaultReactiveDomain())
 
-get_groups(proxy, session = getDefaultReactiveDomain())
+get_groups(dock_id, session = getDefaultReactiveDomain())
 
-get_groups_ids(proxy, session = getDefaultReactiveDomain())
+get_groups_ids(dock_id, session = getDefaultReactiveDomain())
 
-get_groups_panels(proxy, session = getDefaultReactiveDomain())
+get_groups_panels(dock_id, session = getDefaultReactiveDomain())
 
-save_dock(proxy, session = getDefaultReactiveDomain())
+save_dock(dock_id, session = getDefaultReactiveDomain())
 
-restore_dock(proxy, data, session = getDefaultReactiveDomain())
+restore_dock(dock_id, data, session = getDefaultReactiveDomain())
 }
 \arguments{
-\item{proxy}{Result of \code{\link[=dock_view]{dock_view()}} or a character with the ID of the dockview.}
+\item{dock_id}{Dock unique id. When using modules the namespace is automatically
+added.}
 
 \item{session}{shiny session object.}
 

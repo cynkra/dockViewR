@@ -82,12 +82,17 @@ valid_position_names <- c(
 )
 
 #' @keywords internal
-process_panel_position <- function(id, position, proxy = NULL, session = NULL) {
+process_panel_position <- function(
+  id,
+  position,
+  dock_id = NULL,
+  session = NULL
+) {
   # Check names
   validate_position_names(id, position)
   position[["referencePanel"]] <- as.character(position[["referencePanel"]])
   # Check ref panel id when dynamically injected
-  validate_position_ref(id, position, proxy, session)
+  validate_position_ref(id, position, dock_id, session)
   # Check position
   validate_position_direction(id, position)
   invisible(position)
@@ -110,9 +115,9 @@ validate_position_names <- function(id, position) {
 }
 
 #' @keywords internal
-validate_position_ref <- function(id, position, proxy, session) {
-  if (!is.null(proxy)) {
-    panel_ids <- get_panels_ids(proxy, session)
+validate_position_ref <- function(id, position, dock_id, session) {
+  if (!is.null(dock_id)) {
+    panel_ids <- get_panels_ids(dock_id, session)
     if (!(position[["referencePanel"]] %in% panel_ids))
       stop(
         sprintf(

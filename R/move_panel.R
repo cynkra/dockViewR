@@ -1,5 +1,6 @@
 #' Move Panel dynamically
-#' @param proxy Result of [dock_view()] or a character with the ID of the dockview.
+#' @param dock_id Dock unique id. When using modules the namespace is automatically
+#' added.
 #' @param id Panel id.
 #' @param position Panel position options: one of \code{"left", "right", "top", "bottom", "center"}.
 #' @param group ID of the panel you want to move the target to. They must belong
@@ -11,7 +12,7 @@
 #' See \url{https://dockview.dev/docs/api/dockview/panelApi}.
 #' @export
 move_panel <- function(
-  proxy,
+  dock_id,
   id,
   position = NULL,
   group = NULL,
@@ -19,7 +20,7 @@ move_panel <- function(
   session = getDefaultReactiveDomain()
 ) {
   id <- as.character(id)
-  panel_ids <- get_panels_ids(proxy, session)
+  panel_ids <- get_panels_ids(dock_id, session)
   if (!(id %in% panel_ids))
     stop(sprintf("<Panel (ID: %s)>: `id` cannot be found.", id))
 
@@ -50,7 +51,7 @@ move_panel <- function(
   }
 
   session$sendCustomMessage(
-    sprintf("%s_move-panel", proxy),
+    sprintf("%s_move-panel", session$ns(dock_id)),
     list(
       id = id,
       options = dropNulls(options)

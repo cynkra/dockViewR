@@ -5,7 +5,7 @@
 \title{Move Panel dynamically}
 \usage{
 move_panel(
-  proxy,
+  dock_id,
   id,
   position = NULL,
   group = NULL,
@@ -14,7 +14,8 @@ move_panel(
 )
 }
 \arguments{
-\item{proxy}{Result of \code{\link[=dock_view]{dock_view()}} or a character with the ID of the dockview.}
+\item{dock_id}{Dock unique id. When using modules the namespace is automatically
+added.}
 
 \item{id}{Panel id.}
 

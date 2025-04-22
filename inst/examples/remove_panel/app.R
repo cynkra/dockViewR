@@ -107,7 +107,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$btn, {
     req(input$selinp)
-    remove_panel(proxy = "dock", input$selinp)
+    remove_panel("dock", input$selinp)
   })
 }
 
