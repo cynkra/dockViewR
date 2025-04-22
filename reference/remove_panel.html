@@ -39,15 +39,16 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">remove_panel</span><span class="op">(</span><span class="va">proxy</span>, <span class="va">id</span>, session <span class="op">=</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/domains.html" class="external-link">getDefaultReactiveDomain</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">remove_panel</span><span class="op">(</span><span class="va">dock_id</span>, <span class="va">id</span>, session <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/domains.html" class="external-link">getDefaultReactiveDomain</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-proxy">proxy<a class="anchor" aria-label="anchor" href="#arg-proxy"></a></dt>
-<dd><p>Result of <code><a href="dock_view.html">dock_view()</a></code> or a character with the ID of the dockview.</p></dd>
+<dl><dt id="arg-dock-id">dock_id<a class="anchor" aria-label="anchor" href="#arg-dock-id"></a></dt>
+<dd><p>Dock unique id. When using modules the namespace is automatically
+added.</p></dd>
 
 
 <dt id="arg-id">id<a class="anchor" aria-label="anchor" href="#arg-id"></a></dt>
