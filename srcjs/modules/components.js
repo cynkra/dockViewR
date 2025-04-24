@@ -9,9 +9,7 @@ class Panel {
   }
 
   init(config) {
-    let dockId = $(config.containerApi.component.gridview.element)
-      .closest(".dockview")
-      .attr("id");
+    let dockId = config.containerApi.component.gridview.element.closest('.dockview').attributes.id.textContent;
     this._element.id = dockId + '-' + config.api.id;
     this._element.innerHTML = config.params.content.html
     this._element.className = 'dockview-panel'
