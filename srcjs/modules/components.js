@@ -33,11 +33,13 @@ class RightHeader {
     this._element.innerHTML = '<i class="fas fa-expand" role="presentation" aria-label="plus icon"></i>'
     this._element.addEventListener('click', (e) => {
       if (!config.api.isMaximized()) {
-        $(e.target).removeClass('fa-expand').addClass('fa-compress')
-        config.api.maximize()
+        e.target.classList.remove('fa-expand');
+        e.target.classList.add('fa-compress');
+        config.api.maximize();
       } else {
-        config.api.exitMaximized()
-        $(e.target).removeClass('fa-compress').addClass('fa-expand')
+        config.api.exitMaximized();
+        e.target.classList.remove('fa-compress');
+        e.target.classList.add('fa-expand');
       }
     });
   }
