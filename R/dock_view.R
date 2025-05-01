@@ -1,6 +1,7 @@
-#' Dock view widget
-#'
 #' Create a dock view widget
+#'
+#' Create a dock view widget for user controled layout management
+#' and docking controls.
 #'
 #' @import htmlwidgets
 #' @param panels Widget configuration. Slot for \link{panel}.
@@ -10,6 +11,9 @@
 #' @param width Widget width.
 #' @param height Widget height.
 #' @param elementId When used outside Shiny.
+#' 
+#' @returns An HTML widget object.
+#' 
 #'
 #' @export
 #' @examplesShinylive

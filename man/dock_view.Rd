@@ -2,7 +2,7 @@
 % Please edit documentation in R/dock_view.R
 \name{dock_view}
 \alias{dock_view}
-\title{Dock view widget}
+\title{Create a dock view widget}
 \usage{
 dock_view(
   panels,
@@ -28,8 +28,12 @@ dock_view(
 
 \item{elementId}{When used outside Shiny.}
 }
+\value{
+An HTML widget object.
+}
 \description{
-Create a dock view widget
+Create a dock view widget for user controled layout management
+and docking controls.
 }
 \section{Examples in Shinylive}{
 \describe{
