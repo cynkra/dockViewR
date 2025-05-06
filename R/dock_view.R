@@ -1,9 +1,11 @@
 #' Create a dock view widget
 #'
-#' Create a dock view widget for user controled layout management
-#' and docking controls.
+#' Creates an interactive dock view widget that enables flexible
+#' layout management with draggable, resizable, and dockable panels.
+#' This is a wrapper around the dockview.dev
+#' JavaScript library, providing a powerful interface for
+#' creating IDE-like layouts in Shiny applications or R Markdown documents.
 #'
-#' @import htmlwidgets
 #' @param panels Widget configuration. Slot for \link{panel}.
 #' @param ... Other options. See
 #' \url{https://dockview.dev/docs/api/dockview/options}.
@@ -14,7 +16,6 @@
 #' @param elementId When used outside Shiny.
 #'
 #' @returns An HTML widget object.
-#'
 #'
 #' @export
 #' @examplesShinylive
@@ -144,9 +145,10 @@ dock_view <- function(
 
 #' Dock panel
 #'
-#' Create a dock panel
+#' Create a panel for use within a [dock_view()] widget.
+#' Panels are the main container components that can be docked, dragged,
+#' resized, and arranged within the dockview interface.
 #'
-#' @import htmlwidgets
 #' @param id Panel unique id.
 #' @param title Panel title.
 #' @param content Panel content. Can be a list of Shiny tags.

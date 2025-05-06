@@ -33,8 +33,11 @@ dock_view(
 An HTML widget object.
 }
 \description{
-Create a dock view widget for user controled layout management
-and docking controls.
+Creates an interactive dock view widget that enables flexible
+layout management with draggable, resizable, and dockable panels.
+This is a wrapper around the dockview.dev
+JavaScript library, providing a powerful interface for
+creating IDE-like layouts in Shiny applications or R Markdown documents.
 }
 \section{Examples in Shinylive}{
 \describe{

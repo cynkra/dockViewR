@@ -38,5 +38,7 @@ A list representing a panel object to be consumed by
 }
 }
 \description{
-Create a dock panel
+Create a panel for use within a \code{\link[=dock_view]{dock_view()}} widget.
+Panels are the main container components that can be docked, dragged,
+resized, and arranged within the dockview interface.
 }
