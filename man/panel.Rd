@@ -21,13 +21,14 @@ If you pass position, it must be a list with 2 fields:
 \itemize{
 \item referencePanel: reference panel id.
 \item direction: one of \code{above}, \code{below}, \code{left}, \code{right} or \code{within}
-(\code{above}, \code{below}, \code{left}, \code{right} put the panel in a new group, while \code{within} puts the panel
-after its reference panel in the same group).
+(\code{above}, \code{below}, \code{left}, \code{right} put the panel in a new group,
+while \code{within} puts the panel after its reference panel in the same group).
 Position is relative to the reference panel target.
 }}
 }
 \value{
-A list representing a panel object to be consumed by \link{dock_view}:
+A list representing a panel object to be consumed by
+\link{dock_view}:
 \itemize{
 \item id: unique panel id (string).
 \item title: panel title (string).

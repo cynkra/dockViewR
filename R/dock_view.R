@@ -5,7 +5,8 @@
 #'
 #' @import htmlwidgets
 #' @param panels Widget configuration. Slot for \link{panel}.
-#' @param ... Other options. See \url{https://dockview.dev/docs/api/dockview/options}.
+#' @param ... Other options. See
+#' \url{https://dockview.dev/docs/api/dockview/options}.
 #' @param theme Theme. One of
 #' \code{c("abyss", "dark", "light", "vs", "dracula", "replit")}.
 #' @param width Widget width.
@@ -17,7 +18,10 @@
 #'
 #' @export
 #' @examplesShinylive
-#' webr::install("dockViewR", repos = "https://rinterface.github.io/rinterface-wasm-cran/")
+#' webr::install(
+#'  "dockViewR",
+#'  repos = "https://rinterface.github.io/rinterface-wasm-cran/"
+#' )
 #' library(shiny)
 #' library(bslib)
 #' library(dockViewR)
@@ -152,11 +156,12 @@ dock_view <- function(
 #' If you pass position, it must be a list with 2 fields:
 #' - referencePanel: reference panel id.
 #' - direction: one of `above`, `below`, `left`, `right` or `within`
-#' (`above`, `below`, `left`, `right` put the panel in a new group, while `within` puts the panel
-#' after its reference panel in the same group).
+#' (`above`, `below`, `left`, `right` put the panel in a new group,
+#' while `within` puts the panel after its reference panel in the same group).
 #' Position is relative to the reference panel target.
 #'
-#' @return A list representing a panel object to be consumed by \link{dock_view}:
+#' @return A list representing a panel object to be consumed by
+#' \link{dock_view}:
 #' - id: unique panel id (string).
 #' - title: panel title (string).
 #' - content: panel content (`shiny.tag.list` or single `shiny.tag`).
@@ -199,12 +204,14 @@ panel <- function(id, title, content, active = TRUE, ...) {
 #' @param expr An expression that generates a dock_view
 #' @param env The environment in which to evaluate \code{expr}.
 #' @param quoted Is \code{expr} a quoted expression (with \code{quote()})? This
-#'   is useful if you want to save an expression in a variable.
+#' is useful if you want to save an expression in a variable.
 #'
 #' @rdname dock_view-shiny
 #'
-#' @return \code{dockViewOutput} and `dock_view_output` return a Shiny output function that can be used in the UI definition.
-#'   \code{renderDockView} and `render_dock_view` return a Shiny render function that can be used in the server definition to
+#' @return \code{dockViewOutput} and `dock_view_output`
+#' return a Shiny output function that can be used in the UI definition.
+#' \code{renderDockView} and `render_dock_view` return a
+#' Shiny render function that can be used in the server definition to
 #' render a `dock_view` element.
 #'
 #' @export

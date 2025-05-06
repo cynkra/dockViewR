@@ -14,26 +14,29 @@ move_panel(
 )
 }
 \arguments{
-\item{dock_id}{Dock unique id. When using modules the namespace is automatically
-added.}
+\item{dock_id}{Dock unique id. When using modules the namespace
+is automatically added.}
 
 \item{id}{Panel id.}
 
-\item{position}{Panel position options: one of \code{"left", "right", "top", "bottom", "center"}.}
+\item{position}{Panel position options: one of
+\code{"left", "right", "top", "bottom", "center"}.}
 
 \item{group}{ID of the panel you want to move the target to. They must belong
 to different groups.}
 
-\item{index}{Panel index. If panels belong to the same group, you can use index to move the target
-panel at the desired position. When group is left NULL, index must be passed and cannot exceed the
+\item{index}{Panel index. If panels belong to the same group,
+you can use index to move the target panel at the desired position.
+When group is left NULL, index must be passed and cannot exceed the
 total number of panels or be negative.}
 
 \item{session}{shiny session object.
 See \url{https://dockview.dev/docs/api/dockview/panelApi}.}
 }
 \value{
-This function is called for its side effect. It sends a message to JavaScript
-through the current websocket connection, leveraging the shiny session object.
+This function is called for its side effect.
+It sends a message to JavaScript through the current websocket connection,
+leveraging the shiny session object.
 }
 \description{
 Move Panel dynamically

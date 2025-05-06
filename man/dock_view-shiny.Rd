@@ -30,8 +30,10 @@ string and have \code{'px'} appended.}
 is useful if you want to save an expression in a variable.}
 }
 \value{
-\code{dockViewOutput} and \code{dock_view_output} return a Shiny output function that can be used in the UI definition.
-\code{renderDockView} and \code{render_dock_view} return a Shiny render function that can be used in the server definition to
+\code{dockViewOutput} and \code{dock_view_output}
+return a Shiny output function that can be used in the UI definition.
+\code{renderDockView} and \code{render_dock_view} return a
+Shiny render function that can be used in the server definition to
 render a \code{dock_view} element.
 }
 \description{

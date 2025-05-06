@@ -1,18 +1,21 @@
 #' Move Panel dynamically
-#' @param dock_id Dock unique id. When using modules the namespace is automatically
-#' added.
+#' @param dock_id Dock unique id. When using modules the namespace
+#' is automatically added.
 #' @param id Panel id.
-#' @param position Panel position options: one of \code{"left", "right", "top", "bottom", "center"}.
+#' @param position Panel position options: one of
+#' \code{"left", "right", "top", "bottom", "center"}.
 #' @param group ID of the panel you want to move the target to. They must belong
 #' to different groups.
-#' @param index Panel index. If panels belong to the same group, you can use index to move the target
-#' panel at the desired position. When group is left NULL, index must be passed and cannot exceed the
+#' @param index Panel index. If panels belong to the same group,
+#' you can use index to move the target panel at the desired position.
+#' When group is left NULL, index must be passed and cannot exceed the
 #' total number of panels or be negative.
 #' @param session shiny session object.
 #' See \url{https://dockview.dev/docs/api/dockview/panelApi}.
 #' @export
-#' @return This function is called for its side effect. It sends a message to JavaScript
-#' through the current websocket connection, leveraging the shiny session object.
+#' @return This function is called for its side effect.
+#' It sends a message to JavaScript through the current websocket connection,
+#' leveraging the shiny session object.
 move_panel <- function(
   dock_id,
   id,

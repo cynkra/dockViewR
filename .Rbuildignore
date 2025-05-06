@@ -18,3 +18,5 @@
 _\.new\.png$
 ^\.vscode$
 ^codecov\.yml$
+^air\.toml$
+^\.lintr$

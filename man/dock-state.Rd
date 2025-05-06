@@ -34,8 +34,8 @@ save_dock(dock_id, session = getDefaultReactiveDomain())
 restore_dock(dock_id, data, session = getDefaultReactiveDomain())
 }
 \arguments{
-\item{dock_id}{Dock unique id. When using modules the namespace is automatically
-added.}
+\item{dock_id}{Dock unique id. When using modules the namespace is
+automatically added.}
 
 \item{session}{shiny session object.}
 
@@ -49,16 +49,21 @@ added.}
 \item activeGroup: the current active group (a string).
 }
 
-Each other function allows to deep dive into the returned value of \code{\link[=get_dock]{get_dock()}}.
+Each other function allows to deep dive into the returned
+value of \code{\link[=get_dock]{get_dock()}}.
 \code{\link[=get_panels]{get_panels()}} returns the \code{panels} element of \code{\link[=get_dock]{get_dock()}}.
-\code{\link[=get_panels_ids]{get_panels_ids()}} returns a character vector containing all panel ids from \code{\link[=get_panels]{get_panels()}}.
-\code{\link[=get_active_group]{get_active_group()}} extracts the \code{activeGroup} component of \code{\link[=get_dock]{get_dock()}} as a string.
+\code{\link[=get_panels_ids]{get_panels_ids()}} returns a character vector containing all panel ids
+from \code{\link[=get_panels]{get_panels()}}.
+\code{\link[=get_active_group]{get_active_group()}} extracts the \code{activeGroup} component of
+\code{\link[=get_dock]{get_dock()}} as a string.
 \code{\link[=get_grid]{get_grid()}} returns the \code{grid} element of \code{\link[=get_dock]{get_dock()}} which is a list.
 \code{\link[=get_groups]{get_groups()}} returns a list of panel groups from \code{\link[=get_grid]{get_grid()}}.
-\code{\link[=get_groups_ids]{get_groups_ids()}} returns a character vector of groups ids from \code{\link[=get_groups]{get_groups()}}.
-\code{\link[=get_groups_panels]{get_groups_panels()}} returns a list of character vector containing the ids of each panel within each group.
-\code{\link[=save_dock]{save_dock()}} and \code{\link[=restore_dock]{restore_dock()}} are used for their side effect to allow to respectively
-serialise and restore a dock object.
+\code{\link[=get_groups_ids]{get_groups_ids()}} returns a character vector of groups ids
+from \code{\link[=get_groups]{get_groups()}}.
+\code{\link[=get_groups_panels]{get_groups_panels()}} returns a list of character vector containing
+the ids of each panel within each group.
+\code{\link[=save_dock]{save_dock()}} and \code{\link[=restore_dock]{restore_dock()}} are used for their side effect to
+allow to respectively serialise and restore a dock object.
 }
 \description{
 get dock
@@ -82,6 +87,6 @@ save a dock
 restore a dock
 }
 \note{
-Only works with server side functions like \link{add_panel}. Don't call it
-from the UI.
+Only works with server side functions like \link{add_panel}.
+Don't call it from the UI.
 }
