@@ -57,9 +57,7 @@ class LeftHeader {
   }
 
   init(config) {
-    let dockId = $(config.containerApi.component.gridview.element)
-      .closest(".dockview")
-      .attr("id");
+    let dockId = config.containerApi.component.gridview.element.closest('.dockview').attributes.id.textContent;
     this._element.style = 'height: 100%; padding: 8px'
     this._element.innerHTML = '<i class="fas fa-plus" role="presentation" aria-label="plus icon"></i>'
     this._element.addEventListener('click', (e) => {
