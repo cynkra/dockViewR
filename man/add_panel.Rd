@@ -17,6 +17,10 @@ added.}
 \item{session}{shiny session object.
 See \url{https://dockview.dev/docs/api/dockview/panelApi}.}
 }
+\value{
+This function is called for its side effect. It sends a message to JavaScript
+through the current websocket connection, leveraging the shiny session object.
+}
 \description{
 Add Panel dynamically
 }

@@ -7,6 +7,8 @@
 #' See \url{https://dockview.dev/docs/api/dockview/panelApi}.
 #' @seealso [panel()]
 #' @export
+#' @return This function is called for its side effect. It sends a message to JavaScript
+#' through the current websocket connection, leveraging the shiny session object.
 add_panel <- function(
   dock_id,
   panel,

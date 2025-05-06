@@ -26,6 +26,16 @@ after its reference panel in the same group).
 Position is relative to the reference panel target.
 }}
 }
+\value{
+A list representing a panel object to be consumed by \link{dock_view}:
+\itemize{
+\item id: unique panel id (string).
+\item title: panel title (string).
+\item content: panel content (\code{shiny.tag.list} or single \code{shiny.tag}).
+\item active: whether the panel is active or not (boolean).
+\item ...: extra parameters to pass to the API.
+}
+}
 \description{
 Create a dock panel
 }

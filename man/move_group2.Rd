@@ -25,6 +25,10 @@ added.}
 \item{session}{shiny session object.
 See \url{https://dockview.dev/docs/api/dockview/panelApi}.}
 }
+\value{
+This function is called for its side effect. It sends a message to JavaScript
+through the current websocket connection, leveraging the shiny session object.
+}
 \description{
 move_group2 moves a group to a different position from withing a shiny server function.
 The parameter from refers to a panel-id of a panel within the group you want to move.

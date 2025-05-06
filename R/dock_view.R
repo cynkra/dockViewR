@@ -11,9 +11,9 @@
 #' @param width Widget width.
 #' @param height Widget height.
 #' @param elementId When used outside Shiny.
-#' 
+#'
 #' @returns An HTML widget object.
-#' 
+#'
 #'
 #' @export
 #' @examplesShinylive
@@ -156,6 +156,13 @@ dock_view <- function(
 #' after its reference panel in the same group).
 #' Position is relative to the reference panel target.
 #'
+#' @return A list representing a panel object to be consumed by \link{dock_view}:
+#' - id: unique panel id (string).
+#' - title: panel title (string).
+#' - content: panel content (`shiny.tag.list` or single `shiny.tag`).
+#' - active: whether the panel is active or not (boolean).
+#' - ...: extra parameters to pass to the API.
+#'
 #' @export
 panel <- function(id, title, content, active = TRUE, ...) {
   # We can't check id uniqueness here because panel has no
@@ -195,6 +202,10 @@ panel <- function(id, title, content, active = TRUE, ...) {
 #'   is useful if you want to save an expression in a variable.
 #'
 #' @rdname dock_view-shiny
+#'
+#' @return \code{dockViewOutput} and `dock_view_output` return a Shiny output function that can be used in the UI definition.
+#'   \code{renderDockView} and `render_dock_view` return a Shiny render function that can be used in the server definition to
+#' render a `dock_view` element.
 #'
 #' @export
 dockViewOutput <- function(outputId, width = "100%", height = "400px") {

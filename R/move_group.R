@@ -15,6 +15,8 @@
 #' The difference between move_group2 and move_group is that move_group2 selects both
 #' from and to by panel-id, whereas move_group selects by group-id.
 #' @export
+#' @return This function is called for its side effect. It sends a message to JavaScript
+#' through the current websocket connection, leveraging the shiny session object.
 move_group <- function(
   dock_id,
   from,
