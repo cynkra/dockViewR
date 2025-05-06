@@ -6,7 +6,8 @@ Authors@R:
     person("David", "Granjon", , "dgranjon@ymail.com", role = c("aut", "cre")),
     person("Nelson", "Stevens", email = "nelson.stevens92@gmail.com", role = "aut"),
     person("Nicolas", "Bennett", email = "nicolas@cynkra.com", role = "aut"),
-    person("mathuo", email = "github.mathuo@gmail.com", role = "cph")
+    person("mathuo", email = "github.mathuo@gmail.com", role = "cph"),
+    person("cynkra GmbH", email = "mail@cynkra.com", role = "fnd")
     )
 Description: Provides R bindings to the 'dockview' 'JavaScript' library <https://dockview.dev/>.
     Create rearrangeable grid layouts (docks) in seconds to include in interactive R reports with R Markdown or 'Quarto' or 
