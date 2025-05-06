@@ -24,7 +24,7 @@ automatically added.}
 \code{"left", "right", "top", "bottom", "center"}.}
 
 \item{session}{shiny session object.
-See \url{https://dockview.dev/docs/api/dockview/panelApi}.}
+See \url{https://dockview.dev/docs/api/dockview/panelApi/}.}
 }
 \value{
 This function is called for its side effect.

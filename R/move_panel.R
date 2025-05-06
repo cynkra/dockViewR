@@ -11,7 +11,7 @@
 #' When group is left NULL, index must be passed and cannot exceed the
 #' total number of panels or be negative.
 #' @param session shiny session object.
-#' See \url{https://dockview.dev/docs/api/dockview/panelApi}.
+#' See \url{https://dockview.dev/docs/api/dockview/panelApi/}.
 #' @export
 #' @return This function is called for its side effect.
 #' It sends a message to JavaScript through the current websocket connection,

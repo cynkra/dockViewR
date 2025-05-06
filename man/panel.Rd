@@ -16,7 +16,7 @@ panel(id, title, content, active = TRUE, ...)
 \item{active}{Is active?}
 
 \item{...}{Other options passed to the API.
-See \url{https://dockview.dev/docs/api/dockview/panelApi}.
+See \url{https://dockview.dev/docs/api/dockview/panelApi/}.
 If you pass position, it must be a list with 2 fields:
 \itemize{
 \item referencePanel: reference panel id.

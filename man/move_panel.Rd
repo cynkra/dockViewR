@@ -31,7 +31,7 @@ When group is left NULL, index must be passed and cannot exceed the
 total number of panels or be negative.}
 
 \item{session}{shiny session object.
-See \url{https://dockview.dev/docs/api/dockview/panelApi}.}
+See \url{https://dockview.dev/docs/api/dockview/panelApi/}.}
 }
 \value{
 This function is called for its side effect.

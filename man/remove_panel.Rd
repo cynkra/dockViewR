@@ -13,7 +13,7 @@ automatically added.}
 \item{id}{Id of the panel that ought to be removed.}
 
 \item{session}{shiny session object.
-See \url{https://dockview.dev/docs/api/dockview/panelApi}.}
+See \url{https://dockview.dev/docs/api/dockview/panelApi/}.}
 }
 \value{
 This function is called for its side effect.

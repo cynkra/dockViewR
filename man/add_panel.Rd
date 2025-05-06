@@ -15,7 +15,7 @@ automatically added.}
 \item{...}{Other options passed to the API. Not used yet.}
 
 \item{session}{shiny session object.
-See \url{https://dockview.dev/docs/api/dockview/panelApi}.}
+See \url{https://dockview.dev/docs/api/dockview/panelApi/}.}
 }
 \value{
 This function is called for its side effect.

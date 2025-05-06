@@ -10,7 +10,7 @@ Authors@R:
     person("cynkra GmbH", email = "mail@cynkra.com", role = "fnd")
     )
 Description: Provides R bindings to the 'dockview' 'JavaScript' library <https://dockview.dev/>.
-    Create rearrangeable grid layouts (docks) in seconds to include in interactive R reports with R Markdown or 'Quarto' or 
+    Create fully customizable grid layouts (docks) in seconds to include in interactive R reports with R Markdown or 'Quarto' or 
     in 'shiny' apps <https://shiny.posit.co/>. In 'shiny' mode, modify docks by dynamically adding, removing or moving panels or 
     groups of panels from the server function. Choose among 8 stunning themes (dark and light),
     serialise the state of a dock to restore it later.

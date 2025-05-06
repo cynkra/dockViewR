@@ -18,7 +18,7 @@ dock_view(
 \item{panels}{Widget configuration. Slot for \link{panel}.}
 
 \item{...}{Other options. See
-\url{https://dockview.dev/docs/api/dockview/options}.}
+\url{https://dockview.dev/docs/api/dockview/options/}.}
 
 \item{theme}{Theme. One of
 \code{c("abyss", "dark", "light", "vs", "dracula", "replit")}.}

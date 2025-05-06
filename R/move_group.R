@@ -6,7 +6,7 @@
 #' \code{"left", "right", "top", "bottom", "center"}.
 #' @param to Group-id of a panel within the group you want as a destination.
 #' @param session shiny session object.
-#' See \url{https://dockview.dev/docs/api/dockview/panelApi}.
+#' See \url{https://dockview.dev/docs/api/dockview/panelApi/}.
 #'
 #' @description
 #' move_group moves a group to a different position from

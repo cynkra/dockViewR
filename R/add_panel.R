@@ -4,7 +4,7 @@
 #' @param panel A panel object. See \link{panel} for the different parameters.
 #' @param ... Other options passed to the API. Not used yet.
 #' @param session shiny session object.
-#' See \url{https://dockview.dev/docs/api/dockview/panelApi}.
+#' See \url{https://dockview.dev/docs/api/dockview/panelApi/}.
 #' @seealso [panel()]
 #' @export
 #' @return This function is called for its side effect.

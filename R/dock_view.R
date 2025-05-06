@@ -8,7 +8,7 @@
 #'
 #' @param panels Widget configuration. Slot for \link{panel}.
 #' @param ... Other options. See
-#' \url{https://dockview.dev/docs/api/dockview/options}.
+#' \url{https://dockview.dev/docs/api/dockview/options/}.
 #' @param theme Theme. One of
 #' \code{c("abyss", "dark", "light", "vs", "dracula", "replit")}.
 #' @param width Widget width.
@@ -154,7 +154,7 @@ dock_view <- function(
 #' @param content Panel content. Can be a list of Shiny tags.
 #' @param active Is active?
 #' @param ... Other options passed to the API.
-#' See \url{https://dockview.dev/docs/api/dockview/panelApi}.
+#' See \url{https://dockview.dev/docs/api/dockview/panelApi/}.
 #' If you pass position, it must be a list with 2 fields:
 #' - referencePanel: reference panel id.
 #' - direction: one of `above`, `below`, `left`, `right` or `within`

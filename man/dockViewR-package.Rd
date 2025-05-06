@@ -6,7 +6,7 @@
 \alias{dockViewR-package}
 \title{dockViewR: Layout Manager Widget for R and 'shiny' Apps}
 \description{
-Provides R bindings to the 'dockview' 'JavaScript' library \url{https://dockview.dev/}. Create rearrangeable grid layouts (docks) in seconds to include in interactive R reports with R Markdown or 'Quarto' or in 'shiny' apps \url{https://shiny.posit.co/}. In 'shiny' mode, modify docks by dynamically adding, removing or moving panels or groups of panels from the server function. Choose among 8 stunning themes (dark and light), serialise the state of a dock to restore it later.
+Provides R bindings to the 'dockview' 'JavaScript' library \url{https://dockview.dev/}. Create fully customizable grid layouts (docks) in seconds to include in interactive R reports with R Markdown or 'Quarto' or in 'shiny' apps \url{https://shiny.posit.co/}. In 'shiny' mode, modify docks by dynamically adding, removing or moving panels or groups of panels from the server function. Choose among 8 stunning themes (dark and light), serialise the state of a dock to restore it later.
 }
 \seealso{
 Useful links:
