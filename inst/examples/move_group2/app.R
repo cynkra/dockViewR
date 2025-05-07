@@ -4,7 +4,8 @@ library(dockViewR)
 ui <- fluidPage(
   actionButton(
     "move",
-    "Move Group that contains Panel 1 to the right of group that contains Panel 3"
+    "Move Group that contains Panel 1 to the right of group 
+    that contains Panel 3"
   ),
   dockViewOutput("dock"),
 )

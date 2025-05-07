@@ -1,19 +1,28 @@
-#' Dock view widget
-#'
 #' Create a dock view widget
 #'
-#' @import htmlwidgets
+#' Creates an interactive dock view widget that enables flexible
+#' layout management with draggable, resizable, and dockable panels.
+#' This is a wrapper around the dockview.dev
+#' JavaScript library, providing a powerful interface for
+#' creating IDE-like layouts in Shiny applications or R Markdown documents.
+#'
 #' @param panels Widget configuration. Slot for \link{panel}.
-#' @param ... Other options. See \url{https://dockview.dev/docs/api/dockview/options}.
+#' @param ... Other options. See
+#' \url{https://dockview.dev/docs/api/dockview/options/}.
 #' @param theme Theme. One of
 #' \code{c("abyss", "dark", "light", "vs", "dracula", "replit")}.
 #' @param width Widget width.
 #' @param height Widget height.
 #' @param elementId When used outside Shiny.
 #'
+#' @returns An HTML widget object.
+#'
 #' @export
 #' @examplesShinylive
-#' webr::install("dockViewR", repos = "https://rinterface.github.io/rinterface-wasm-cran/")
+#' webr::install(
+#'  "dockViewR",
+#'  repos = "https://rinterface.github.io/rinterface-wasm-cran/"
+#' )
 #' library(shiny)
 #' library(bslib)
 #' library(dockViewR)
@@ -136,21 +145,30 @@ dock_view <- function(
 
 #' Dock panel
 #'
-#' Create a dock panel
+#' Create a panel for use within a [dock_view()] widget.
+#' Panels are the main container components that can be docked, dragged,
+#' resized, and arranged within the dockview interface.
 #'
-#' @import htmlwidgets
 #' @param id Panel unique id.
 #' @param title Panel title.
 #' @param content Panel content. Can be a list of Shiny tags.
 #' @param active Is active?
 #' @param ... Other options passed to the API.
-#' See \url{https://dockview.dev/docs/api/dockview/panelApi}.
+#' See \url{https://dockview.dev/docs/api/dockview/panelApi/}.
 #' If you pass position, it must be a list with 2 fields:
 #' - referencePanel: reference panel id.
 #' - direction: one of `above`, `below`, `left`, `right` or `within`
-#' (`above`, `below`, `left`, `right` put the panel in a new group, while `within` puts the panel
-#' after its reference panel in the same group).
+#' (`above`, `below`, `left`, `right` put the panel in a new group,
+#' while `within` puts the panel after its reference panel in the same group).
 #' Position is relative to the reference panel target.
+#'
+#' @return A list representing a panel object to be consumed by
+#' \link{dock_view}:
+#' - id: unique panel id (string).
+#' - title: panel title (string).
+#' - content: panel content (`shiny.tag.list` or single `shiny.tag`).
+#' - active: whether the panel is active or not (boolean).
+#' - ...: extra parameters to pass to the API.
 #'
 #' @export
 panel <- function(id, title, content, active = TRUE, ...) {
@@ -188,9 +206,15 @@ panel <- function(id, title, content, active = TRUE, ...) {
 #' @param expr An expression that generates a dock_view
 #' @param env The environment in which to evaluate \code{expr}.
 #' @param quoted Is \code{expr} a quoted expression (with \code{quote()})? This
-#'   is useful if you want to save an expression in a variable.
+#' is useful if you want to save an expression in a variable.
 #'
 #' @rdname dock_view-shiny
+#'
+#' @return \code{dockViewOutput} and `dock_view_output`
+#' return a Shiny output function that can be used in the UI definition.
+#' \code{renderDockView} and `render_dock_view` return a
+#' Shiny render function that can be used in the server definition to
+#' render a `dock_view` element.
 #'
 #' @export
 dockViewOutput <- function(outputId, width = "100%", height = "400px") {

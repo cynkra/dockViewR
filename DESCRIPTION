@@ -1,15 +1,19 @@
 Package: dockViewR
-Title: Layout Manager Widget for R and Shiny
+Title: Layout Manager Widget for R and 'shiny' Apps
 Version: 0.1.0
 Authors@R: 
     c(
     person("David", "Granjon", , "dgranjon@ymail.com", role = c("aut", "cre")),
     person("Nelson", "Stevens", email = "nelson.stevens92@gmail.com", role = "aut"),
     person("Nicolas", "Bennett", email = "nicolas@cynkra.com", role = "aut"),
-    person("mathuo", email = "github.mathuo@gmail.com", role = "cph")
+    person("mathuo", email = "github.mathuo@gmail.com", role = "cph"),
+    person("cynkra GmbH", email = "mail@cynkra.com", role = "fnd")
     )
-Description: Provides R bindings to the 'dockview' JavaScript library.
-    Create rearrangeable grid layouts in seconds.
+Description: Provides R bindings to the 'dockview' 'JavaScript' library <https://dockview.dev/>.
+    Create fully customizable grid layouts (docks) in seconds to include in interactive R reports with R Markdown or 'Quarto' or 
+    in 'shiny' apps <https://shiny.posit.co/>. In 'shiny' mode, modify docks by dynamically adding, removing or moving panels or 
+    groups of panels from the server function. Choose among 8 stunning themes (dark and light),
+    serialise the state of a dock to restore it later.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE, packages = c("roxy.shinylive"))
@@ -26,5 +30,4 @@ Suggests:
 URL: https://github.com/cynkra/dockViewR, https://cynkra.github.io/dockViewR/
 BugReports: https://github.com/cynkra/dockViewR/issues
 Config/testthat/edition: 3
-Depends: 
-    R (>= 2.10)
+Depends: R (>= 2.10)

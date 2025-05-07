@@ -149,7 +149,13 @@ test_that("add_panel with + leftheader button works", {
   app$click(selector = ".dv-left-actions-container .fas.fa-plus")
   app$set_inputs(
     selinp = app$get_js(
-      "Object.getOwnPropertyNames(Shiny.shinyapp.$inputValues['dock_state']['panels'])"
+      "Object
+        .getOwnPropertyNames(
+          Shiny
+            .shinyapp
+            .$inputValues['dock_state']['panels']
+        )
+      "
     )[[
       2
     ]]

@@ -1,12 +1,37 @@
 #' get dock
-#' @param dock_id Dock unique id. When using modules the namespace is automatically
-#' added.
+#' @param dock_id Dock unique id. When using modules the namespace is
+#' automatically added.
 #' @param session shiny session object.
 #' @export
-#' @note Only works with server side functions like \link{add_panel}. Don't call it
-#' from the UI.
+#' @note Only works with server side functions like \link{add_panel}.
+#' Don't call it from the UI.
 #' @rdname dock-state
+#' @return `get_dock` returns a list of 3 elements:
+#' - grid: a list representing the dock layout.
+#' - panels: a list having the same structure as [panel()] composing the dock.
+#' - activeGroup: the current active group (a string).
+#'
+#' Each other function allows to deep dive into the returned
+#' value of [get_dock()].
+#' [get_panels()] returns the `panels` element of [get_dock()].
+#' [get_panels_ids()] returns a character vector containing all panel ids
+#' from [get_panels()].
+#' [get_active_group()] extracts the `activeGroup` component of
+#' [get_dock()] as a string.
+#' [get_grid()] returns the `grid` element of [get_dock()] which is a list.
+#' [get_groups()] returns a list of panel groups from [get_grid()].
+#' [get_groups_ids()] returns a character vector of groups ids
+#' from [get_groups()].
+#' [get_groups_panels()] returns a list of character vector containing
+#' the ids of each panel within each group.
+#' [save_dock()] and [restore_dock()] are used for their side effect to
+#' allow to respectively serialise and restore a dock object.
 get_dock <- function(dock_id, session = getDefaultReactiveDomain()) {
+  if (is.null(session))
+    stop(sprintf(
+      "%s must be called from the server of a Shiny app",
+      deparse(sys.call())
+    ))
   session$input[[sprintf("%s_state", dock_id)]]
 }
 
@@ -50,7 +75,7 @@ get_groups <- function(dock_id, session = getDefaultReactiveDomain()) {
 #' @export
 get_groups_ids <- function(dock_id, session = getDefaultReactiveDomain()) {
   unlist(
-    lapply(get_groups(dock_id, session), \(group) {
+    lapply(get_groups(dock_id, session), function(group) {
       group[["data"]][["id"]]
     }),
     use.names = FALSE
@@ -62,7 +87,7 @@ get_groups_ids <- function(dock_id, session = getDefaultReactiveDomain()) {
 #' @export
 get_groups_panels <- function(dock_id, session = getDefaultReactiveDomain()) {
   setNames(
-    lapply(get_groups(dock_id, session), \(group) {
+    lapply(get_groups(dock_id, session), function(group) {
       group[["data"]][["views"]]
     }),
     get_groups_ids(dock_id, session)

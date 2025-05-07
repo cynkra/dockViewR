@@ -29,6 +29,13 @@ string and have \code{'px'} appended.}
 \item{quoted}{Is \code{expr} a quoted expression (with \code{quote()})? This
 is useful if you want to save an expression in a variable.}
 }
+\value{
+\code{dockViewOutput} and \code{dock_view_output}
+return a Shiny output function that can be used in the UI definition.
+\code{renderDockView} and \code{render_dock_view} return a
+Shiny render function that can be used in the server definition to
+render a \code{dock_view} element.
+}
 \description{
 Output and render functions for using dock_view within Shiny
 applications and interactive Rmd documents.
