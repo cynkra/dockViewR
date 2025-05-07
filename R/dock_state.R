@@ -75,7 +75,7 @@ get_groups <- function(dock_id, session = getDefaultReactiveDomain()) {
 #' @export
 get_groups_ids <- function(dock_id, session = getDefaultReactiveDomain()) {
   unlist(
-    lapply(get_groups(dock_id, session), \(group) {
+    lapply(get_groups(dock_id, session), function(group) {
       group[["data"]][["id"]]
     }),
     use.names = FALSE
@@ -87,7 +87,7 @@ get_groups_ids <- function(dock_id, session = getDefaultReactiveDomain()) {
 #' @export
 get_groups_panels <- function(dock_id, session = getDefaultReactiveDomain()) {
   setNames(
-    lapply(get_groups(dock_id, session), \(group) {
+    lapply(get_groups(dock_id, session), function(group) {
       group[["data"]][["views"]]
     }),
     get_groups_ids(dock_id, session)

@@ -30,5 +30,3 @@ Suggests:
 URL: https://github.com/cynkra/dockViewR, https://cynkra.github.io/dockViewR/
 BugReports: https://github.com/cynkra/dockViewR/issues
 Config/testthat/edition: 3
-Depends: 
-    R (>= 2.10)
