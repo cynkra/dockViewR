@@ -92,8 +92,8 @@ restore a dock"></head><body>
 
 
 <dl><dt id="arg-dock-id">dock_id<a class="anchor" aria-label="anchor" href="#arg-dock-id"></a></dt>
-<dd><p>Dock unique id. When using modules the namespace is automatically
-added.</p></dd>
+<dd><p>Dock unique id. When using modules the namespace is
+automatically added.</p></dd>
 
 
 <dt id="arg-session">session<a class="anchor" aria-label="anchor" href="#arg-session"></a></dt>
@@ -105,9 +105,30 @@ added.</p></dd>
 
 </dl></div>
     <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p><code>get_dock</code> returns a list of 3 elements:</p><ul><li><p>grid: a list representing the dock layout.</p></li>
+<li><p>panels: a list having the same structure as <code><a href="panel.html">panel()</a></code> composing the dock.</p></li>
+<li><p>activeGroup: the current active group (a string).</p></li>
+</ul><p>Each other function allows to deep dive into the returned
+value of <code>get_dock()</code>.
+<code>get_panels()</code> returns the <code>panels</code> element of <code>get_dock()</code>.
+<code>get_panels_ids()</code> returns a character vector containing all panel ids
+from <code>get_panels()</code>.
+<code>get_active_group()</code> extracts the <code>activeGroup</code> component of
+<code>get_dock()</code> as a string.
+<code>get_grid()</code> returns the <code>grid</code> element of <code>get_dock()</code> which is a list.
+<code>get_groups()</code> returns a list of panel groups from <code>get_grid()</code>.
+<code>get_groups_ids()</code> returns a character vector of groups ids
+from <code>get_groups()</code>.
+<code>get_groups_panels()</code> returns a list of character vector containing
+the ids of each panel within each group.
+<code>save_dock()</code> and <code>restore_dock()</code> are used for their side effect to
+allow to respectively serialise and restore a dock object.</p>
+    </div>
+    <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
-    <p>Only works with server side functions like <a href="add_panel.html">add_panel</a>. Don't call it
-from the UI.</p>
+    <p>Only works with server side functions like <a href="add_panel.html">add_panel</a>.
+Don't call it from the UI.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -115,7 +136,7 @@ from the UI.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by David Granjon, Nelson Stevens, Nicolas Bennett.</p>
+  <p>Developed by David Granjon, Nelson Stevens, Nicolas Bennett, cynkra GmbH.</p>
 </div>
 
 <div class="pkgdown-footer-right">
