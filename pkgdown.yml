@@ -1,8 +1,9 @@
 pandoc: 3.1.11
 pkgdown: 2.1.2
 pkgdown_sha: ~
-articles: {}
-last_built: 2025-05-07T21:23Z
+articles:
+  dockViewR: dockViewR.html
+last_built: 2025-05-08T10:13Z
 urls:
   reference: https://cynkra.github.io/dockViewR/reference
   article: https://cynkra.github.io/dockViewR/articles
