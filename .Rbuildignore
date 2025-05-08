@@ -21,3 +21,5 @@ _\.new\.png$
 ^air\.toml$
 ^\.lintr$
 ^cran-comments\.md$
+^vignettes/*_files$
+^vignettes/\.quarto$
