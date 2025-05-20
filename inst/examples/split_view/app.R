@@ -11,11 +11,11 @@ ui <- page_fillable(
 )
 
 server <- function(input, output, session) {
-  # exportTestValues(
-  #   panel_ids = get_panels_ids("split"),
-  #   active_group = get_active_group("split"),
-  #   grid = get_grid("split")
-  # )
+  exportTestValues(
+    panel_ids = get_panels_ids("split"),
+    active_group = get_active_group("split"),
+    grid = get_grid("split")
+  )
   output$split <- renderSplitView({
     split_view(
       panels = list(
