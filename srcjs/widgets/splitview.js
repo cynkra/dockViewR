@@ -41,6 +41,13 @@ const addPanel = (panel, api) => {
   let props = { ...panel, ...internals }
   return (api.addPanel(props))
 }
+const initShiny = (api, id) => {
+  api.panels.map((panel) => {
+    let pane = `#${id}-${panel.id}`;
+    Shiny.initializeInputs($(pane));
+    Shiny.bindAll($(pane));
+  })
+}
 
 HTMLWidgets.widget({
 
@@ -84,11 +91,7 @@ HTMLWidgets.widget({
         api.onDidLayoutChange(() => {
           window.dispatchEvent(new Event('resize'));
           if (HTMLWidgets.shinyMode) {
-            api.panels.map((panel) => {
-              let pane = `#${id}-${panel.id}`;
-              Shiny.initializeInputs($(pane));
-              Shiny.bindAll($(pane));
-            })
+            initShiny(api, id);
           }
         })
 
@@ -96,6 +99,8 @@ HTMLWidgets.widget({
         x.panels.map((panel) => {
           addPanel(panel, api);
         });
+        // init shiy
+        initShiny(api, id);
 
       },
 
