@@ -40,25 +40,18 @@ test_that("split_view demo works", {
     height = 752,
     width = 1211
   )
-  app$expect_values()
+  app$wait_for_idle()
+  app$expect_values(input = c("obs", "variable"), output = FALSE, export = TRUE)
   app$set_inputs(obs = 678)
-  app$expect_values(
-    output = FALSE,
-    export = TRUE
-  )
+  app$wait_for_idle()
+  app$expect_values(input = c("obs", "variable"), output = FALSE, export = TRUE)
   app$set_inputs(nodeSelectnetwork = character(0))
   app$set_inputs(selectedBynetwork = character(0))
-  app$expect_values(
-    output = FALSE,
-    export = TRUE
-  )
-  app$expect_values(
-    output = FALSE,
-    export = TRUE
-  )
+  app$wait_for_idle()
+  app$expect_values(input = c("obs", "variable"), output = FALSE, export = TRUE)
+  app$wait_for_idle()
+  app$expect_values(input = c("obs", "variable"), output = FALSE, export = TRUE)
   app$set_inputs(variable = "am")
-  app$expect_values(
-    output = FALSE,
-    export = TRUE
-  )
+  app$wait_for_idle()
+  app$expect_values(input = c("obs", "variable"), output = FALSE, export = TRUE)
 })
