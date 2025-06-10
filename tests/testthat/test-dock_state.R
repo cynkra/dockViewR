@@ -67,7 +67,8 @@ test_that("dock state app works", {
     height = 752,
     width = 1211
   )
-  app$wait_for_idle()
+
+  Sys.sleep(2)
   app$expect_values(input = "obs", output = FALSE, export = TRUE)
   app$click("restore")
   app$wait_for_idle()
