@@ -73,6 +73,10 @@ HTMLWidgets.widget({
             movePanel(m, api)
           })
 
+          Shiny.addCustomMessageHandler(el.id + '_select-panel', (m) => {
+            api.getPanel(m.id).api.setActive();
+          })
+
           // Force save dock
           Shiny.addCustomMessageHandler(el.id + '_save-state', (m) => {
             saveDock(id, api)

@@ -1,0 +1,38 @@
+{
+  "input": {
+    "obs": 500,
+    "variable": "cyl"
+  },
+  "export": {
+    "active_group": "1",
+    "grid": {
+      "root": {
+        "type": "branch",
+        "data": [
+          {
+            "type": "leaf",
+            "data": {
+              "views": [
+                "1",
+                "2",
+                "3"
+              ],
+              "activeView": "3",
+              "id": "1"
+            },
+            "size": 1143
+          }
+        ],
+        "size": 591.5
+      },
+      "width": 1143,
+      "height": 591.5,
+      "orientation": "HORIZONTAL"
+    },
+    "panel_ids": [
+      "1",
+      "2",
+      "3"
+    ]
+  }
+}
