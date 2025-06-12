@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">dockViewR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,8 +34,10 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.5" id="dockviewr-015">dockViewR 0.1.5<a class="anchor" aria-label="anchor" href="#dockviewr-015"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.2.0" id="dockviewr-020">dockViewR 0.2.0<a class="anchor" aria-label="anchor" href="#dockviewr-020"></a></h2>
 <ul><li>Add <code><a href="../reference/select_panel.html">select_panel()</a></code> function to select a specific panel by id from the server.</li>
+<li>Add <code>removable</code> parameter to <code><a href="../reference/add_panel.html">add_panel()</a></code> to allow panels to be removable or not. Default is FALSE so you don’t accidentally corrupt the layout of your app.</li>
+<li>Add <code>addTab</code> parameter to <code><a href="../reference/dock_view.html">dock_view()</a></code> to allow controlling the add tab behavior. By default, it is disabled. You can activate it by passing <code>list(enable = TRUE)</code>. By default, a JS callback inserts a panel into the dock with instructions on how to overwrite it by content created from the server of a Shiny app. This control is global, that is, you can’t have panel for which addTab is enabled and another for which it is disabled due to constraints imposed by the JS api.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="dockviewr-010">dockViewR 0.1.0<a class="anchor" aria-label="anchor" href="#dockviewr-010"></a></h2><p class="text-muted">CRAN release: 2025-05-09</p>
