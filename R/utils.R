@@ -144,3 +144,8 @@ validate_position_direction <- function(id, position) {
 `%OR%` <- function(x, y) {
   if (is.null(x)) y else x
 }
+
+#' @keywords internal
+is_js <- function(x) {
+  inherits(x, "JS_EVAL")
+}

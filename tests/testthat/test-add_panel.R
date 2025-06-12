@@ -77,7 +77,7 @@ test_that("add_panel works", {
   expect_type(session$lastCustomMessage$message, "list")
   expect_named(
     session$lastCustomMessage$message,
-    c("id", "title", "inactive", "content", "position")
+    c("id", "title", "inactive", "removable", "content", "position")
   )
   expect_identical(session$lastCustomMessage$message$id, "4")
   expect_type(session$lastCustomMessage$message$position, "list")
