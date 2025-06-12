@@ -11,6 +11,9 @@
 #' \url{https://dockview.dev/docs/api/dockview/options/}.
 #' @param theme Theme. One of
 #' \code{c("abyss", "dark", "light", "vs", "dracula", "replit")}.
+#' @param addTab Globally controls the add tab behavior. List with enable and callback.
+#' Enable is a boolean, default to FALSE and callback is a
+#' JavaScript function passed with \link[htmltwidgets]{JS}.
 #' @param width Widget width.
 #' @param height Widget height.
 #' @param elementId When used outside Shiny.
@@ -96,6 +99,7 @@ dock_view <- function(
     "dracula",
     "replit"
   ),
+  addTab = list(enable = FALSE, callback = NULL),
   width = NULL,
   height = NULL,
   elementId = NULL
@@ -109,10 +113,71 @@ dock_view <- function(
   # check reference panels ids
   check_panel_refs(panels, ids)
 
+  if (addTab$enable) {
+    if (is.null(addTab$callback)) {
+      addTab$callback <- JS(
+        "(config) => {
+          const addPanel = (panel, api) => {
+            let internals = {
+              component: 'default',
+              params: {
+                content: panel.content,
+                addTab: panel.addTab
+              }
+            }
+
+            // Handle removable option. If no,
+            // use the default tab component without the close panel button.
+            if (!panel.removable) {
+              internals.tabComponent = 'default';
+            }
+            let props = { ...panel, ...internals }
+            return (api.addPanel(props))
+          }
+          const defaultPanel = (pnId) => {
+            return (`
+              <p>Exchange me by running:</p>
+              <p>removeUI(<br>
+                &nbsp;&nbsp;selector = \"#${pnId} > *\",<br>
+                &nbsp;&nbsp;multiple = TRUE<br>
+              )</p>
+              <p>shiny::insertUI(<br>
+                    &nbsp;&nbsp;selector = \"#${pnId}\",<br>
+                    &nbsp;&nbsp;where = \"beforeEnd\",<br>
+                    &nbsp;&nbsp;ui = \"your ui code here\"<br>
+              )</p>
+            `)
+          }
+          const dockId = config.containerApi.component
+            .gridview.element.closest('.dockview')
+            .attributes.id.textContent;
+          const pnId = `panel-${Date.now()}`
+          addPanel({
+            id: pnId,
+            title: 'Panel new',
+            inactive: false,
+            content: {
+              head: '',
+              singletons: [],
+              dependencies: [],
+              html: defaultPanel(dockId + '-' + pnId)
+            },
+            position: { referenceGroup: config.group.id, direction: 'within' }
+          }, config.containerApi);
+        }"
+      )
+    } else {
+      if (!is_js(addTab$callback)) {
+        stop("`callback` must be a JavaScript function.")
+      }
+    }
+  }
+
   # forward options using x
   x <- list(
     theme = theme,
     panels = panels,
+    addTab = addTab,
     ...
   )
 
@@ -153,6 +218,7 @@ dock_view <- function(
 #' @param title Panel title.
 #' @param content Panel content. Can be a list of Shiny tags.
 #' @param active Is active?
+#' @param removable Is the panel removable? Default to FALSE.
 #' @param ... Other options passed to the API.
 #' See \url{https://dockview.dev/docs/api/dockview/panelApi/}.
 #' If you pass position, it must be a list with 2 fields:
@@ -171,7 +237,14 @@ dock_view <- function(
 #' - ...: extra parameters to pass to the API.
 #'
 #' @export
-panel <- function(id, title, content, active = TRUE, ...) {
+panel <- function(
+  id,
+  title,
+  content,
+  active = TRUE,
+  removable = FALSE,
+  ...
+) {
   # We can't check id uniqueness here because panel has no
   # idea of other existing panel ids at that point.
   id <- as.character(id)
@@ -180,6 +253,7 @@ panel <- function(id, title, content, active = TRUE, ...) {
     id = id,
     title = title,
     inactive = !active,
+    removable = removable,
     content = htmltools::renderTags(content)
   )
 
@@ -240,7 +314,12 @@ renderDockView <- function(expr, env = parent.frame(), quoted = FALSE) {
   if (!quoted) {
     expr <- substitute(expr)
   } # force quoted
-  htmlwidgets::shinyRenderWidget(expr, dockViewOutput, env, quoted = TRUE)
+  htmlwidgets::shinyRenderWidget(
+    expr,
+    dockViewOutput,
+    env,
+    quoted = TRUE
+  )
 } #nocov end
 
 #' Alias to \link{renderDockView}

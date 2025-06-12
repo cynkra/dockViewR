@@ -4,7 +4,7 @@
 \alias{panel}
 \title{Dock panel}
 \usage{
-panel(id, title, content, active = TRUE, ...)
+panel(id, title, content, active = TRUE, removable = FALSE, ...)
 }
 \arguments{
 \item{id}{Panel unique id.}
@@ -14,6 +14,8 @@ panel(id, title, content, active = TRUE, ...)
 \item{content}{Panel content. Can be a list of Shiny tags.}
 
 \item{active}{Is active?}
+
+\item{removable}{Is the panel removable? Default to FALSE.}
 
 \item{...}{Other options passed to the API.
 See \url{https://dockview.dev/docs/api/dockview/panelApi/}.
