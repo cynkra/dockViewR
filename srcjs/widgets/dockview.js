@@ -62,6 +62,13 @@ HTMLWidgets.widget({
           window.dispatchEvent(new Event('resize'));
         })
 
+        api.onDidRemovePanel((e) => {
+          if (HTMLWidgets.shinyMode) {
+            let pane = `#${id}-${e.id}`;
+            Shiny.setInputValue(id + '_removed-panel', e.id, { priority: 'event' });
+          }
+        })
+
         // Init panels
         x.panels.map((panel) => {
           addPanel(panel, api);
