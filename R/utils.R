@@ -20,7 +20,7 @@ print_r_code <- function(path) {
 #' @keywords internal
 extract_panel_deps <- function(panels) {
   dropNulls(
-    lapply(panels, \(panel) {
+    lapply(panels, function(panel) {
       if (length(panel$content$dependencies)) {
         panel$content$dependencies
       } else {
@@ -32,7 +32,7 @@ extract_panel_deps <- function(panels) {
 
 #' @keywords internal
 check_panel_ids <- function(panels) {
-  ids <- unlist(lapply(panels, \(x) x$id))
+  ids <- unlist(lapply(panels, function(x) x$id))
   dupes <- unique(ids[duplicated(ids)])
   if (length(dupes))
     stop(sprintf(
@@ -46,7 +46,7 @@ check_panel_ids <- function(panels) {
 check_panel_refs <- function(panels, ids) {
   refs <- unlist(lapply(
     panels,
-    \(x) {
+    function(x) {
       res <- c(x[["position"]][["referencePanel"]])
       if (!is.null(res)) names(res) <- x[["id"]]
       res
@@ -143,4 +143,9 @@ validate_position_direction <- function(id, position) {
 
 `%OR%` <- function(x, y) {
   if (is.null(x)) y else x
+}
+
+#' @keywords internal
+is_js <- function(x) {
+  inherits(x, "JS_EVAL")
 }

@@ -77,7 +77,7 @@ test_that("add_panel works", {
   expect_type(session$lastCustomMessage$message, "list")
   expect_named(
     session$lastCustomMessage$message,
-    c("id", "title", "inactive", "content", "position")
+    c("id", "title", "inactive", "removable", "content", "position")
   )
   expect_identical(session$lastCustomMessage$message$id, "4")
   expect_type(session$lastCustomMessage$message$position, "list")
@@ -149,7 +149,13 @@ test_that("add_panel with + leftheader button works", {
   app$click(selector = ".dv-left-actions-container .fas.fa-plus")
   app$set_inputs(
     selinp = app$get_js(
-      "Object.getOwnPropertyNames(Shiny.shinyapp.$inputValues['dock_state']['panels'])"
+      "Object
+        .getOwnPropertyNames(
+          Shiny
+            .shinyapp
+            .$inputValues['dock_state']['panels']
+        )
+      "
     )[[
       2
     ]]

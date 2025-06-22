@@ -1,0 +1,363 @@
+---
+title: "dockViewR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette's Title}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Dynamically add panel
+
+You can add __panels__ to an existing __dock__ with `add_panel()` which expects a `panel()` object.
+
+```{r add-panel, eval=FALSE, echo = FALSE}
+library(dockViewR)
+shinyAppDir(system.file("examples/add_panel", package = "dockViewR"))
+```
+
+<details>
+<summary>Toggle code</summary>
+
+```{r, results="asis", echo=FALSE, warning=FALSE, comment = ""}
+dockViewR:::print_r_code("examples/add_panel/app.R")
+```
+
+</details>
+
+<br/>
+
+```{r add-panel_url, echo = FALSE, results = 'asis'}
+# extract the code from knitr code chunks by ID
+code <- paste0(
+  c(
+    "webr::install(\"dockViewR\", repos = \"https://rinterface.github.io/rinterface-wasm-cran/\")",
+    knitr::knit_code$get("add-panel")
+  ),
+  collapse = "\n"
+)
+
+url <- roxy.shinylive::create_shinylive_url(code, header = FALSE)
+```
+
+```{r add-panel_iframe, echo = FALSE, eval = TRUE}
+shiny::tags$iframe(
+  class = "border border-5 rounded shadow-lg",
+  src = url,
+  width = "125%",
+  height = "900px"
+)
+```
+
+## Dynamically remove panels
+
+You can remove __panels__ from an existing __dock__ with `remove_panel()` which expects the `id` of the panel to remove, in addition to the dock `id`.
+
+```{r remove-panel, eval=FALSE, echo = FALSE}
+library(dockViewR)
+shinyAppDir(system.file("examples/remove_panel", package = "dockViewR"))
+```
+
+<details>
+<summary>Toggle code</summary>
+
+```{r, results="asis", echo=FALSE, warning=FALSE, comment = ""}
+dockViewR:::print_r_code("examples/remove_panel/app.R")
+
+```
+
+</details>
+
+<br/>
+
+```{r remove-panel_url, echo = FALSE, results = 'asis'}
+# extract the code from knitr code chunks by ID
+code <- paste0(
+  c(
+    "webr::install(\"dockViewR\", repos = \"https://rinterface.github.io/rinterface-wasm-cran/\")",
+    knitr::knit_code$get("remove-panel")
+  ),
+  collapse = "\n"
+)
+
+url <- roxy.shinylive::create_shinylive_url(code, header = FALSE)
+```
+
+```{r remove-panel_iframe, echo = FALSE, eval = TRUE}
+shiny::tags$iframe(
+  class = "border border-5 rounded shadow-lg",
+  src = url,
+  width = "125%",
+  height = "900px"
+)
+```
+
+## Dynamically move panel
+
+You can __move__ individual panels in the dock with `move_panel()` which expects:
+
+- The dock id.
+- The panel id: can be a string or numeric value.
+- The position. If left NULL, the panel is moved to the latest index. Otherwise choose one of `"left", "right", "top", "bottom", "center"`.
+- `group`: id of the panel that belongs to another group. The panel will be moved relative to the second group, depending on
+the position parameter. If left NULL, it is added on the right side.
+- index: If panels belong to the same group, you can use index to move the target panel at the desired position. When group is left NULL, index must be passed and cannot exceed the total number of panels or be negative.
+
+```{r move-panel, eval=FALSE, echo = FALSE}
+library(dockViewR)
+shinyAppDir(system.file("examples/move_panel", package = "dockViewR"))
+```
+
+<details>
+<summary>Toggle code</summary>
+
+```{r, results="asis", echo=FALSE, warning=FALSE, comment = ""}
+dockViewR:::print_r_code("examples/move_panel/app.R")
+
+```
+
+</details>
+
+<br/>
+
+```{r move-panel_url, echo = FALSE, results = 'asis'}
+# extract the code from knitr code chunks by ID
+code <- paste0(
+  c(
+    "webr::install(\"dockViewR\", repos = \"https://rinterface.github.io/rinterface-wasm-cran/\")",
+    knitr::knit_code$get("move-panel")
+  ),
+  collapse = "\n"
+)
+
+url <- roxy.shinylive::create_shinylive_url(code, header = FALSE)
+```
+
+```{r move-panel_iframe, echo = FALSE, eval = TRUE}
+shiny::tags$iframe(
+  class = "border border-5 rounded shadow-lg",
+  src = url,
+  width = "125%",
+  height = "900px"
+)
+```
+
+## Dynamically move groups
+
+You can move __groups__ of panels using 2 different APIs described below.
+
+### Group point of view
+
+To move a __group__ of panel(s), `move_group()` works by selecting the group __source__ id, that is `from`, and the group __target__ id, `to`. Position is relative to the `to`.
+
+```{r move-group, eval=FALSE, echo = FALSE}
+library(dockViewR)
+shinyAppDir(system.file("examples/move_group", package = "dockViewR"))
+```
+
+<details>
+<summary>Toggle code</summary>
+
+```{r, results="asis", echo=FALSE, warning=FALSE, comment = ""}
+dockViewR:::print_r_code("examples/move_group/app.R")
+```
+
+</details>
+
+<br/>
+
+```{r move-group_url, echo = FALSE, results = 'asis'}
+# extract the code from knitr code chunks by ID
+code <- paste0(
+  c(
+    "webr::install(\"dockViewR\", repos = \"https://rinterface.github.io/rinterface-wasm-cran/\")",
+    knitr::knit_code$get("move-group")
+  ),
+  collapse = "\n"
+)
+
+url <- roxy.shinylive::create_shinylive_url(code, header = FALSE)
+```
+
+```{r move-group_iframe, echo = FALSE, eval = TRUE}
+shiny::tags$iframe(
+  class = "border border-5 rounded shadow-lg",
+  src = url,
+  width = "125%",
+  height = "900px"
+)
+```
+
+### Panel point of view
+
+Another approach is possible with `move_group2`, which works from the point of view of a panel. 
+This means given `from` which the panel id, `{dockViewR}` is able to find the group where it belongs to. 
+Same for the `to`. This way you don't have to worry about group ids, which are implicit.
+
+```{r move-group2, eval=FALSE, echo = FALSE}
+library(dockViewR)
+shinyAppDir(system.file("examples/move_group2", package = "dockViewR"))
+```
+
+<details>
+<summary>Toggle code</summary>
+
+```{r, results="asis", echo=FALSE, warning=FALSE, comment = ""}
+dockViewR:::print_r_code("examples/move_group2/app.R")
+```
+
+</details>
+
+<br/>
+
+```{r move-group2_url, echo = FALSE, results = 'asis'}
+# extract the code from knitr code chunks by ID
+code <- paste0(
+  c(
+    "webr::install(\"dockViewR\", repos = \"https://rinterface.github.io/rinterface-wasm-cran/\")",
+    knitr::knit_code$get("move-group2")
+  ),
+  collapse = "\n"
+)
+
+url <- roxy.shinylive::create_shinylive_url(code, header = FALSE)
+```
+
+```{r move-group2_iframe, echo = FALSE, eval = TRUE}
+shiny::tags$iframe(
+  class = "border border-5 rounded shadow-lg",
+  src = url,
+  width = "125%",
+  height = "900px"
+)
+``` 
+
+## Get the state of the dock
+
+You can access the __state__ of the dock which can return something like:
+
+```{r}
+dockViewR:::test_dock
+```
+
+The dock state is a deeply nested list:
+
+```{r}
+str(dockViewR:::test_dock)
+```
+
+On the top level it has 3 elements:
+
+- __grid__: a list representing the dock layout.
+- __panels__: a list having the same structure as `panel()` composing the dock.
+- __activeGroup__: the current active group (a string).
+
+Within the Shiny server function, on can access the state of the dock with `get_dock()`, passing the dock id (since the app may have multiple docks).
+
+Each other function allows to deep dive into the returned value of `get_dock()`:
+
+- `get_panels()` returns the __panels__ element of `get_dock()`.
+    - `get_panels_ids()` returns a character vector containing all panel ids from `get_panels()`. 
+- `get_active_group()` extracts the __activeGroup__ component of `get_dock()` as a string.
+- `get_grid()` returns the __grid__ element of `get_dock()` which is a list.
+    -`get_groups()` returns a list of panel groups from `get_grid()`.
+    - `get_groups_ids()` returns a character vector of groups ids from `get_groups()`. 
+    - `get_groups_panels()` returns a list of character vector containing the ids of each panel within each group. 
+
+
+`save_dock()` and `restore_dock()` are used for their side effect to allow to respectively __serialise__ and __restore__ a dock object, as shown in the following demonstration app.
+
+Each time a panel moves, or a group is maximized, the dock state is updated.
+
+```{r serialise, eval=FALSE, echo = FALSE}
+library(dockViewR)
+shinyAppDir(system.file("examples/serialise", package = "dockViewR"))
+```
+
+<details>
+<summary>Toggle code</summary>
+
+```{r, results="asis", echo=FALSE, warning=FALSE, comment = ""}
+dockViewR:::print_r_code("examples/serialise/app.R")
+```
+
+</details>
+
+<br/>
+
+```{r serialise_url, echo = FALSE, results = 'asis'}
+# extract the code from knitr code chunks by ID
+code <- paste0(
+  c(
+    "webr::install(\"dockViewR\", repos = \"https://rinterface.github.io/rinterface-wasm-cran/\")",
+    knitr::knit_code$get("serialise")
+  ),
+  collapse = "\n"
+)
+
+url <- roxy.shinylive::create_shinylive_url(code, header = FALSE)
+```
+
+```{r serialise_iframe, echo = FALSE, eval = TRUE}
+shiny::tags$iframe(
+  class = "border border-5 rounded shadow-lg",
+  src = url,
+  width = "125%",
+  height = "900px"
+)
+```
+
+## Replace panel content
+
+You may have noticed that you can add panels on the fly by using the `+` icon next to the panel tab.
+This panel has a unique id given on the fly and you can't know it when you start the app. Using the dock state,
+you can find this new id and replace the panel content with `shiny::insertUI()` and `shiny::removeUI()`, as shown below. In brief,
+the expected selector would be something like `#<DOCK_ID>-<PANEL_ID > *` (with `multiple = TRUE` to remove elements).
+
+```{r replace_panel_content, eval=FALSE, echo = FALSE}
+library(dockViewR)
+shinyAppDir(system.file(
+  "examples/replace_panel_content",
+  package = "dockViewR"
+))
+```
+
+<details>
+<summary>Toggle code</summary>
+
+```{r, results="asis", echo=FALSE, warning=FALSE, comment = ""}
+dockViewR:::print_r_code("examples/replace_panel_content/app.R")
+```
+
+</details>
+
+<br/>
+
+```{r replace_panel_content_url, echo = FALSE, results = 'asis'}
+# extract the code from knitr code chunks by ID
+code <- paste0(
+  c(
+    "webr::install(\"dockViewR\", repos = \"https://rinterface.github.io/rinterface-wasm-cran/\")",
+    knitr::knit_code$get("replace_panel_content")
+  ),
+  collapse = "\n"
+)
+
+url <- roxy.shinylive::create_shinylive_url(code, header = FALSE)
+```
+
+```{r replace_panel_content_iframe, echo = FALSE, eval = TRUE}
+shiny::tags$iframe(
+  class = "border border-5 rounded shadow-lg",
+  src = url,
+  width = "125%",
+  height = "900px"
+)
+```

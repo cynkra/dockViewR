@@ -4,7 +4,7 @@
 \alias{panel}
 \title{Dock panel}
 \usage{
-panel(id, title, content, active = TRUE, ...)
+panel(id, title, content, active = TRUE, removable = FALSE, ...)
 }
 \arguments{
 \item{id}{Panel unique id.}
@@ -15,17 +15,32 @@ panel(id, title, content, active = TRUE, ...)
 
 \item{active}{Is active?}
 
+\item{removable}{Is the panel removable? Default to FALSE.}
+
 \item{...}{Other options passed to the API.
-See \url{https://dockview.dev/docs/api/dockview/panelApi}.
+See \url{https://dockview.dev/docs/api/dockview/panelApi/}.
 If you pass position, it must be a list with 2 fields:
 \itemize{
 \item referencePanel: reference panel id.
 \item direction: one of \code{above}, \code{below}, \code{left}, \code{right} or \code{within}
-(\code{above}, \code{below}, \code{left}, \code{right} put the panel in a new group, while \code{within} puts the panel
-after its reference panel in the same group).
+(\code{above}, \code{below}, \code{left}, \code{right} put the panel in a new group,
+while \code{within} puts the panel after its reference panel in the same group).
 Position is relative to the reference panel target.
 }}
 }
+\value{
+A list representing a panel object to be consumed by
+\link{dock_view}:
+\itemize{
+\item id: unique panel id (string).
+\item title: panel title (string).
+\item content: panel content (\code{shiny.tag.list} or single \code{shiny.tag}).
+\item active: whether the panel is active or not (boolean).
+\item ...: extra parameters to pass to the API.
+}
+}
 \description{
-Create a dock panel
+Create a panel for use within a \code{\link[=dock_view]{dock_view()}} widget.
+Panels are the main container components that can be docked, dragged,
+resized, and arranged within the dockview interface.
 }

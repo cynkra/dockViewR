@@ -18,3 +18,8 @@
 _\.new\.png$
 ^\.vscode$
 ^codecov\.yml$
+^air\.toml$
+^\.lintr$
+^cran-comments\.md$
+^vignettes/*_files$
+^vignettes/\.quarto$

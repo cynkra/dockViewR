@@ -2,13 +2,14 @@
 % Please edit documentation in R/dock_view.R
 \name{dock_view}
 \alias{dock_view}
-\title{Dock view widget}
+\title{Create a dock view widget}
 \usage{
 dock_view(
   panels,
   ...,
   theme = c("light-spaced", "light", "abyss", "abyss-spaced", "dark", "vs", "dracula",
     "replit"),
+  addTab = list(enable = FALSE, callback = NULL),
   width = NULL,
   height = NULL,
   elementId = NULL
@@ -17,10 +18,15 @@ dock_view(
 \arguments{
 \item{panels}{Widget configuration. Slot for \link{panel}.}
 
-\item{...}{Other options. See \url{https://dockview.dev/docs/api/dockview/options}.}
+\item{...}{Other options. See
+\url{https://dockview.dev/docs/api/dockview/options/}.}
 
 \item{theme}{Theme. One of
 \code{c("abyss", "dark", "light", "vs", "dracula", "replit")}.}
+
+\item{addTab}{Globally controls the add tab behavior. List with enable and callback.
+Enable is a boolean, default to FALSE and callback is a
+JavaScript function passed with \link[htmltwidgets]{JS}.}
 
 \item{width}{Widget width.}
 
@@ -28,14 +34,21 @@ dock_view(
 
 \item{elementId}{When used outside Shiny.}
 }
+\value{
+An HTML widget object.
+}
 \description{
-Create a dock view widget
+Creates an interactive dock view widget that enables flexible
+layout management with draggable, resizable, and dockable panels.
+This is a wrapper around the dockview.dev
+JavaScript library, providing a powerful interface for
+creating IDE-like layouts in Shiny applications or R Markdown documents.
 }
 \section{Examples in Shinylive}{
 \describe{
   \item{example-1}{
-    \href{https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YACZECAawBqLONSxDcAAgZxURdooC8ioQAtSpVO0QB6EwzbkGAMygE4GAOYtSugK50MLIuctwbdnAAtNRQ7DBBBAxQECZCAJQCENwsjFAMAJ587LpsGYnJqdGZfHTsKXQFFcVZohLSslgFSW4sigA8QYqoUI5wAPrWLLxQdNxwghCKinVSMtQA8m6Gy4IiYuIJSc0c-gBu-h1d1m4QBKTeEHxsqMtKRMu3pErscOzsl-GKIEmKDyukAAksyOygown8ABENg1qHwflNprN+nt5pNphiehA4NwNNoUpx0RjMTEcUTiRiWMItDowABGBS-CkYi6kcY0oQABVJ3EUDLwTOZimIZAopBpXEcABkWITBULFOUqf4AJIQJ7khXTIREMqMxFa7VgABybhgdEORGsfzK+ygFxIxn1hoxMDYNIADLh5VqYFAAB40ukekPeg2GvY8NxwGkAVhDPuZ8TDLtQ3CIpCWALWwllpE56dIW3DFIKQuTie6PM1FKpHLAACZnQrWeztFyeYomwKS8SReQyBLejK5b2Ka9xuc1RrK8yhJGLKNxs2XUJJOkWEu4IgV4aCGsAMIZFIQCEMdhCesEY8KWkAFWiHDd70ul-bKBgt6EAHE4OkL2A9Z9OkxYuhWY7ElwYxwFmM4iPaUCgQq4FamoHwOlM+J5jWzIqNY-gUPY3LYry778imhq5io5yXPWFiOPoQizooZZJj6KGQbocDwHRqgpEWYCCmWAC+Ox-I8yzAnmBYZqCKinv4MmkPCgoqAAjtc6qSbq7CsYouSEgwEBEAwMCaU8gI6fEIllv8FnCAhcngv4d5buSCIUjApAEP+wBKPuQgwKgji3jckkLpu0HJjMDBEKgNIAGIAIJSgAygAogAuoKwkUcoRDUNA8B4ood5YAAqulvwFMJSQ5HkSXoHwrQvPs-jxGAwmZUAA}{Open in Shinylive}
-    \if{html}{\out{<iframe class="iframe_shinylive" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YACZECAawBqLONSxDcAAgZxURdooC8ioQAtSpVO0QB6EwzbkGAMygE4GAOYtSugK50MLIuctwbdnAAtNRQ7DBBBAxQECZCAJQCENwsjFAMAJ587LpsGYnJqdGZfHTsKXQFFcVZohLSslgFSW4sigA8QYqoUI5wAPrWLLxQdNxwghCKinVSMtQA8m6Gy4IiYuIJSc0c-gBu-h1d1m4QBKTeEHxsqMtKRMu3pErscOzsl-GKIEmKDyukAAksyOygown8ABENg1qHwflNprN+nt5pNphiehA4NwNNoUpx0RjMTEcUTiRiWMItDowABGBS-CkYi6kcY0oQABVJ3EUDLwTOZimIZAopBpXEcABkWITBULFOUqf4AJIQJ7khXTIREMqMxFa7VgABybhgdEORGsfzK+ygFxIxn1hoxMDYNIADLh5VqYFAAB40ukekPeg2GvY8NxwGkAVhDPuZ8TDLtQ3CIpCWALWwllpE56dIW3DFIKQuTie6PM1FKpHLAACZnQrWeztFyeYomwKS8SReQyBLejK5b2Ka9xuc1RrK8yhJGLKNxs2XUJJOkWEu4IgV4aCGsAMIZFIQCEMdhCesEY8KWkAFWiHDd70ul-bKBgt6EAHE4OkL2A9Z9OkxYuhWY7ElwYxwFmM4iPaUCgQq4FamoHwOlM+J5jWzIqNY-gUPY3LYry778imhq5io5yXPWFiOPoQizooZZJj6KGQbocDwHRqgpEWYCCmWAC+Ox-I8yzAnmBYZqCKinv4MmkPCgoqAAjtc6qSbq7CsYouSEgwEBEAwMCaU8gI6fEIllv8FnCAhcngv4d5buSCIUjApAEP+wBKPuQgwKgji3jckkLpu0HJjMDBEKgNIAGIAIJSgAygAogAuoKwkUcoRDUNA8B4ood5YAAqulvwFMJSQ5HkSXoHwrQvPs-jxGAwmZUAA" style="height: 800px; width: 100vw; max-width: 1400px; border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem; position: absolute; left: 50\%; margin-top: 30px; transform: translateX(-50\%); z-index: 1"></iframe>}}
+    \href{https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6EAAQCwAEyIEA1gDUWcaljG4hwhnFRF2wgLyiwAC1KlU7RAHoLDNuQYAzKATgYA5i1KGArnQwsi1rZwDk5wALTUUOwwYQQMUBAWYkIAlELcLIxQDACefOyGbDlpEBlZuXx07GUlZfEVkjLyilglQl4swgA8YcKoUK5wAPr2LLxQdNxwgiLCjXIK1ADyXqarghJS0mIlbRzBAG7B3b32XhAEpP4QfGyoq7jCRKv3pI-scOzs1ynCIGrPNakAAk8xO6go4mCABEts1qHx-rM5lshgdFjNhFisf0IHBuDp9BlOJjsdjcfjSWTsSxxHoDABGFRqanYq6kKb0sQABQS+OETLwLNZwmIZAopHpXFcABkWCThSLhNVacEAJIQV5UpVYsREKrM5E6gwAOS8MDoxyI9ieVUOUCuJHMhuN2JgbHpAAZVEadTAoAAPekMz2hn2urEHHheOD0gCsocVIpS4eNqG4RFIKyBG3E8tI3IzpB2SbJJWTqepFP4pZpdP0YgATC6lezOQ2wLy8dxhM2hb6yWLyGQpQM5QqB9SPlNLhqtbXWWIozYJlMW66xLJsixV3BEOvjQQNgBhHIZCBQhjsMRcwhnlQGAAq8Q47q+1xvHdgD7EAHE4Nk15gLegzZCWk5lpWra7tm84SA6UDgTqKYLn02geNc9LEqQ2oiho9jBBQzhdvyHaClBIp5holyYR2NiuMYyQQcI5asqx2Iob6nhwPAt4aOmHhMRxagAL57E8LyrKC+aFpm4IaBewSyThSLYhoACOtyalJ+rsOxhQkgwEBEAwMBaa8wK6Sk5ZiQCkkguICHyZCwSPruVKqWSMCkAQgHAI8R5iDAqCuA+dxScuO6THAKZzAwRCoPSABiACCMoAMoAKIALrCiJlbxdQ0DwISwiPlgACqmVqCUIlCAURQpegfAdO8hzBCkYAidlQA}{Open in Shinylive}
+    \if{html}{\out{<iframe class="iframe_shinylive" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6EAAQCwAEyIEA1gDUWcaljG4hwhnFRF2wgLyiwAC1KlU7RAHoLDNuQYAzKATgYA5i1KGArnQwsi1rZwDk5wALTUUOwwYQQMUBAWYkIAlELcLIxQDACefOyGbDlpEBlZuXx07GUlZfEVkjLyilglQl4swgA8YcKoUK5wAPr2LLxQdNxwgiLCjXIK1ADyXqarghJS0mIlbRzBAG7B3b32XhAEpP4QfGyoq7jCRKv3pI-scOzs1ynCIGrPNakAAk8xO6go4mCABEts1qHx-rM5lshgdFjNhFisf0IHBuDp9BlOJjsdjcfjSWTsSxxHoDABGFRqanYq6kKb0sQABQS+OETLwLNZwmIZAopHpXFcABkWCThSLhNVacEAJIQV5UpVYsREKrM5E6gwAOS8MDoxyI9ieVUOUCuJHMhuN2JgbHpAAZVEadTAoAAPekMz2hn2urEHHheOD0gCsocVIpS4eNqG4RFIKyBG3E8tI3IzpB2SbJJWTqepFP4pZpdP0YgATC6lezOQ2wLy8dxhM2hb6yWLyGQpQM5QqB9SPlNLhqtbXWWIozYJlMW66xLJsixV3BEOvjQQNgBhHIZCBQhjsMRcwhnlQGAAq8Q47q+1xvHdgD7EAHE4Nk15gLegzZCWk5lpWra7tm84SA6UDgTqKYLn02geNc9LEqQ2oiho9jBBQzhdvyHaClBIp5holyYR2NiuMYyQQcI5asqx2Iob6nhwPAt4aOmHhMRxagAL57E8LyrKC+aFpm4IaBewSyThSLYhoACOtyalJ+rsOxhQkgwEBEAwMBaa8wK6Sk5ZiQCkkguICHyZCwSPruVKqWSMCkAQgHAI8R5iDAqCuA+dxScuO6THAKZzAwRCoPSABiACCMoAMoAKIALrCiJlbxdQ0DwISwiPlgACqmVqCUIlCAURQpegfAdO8hzBCkYAidlQA" style="height: 800px; width: 100vw; max-width: 1400px; border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem; position: absolute; left: 50\%; margin-top: 30px; transform: translateX(-50\%); z-index: 1"></iframe>}}
     \if{html}{\out{<a style='height: 800px; display: block;'></a>}}
   }
 }

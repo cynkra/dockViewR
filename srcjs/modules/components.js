@@ -9,13 +9,31 @@ class Panel {
   }
 
   init(config) {
-    let dockId = $(config.containerApi.component.gridview.element)
-      .closest(".dockview")
-      .attr("id");
+    let dockId = config.containerApi.component.gridview.element.closest('.dockview').attributes.id.textContent;
     this._element.id = dockId + '-' + config.api.id;
     this._element.innerHTML = config.params.content.html
     this._element.className = 'dockview-panel'
     this._element.style = 'height: 100%; margin: 10px; padding: 10px; overflow: auto;'
+  }
+}
+
+// Tab without remove button
+class CustomTab {
+  constructor() {
+    this._element = document.createElement('div');
+
+    this.e1 = document.createElement('div');
+    this.e2 = document.createElement('span');
+
+    this.element.append(this.e1, this.e2);
+  }
+
+  get element() {
+    return this._element;
+  }
+
+  init(config) {
+    this.e1.textContent = config.title;
   }
 }
 
@@ -30,14 +48,16 @@ class RightHeader {
 
   init(config) {
     this._element.style = 'height: 100%; padding: 8px'
-    this._element.innerHTML = '<i class="fas fa-expand" role="presentation" aria-label="plus icon"></i>'
+    this._element.innerHTML = '<i class="fas fa-expand" role="presentation" aria-label="expand icon"></i>'
     this._element.addEventListener('click', (e) => {
       if (!config.api.isMaximized()) {
-        $(e.target).removeClass('fa-expand').addClass('fa-compress')
-        config.api.maximize()
+        e.target.classList.remove('fa-expand');
+        e.target.classList.add('fa-compress');
+        config.api.maximize();
       } else {
-        config.api.exitMaximized()
-        $(e.target).removeClass('fa-compress').addClass('fa-expand')
+        config.api.exitMaximized();
+        e.target.classList.remove('fa-compress');
+        e.target.classList.add('fa-expand');
       }
     });
   }
@@ -57,25 +77,12 @@ class LeftHeader {
   }
 
   init(config) {
-    let dockId = $(config.containerApi.component.gridview.element)
-      .closest(".dockview")
-      .attr("id");
+    // If addTab is false, we do not need to render this component
+    if (!config.group._params.params.addTab.enable) return null;
     this._element.style = 'height: 100%; padding: 8px'
     this._element.innerHTML = '<i class="fas fa-plus" role="presentation" aria-label="plus icon"></i>'
     this._element.addEventListener('click', (e) => {
-      const pnId = `panel-${Date.now()}`
-      addPanel({
-        id: pnId,
-        title: "Panel new",
-        inactive: false,
-        content: {
-          head: "",
-          singletons: [],
-          dependencies: [],
-          html: defaultPanel(dockId + '-' + pnId)
-        },
-        position: { referenceGroup: config.group.id, direction: "within" }
-      }, config.containerApi);
+      config.group._params.params.addTab.callback(config);
     });
   }
   dispose() {
@@ -84,4 +91,4 @@ class LeftHeader {
   }
 }
 
-export { RightHeader, LeftHeader, Panel };
+export { RightHeader, LeftHeader, Panel, CustomTab };

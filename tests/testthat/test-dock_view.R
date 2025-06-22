@@ -1,14 +1,14 @@
 test_that("dock_view works", {
   pnls <- lapply(
     paste0("id-", c(1, 2, 1)),
-    \(x) panel(id = x, title = "title", content = shiny::h1("content"))
+    function(x) panel(id = x, title = "title", content = shiny::h1("content"))
   )
 
   expect_snapshot(error = TRUE, dock_view(pnls))
 
   pnls <- lapply(
     paste0("id-", c(1, 2, 1, 2)),
-    \(x) panel(id = x, title = "title", content = shiny::h1("content"))
+    function(x) panel(id = x, title = "title", content = shiny::h1("content"))
   )
   expect_snapshot(error = TRUE, dock_view(pnls))
 
