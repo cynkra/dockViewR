@@ -4,12 +4,19 @@
 \alias{update_dock_view}
 \title{Update options for dockview instance}
 \usage{
-update_dock_view(options, session = getDefaultReactiveDomain())
+update_dock_view(dock_id, options, session = getDefaultReactiveDomain())
 }
 \arguments{
+\item{dock_id}{The id of the dock view widget to update.}
+
 \item{options}{List of options for the \link{dock_view} instance.}
 
 \item{session}{Shiny session object.}
+}
+\value{
+This function is called for its side effect.
+It sends a message to JavaScript through the current websocket connection,
+leveraging the shiny session object.
 }
 \description{
 This does not rerender the widget, just update options like global theme.

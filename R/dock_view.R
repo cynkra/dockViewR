@@ -339,6 +339,9 @@ render_dock_view <- renderDockView
 #' @param dock_id The id of the dock view widget to update.
 #' @param options List of options for the \link{dock_view} instance.
 #' @param session Shiny session object.
+#' @return This function is called for its side effect.
+#' It sends a message to JavaScript through the current websocket connection,
+#' leveraging the shiny session object.
 #' @export
 update_dock_view <- function(
   dock_id,
