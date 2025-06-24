@@ -117,11 +117,31 @@ server <- function(input, output, session) {
       position = list(
         referencePanel = "1",
         direction = "within"
-      )
+      ),
+      remove = list(enable = TRUE, mode = "manual")
     )
     add_panel(
       "dock",
       pnl
+    )
+  })
+
+  observeEvent(input[["dock_added-panel"]], {
+    showNotification(
+      paste("Panel added:", input[["dock_added-panel"]]),
+      type = "message"
+    )
+  })
+
+  # Manually remove a panel after clicking on the button
+  observeEvent(input[["dock_panel-to-remove"]], {
+    showNotification(
+      paste("Removing panel:", input[["dock_panel-to-remove"]]),
+      type = "message"
+    )
+    remove_panel(
+      "dock",
+      input[["dock_panel-to-remove"]]
     )
   })
 }

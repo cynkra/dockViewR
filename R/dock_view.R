@@ -11,7 +11,7 @@
 #' \url{https://dockview.dev/docs/api/dockview/options/}.
 #' @param theme Theme. One of
 #' \code{c("abyss", "dark", "light", "vs", "dracula", "replit")}.
-#' @param addTab Globally controls the add tab behavior. List with enable and callback.
+#' @param add_tab Globally controls the add tab behavior. List with enable and callback.
 #' Enable is a boolean, default to FALSE and callback is a
 #' JavaScript function passed with \link[htmltwidgets]{JS}.
 #' @param width Widget width.
@@ -99,7 +99,7 @@ dock_view <- function(
     "dracula",
     "replit"
   ),
-  addTab = list(enable = FALSE, callback = NULL),
+  add_tab = list(enable = FALSE, callback = NULL),
   width = NULL,
   height = NULL,
   elementId = NULL
@@ -113,9 +113,9 @@ dock_view <- function(
   # check reference panels ids
   check_panel_refs(panels, ids)
 
-  if (addTab$enable) {
-    if (is.null(addTab$callback)) {
-      addTab$callback <- JS(
+  if (add_tab$enable) {
+    if (is.null(add_tab$callback)) {
+      add_tab$callback <- JS(
         "(config) => {
           const addPanel = (panel, api) => {
             let internals = {
@@ -126,11 +126,10 @@ dock_view <- function(
               }
             }
 
-            // Handle removable option. If no,
-            // use the default tab component without the close panel button.
-            if (!panel.removable) {
-              internals.tabComponent = 'default';
-            }
+            // Disable tab removal.
+            //internals.tabComponent = 'custom';
+            // You can use manual removal.
+            //internals.tabComponent = 'manual';
             let props = { ...panel, ...internals }
             return (api.addPanel(props))
           }
@@ -167,7 +166,7 @@ dock_view <- function(
         }"
       )
     } else {
-      if (!is_js(addTab$callback)) {
+      if (!is_js(add_tab$callback)) {
         stop("`callback` must be a JavaScript function.")
       }
     }
@@ -177,7 +176,8 @@ dock_view <- function(
   x <- list(
     theme = theme,
     panels = panels,
-    addTab = addTab,
+    # camelCase for JS ...
+    addTab = add_tab,
     ...
   )
 
@@ -218,7 +218,12 @@ dock_view <- function(
 #' @param title Panel title.
 #' @param content Panel content. Can be a list of Shiny tags.
 #' @param active Is active?
-#' @param removable Is the panel removable? Default to FALSE.
+#' @param remove List with two fields: enable and mode. Enable is a boolean
+#' and mode is one of `manual`, `auto` (default to auto). In auto mode,
+#' dockview JS removes the panel when it is closed and all its content. If you
+#' need more control over the panel removal, set it to manual so you can explicitly
+#' call `remove_panel()` and perform other tasks. On the server side, a shiny input is available
+#' `input[["<dock_ID>_panel-to-remove"]]` so you can create observers with custom logic.
 #' @param ... Other options passed to the API.
 #' See \url{https://dockview.dev/docs/api/dockview/panelApi/}.
 #' If you pass position, it must be a list with 2 fields:
@@ -242,7 +247,7 @@ panel <- function(
   title,
   content,
   active = TRUE,
-  removable = FALSE,
+  remove = list(enable = FALSE, mode = "auto"),
   ...
 ) {
   # We can't check id uniqueness here because panel has no
@@ -253,7 +258,7 @@ panel <- function(
     id = id,
     title = title,
     inactive = !active,
-    removable = removable,
+    remove = remove,
     content = htmltools::renderTags(content)
   )
 

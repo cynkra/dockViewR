@@ -52,8 +52,12 @@ const addPanel = (panel, api) => {
 
   // Handle removable option. If no,
   // use the default tab component without the close panel button.
-  if (!panel.removable) {
-    internals.tabComponent = 'default';
+  if (!panel.remove.enable) {
+    internals.tabComponent = 'custom';
+  } else {
+    if (panel.remove.mode === 'manual') {
+      internals.tabComponent = 'manual';
+    }
   }
   let props = { ...panel, ...internals }
   return (api.addPanel(props))

@@ -26,7 +26,7 @@ server <- function(input, output, session) {
 
   output$dock <- renderDockView({
     dock_view(
-      addTab = list(enable = TRUE),
+      add_tab = list(enable = TRUE),
       panels = list(
         panel(
           id = "1",
