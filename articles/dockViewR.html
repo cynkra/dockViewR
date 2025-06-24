@@ -188,11 +188,31 @@ Toggle code
 <span>      position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>        referencePanel <span class="op">=</span> <span class="st">"1"</span>,</span>
 <span>        direction <span class="op">=</span> <span class="st">"within"</span></span>
-<span>      <span class="op">)</span></span>
+<span>      <span class="op">)</span>,</span>
+<span>      remove <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>enable <span class="op">=</span> <span class="cn">TRUE</span>, mode <span class="op">=</span> <span class="st">"manual"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span>    <span class="fu"><a href="../reference/add_panel.html">add_panel</a></span><span class="op">(</span></span>
 <span>      <span class="st">"dock"</span>,</span>
 <span>      <span class="va">pnl</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">[[</span><span class="st">"dock_added-panel"</span><span class="op">]</span><span class="op">]</span>, <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/showNotification.html" class="external-link">showNotification</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Panel added:"</span>, <span class="va">input</span><span class="op">[[</span><span class="st">"dock_added-panel"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>      type <span class="op">=</span> <span class="st">"message"</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="co"># Manually remove a panel after clicking on the button</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">[[</span><span class="st">"dock_panel-to-remove"</span><span class="op">]</span><span class="op">]</span>, <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/showNotification.html" class="external-link">showNotification</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Removing panel:"</span>, <span class="va">input</span><span class="op">[[</span><span class="st">"dock_panel-to-remove"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>      type <span class="op">=</span> <span class="st">"message"</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="fu"><a href="../reference/remove_panel.html">remove_panel</a></span><span class="op">(</span></span>
+<span>      <span class="st">"dock"</span>,</span>
+<span>      <span class="va">input</span><span class="op">[[</span><span class="st">"dock_panel-to-remove"</span><span class="op">]</span><span class="op">]</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
@@ -1076,7 +1096,7 @@ Toggle code
 <span></span>
 <span>  <span class="va">output</span><span class="op">$</span><span class="va">dock</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dock_view-shiny.html">renderDockView</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>    <span class="fu"><a href="../reference/dock_view.html">dock_view</a></span><span class="op">(</span></span>
-<span>      addTab <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>enable <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
+<span>      add_tab <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>enable <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>      panels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>        <span class="fu"><a href="../reference/panel.html">panel</a></span><span class="op">(</span></span>
 <span>          id <span class="op">=</span> <span class="st">"1"</span>,</span>
