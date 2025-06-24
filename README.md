@@ -28,7 +28,8 @@ pak::pak("cynkra/dockViewR")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example which shows you how spin up a simple dockview
+app:
 
 ``` r
 library(shiny)

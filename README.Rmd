@@ -34,7 +34,7 @@ pak::pak("cynkra/dockViewR")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example which shows you how spin up a simple dockview app:
 
 ```{r, results="asis", echo=FALSE, warning=FALSE, comment = ""}
 dockViewR:::print_r_code("examples/demo/app.R")

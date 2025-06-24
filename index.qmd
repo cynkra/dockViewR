@@ -38,13 +38,13 @@ To run the demo app:
 
 ```{r dockview-demo, eval=FALSE, echo = TRUE}
 library(dockViewR)
-shinyAppDir(system.file("examples/demo", package = "dockViewR"))
+shinyAppDir(system.file("examples/update_theme", package = "dockViewR"))
 ```
 
 <details>
 <summary>Toggle code</summary>
 ```{r, results="asis", echo=FALSE, warning=FALSE, comment = ""}
-dockViewR:::print_r_code("examples/demo/app.R")
+dockViewR:::print_r_code("examples/update_theme/app.R")
 ```
 </details>
 

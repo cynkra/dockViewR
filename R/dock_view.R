@@ -331,3 +331,25 @@ renderDockView <- function(expr, env = parent.frame(), quoted = FALSE) {
 #' @export
 #' @rdname dock_view-shiny
 render_dock_view <- renderDockView
+
+#' Update options for dockview instance
+#'
+#' This does not rerender the widget, just update options like global theme.
+#'
+#' @param dock_id The id of the dock view widget to update.
+#' @param options List of options for the \link{dock_view} instance.
+#' @param session Shiny session object.
+#' @export
+update_dock_view <- function(
+  dock_id,
+  options,
+  session = getDefaultReactiveDomain()
+) {
+  if (is.null(session)) {
+    stop("`session` must be a valid Shiny session object.")
+  }
+  session$sendCustomMessage(
+    type = sprintf("%s_update-options", session$ns(dock_id)),
+    message = options
+  )
+}

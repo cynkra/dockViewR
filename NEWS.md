@@ -1,5 +1,6 @@
 # dockViewR 0.2.0
 
+- Add `update_dock_view()` to update a dock instance from the server of a Shiny app.
 - Add `input[["<dock_ID>_added-panel"]]` to track which panel has been added. This can be useful in a shiny app context.
 - Add `input[["<dock_ID>_removed-panel"]]` to track which panel has been removed. This can be useful in a shiny app context.
 - Add `select_panel()` function to select a specific panel by id from the server.
