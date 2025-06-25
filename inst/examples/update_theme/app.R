@@ -1,13 +1,16 @@
-library(dockViewR)
 library(shiny)
 library(bslib)
 library(visNetwork)
+library(dockViewR)
+library(thematic)
+
+thematic_shiny()
 
 nodes <- data.frame(id = 1:3)
 edges <- data.frame(from = c(1, 2), to = c(1, 3))
 
 ui <- page_fillable(
-  actionButton("btn", "add Panel"),
+  input_dark_mode(id = "app_theme"),
   dockViewOutput("dock")
 )
 
@@ -64,7 +67,7 @@ server <- function(input, output, session) {
           )
         )
       ),
-      theme = "replit"
+      theme = "dark"
     )
   })
 
@@ -84,65 +87,9 @@ server <- function(input, output, session) {
     rownames = TRUE
   )
 
-  output$plot <- renderPlot({
-    dist <- switch(
-      input$dist,
-      norm = rnorm,
-      unif = runif,
-      lnorm = rlnorm,
-      exp = rexp,
-      rnorm
-    )
-
-    hist(dist(500))
-  })
-
-  observeEvent(input$btn, {
-    pnl <- panel(
-      id = "new_1",
-      title = "Dynamic panel",
-      content = tagList(
-        radioButtons(
-          "dist",
-          "Distribution type:",
-          c(
-            "Normal" = "norm",
-            "Uniform" = "unif",
-            "Log-normal" = "lnorm",
-            "Exponential" = "exp"
-          )
-        ),
-        plotOutput("plot")
-      ),
-      position = list(
-        referencePanel = "1",
-        direction = "within"
-      ),
-      remove = list(enable = TRUE, mode = "manual")
-    )
-    add_panel(
-      "dock",
-      pnl
-    )
-  })
-
-  observeEvent(input[["dock_added-panel"]], {
-    showNotification(
-      paste("Panel added:", input[["dock_added-panel"]]),
-      type = "message"
-    )
-  })
-
-  # Manually remove a panel after clicking on the button
-  observeEvent(input[["dock_panel-to-remove"]], {
-    showNotification(
-      paste("Removing panel:", input[["dock_panel-to-remove"]]),
-      type = "message"
-    )
-    remove_panel(
-      "dock",
-      input[["dock_panel-to-remove"]]
-    )
+  observeEvent(input$app_theme, {
+    # Update the dock theme
+    update_dock_view("dock", list(theme = input$app_theme))
   })
 }
 

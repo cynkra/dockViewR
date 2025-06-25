@@ -77,7 +77,7 @@ test_that("add_panel works", {
   expect_type(session$lastCustomMessage$message, "list")
   expect_named(
     session$lastCustomMessage$message,
-    c("id", "title", "inactive", "removable", "content", "position")
+    c("id", "title", "inactive", "remove", "content", "position")
   )
   expect_identical(session$lastCustomMessage$message$id, "4")
   expect_type(session$lastCustomMessage$message$position, "list")
@@ -161,14 +161,14 @@ test_that("add_panel with + leftheader button works", {
     ]]
   )
   app$click("insert")
-  app$wait_for_idle()
+  Sys.sleep(2)
   app$expect_values(
     input = c("obs", "dist", "selimp"),
     output = FALSE,
     export = TRUE
   )
   app$set_inputs(dist = "unif")
-  app$wait_for_idle()
+  Sys.sleep(2)
   app$expect_values(
     input = c("obs", "dist", "selimp"),
     output = FALSE,

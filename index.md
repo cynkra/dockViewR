@@ -31,7 +31,7 @@ To run the demo app:
 
 ``` r
 library(dockViewR)
-shinyAppDir(system.file("examples/demo", package = "dockViewR"))
+shinyAppDir(system.file("examples/update_theme", package = "dockViewR"))
 ```
 
 <details>
@@ -44,11 +44,15 @@ library(shiny)
 library(bslib)
 library(visNetwork)
 library(dockViewR)
+library(thematic)
+
+thematic_shiny()
 
 nodes <- data.frame(id = 1:3)
 edges <- data.frame(from = c(1, 2), to = c(1, 3))
 
 ui <- page_fillable(
+  input_dark_mode(id = "app_theme"),
   dockViewOutput("dock")
 )
 
@@ -105,7 +109,7 @@ server <- function(input, output, session) {
           )
         )
       ),
-      theme = "replit"
+      theme = "dark"
     )
   })
 
@@ -124,6 +128,11 @@ server <- function(input, output, session) {
     },
     rownames = TRUE
   )
+
+  observeEvent(input$app_theme, {
+    # Update the dock theme
+    update_dock_view("dock", list(theme = input$app_theme))
+  })
 }
 
 shinyApp(ui, server)
@@ -133,7 +142,7 @@ shinyApp(ui, server)
 
 <br/>
 
-<iframe class="border border-5 rounded shadow-lg" src="https://shinylive.io/r/app/#h=0&amp;code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YACZECAawBqLONSxDcAAgZxURdooC8ioQAtSpVO0QB6EwzbkGAMygE4GAOYtSugK50MLIuctwbdnAAtNRQ7DBBBAxQECZCAJQCENwsjFAMAJ58ohLSsliJHLpsGQCC6AAiLAx87BmccDAY1izccIJgcAAesKht7CbCjUQKiqh24lCOcFo6ImJSMnIJ8WAAvgC6QA" width="125%" height="900px"></iframe>
+<iframe class="border border-5 rounded shadow-lg" src="https://shinylive.io/r/app/#h=0&amp;code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YACZECAawBqLONSxDcAAgZxURdooC8ioQAtSpVO0QB6EwzbkGAMygE4GAOYtSugK50MLIuctwbdnAAtNRQ7DBBBAxQECZCAJQCENwsjFAMAJ58ohLSsliJHLpsGQCC6AAiLAx87BmccDAY1izccIJgcAAesKht7CZuqMJQ5AD6ro1wCoqoduJQjnBaOiJiUjJyCfFgAL4AukA" width="125%" height="900px"></iframe>
 
 ## Contributing
 

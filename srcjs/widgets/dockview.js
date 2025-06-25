@@ -2,7 +2,7 @@ import 'widgets';
 import 'dockview-core/dist/styles/dockview.css'
 import { createDockview } from "dockview-core";
 
-import { Panel, RightHeader, LeftHeader, CustomTab } from '../modules/components'
+import { Panel, RightHeader, LeftHeader, CustomTab, DefaultTab } from '../modules/components'
 import { matchTheme, addPanel, movePanel, saveDock, moveGroup, moveGroup2 } from '../modules/utils';
 
 HTMLWidgets.widget({
@@ -37,7 +37,9 @@ HTMLWidgets.widget({
           },
           createTabComponent: (options) => {
             switch (options.name) {
-              case 'default':
+              case 'manual':
+                return new DefaultTab();
+              case 'custom':
                 return new CustomTab();
             }
           }
@@ -62,9 +64,14 @@ HTMLWidgets.widget({
           window.dispatchEvent(new Event('resize'));
         })
 
+        api.onDidAddPanel((e) => {
+          if (HTMLWidgets.shinyMode) {
+            Shiny.setInputValue(id + '_added-panel', e.id, { priority: 'event' });
+          }
+        })
+
         api.onDidRemovePanel((e) => {
           if (HTMLWidgets.shinyMode) {
-            let pane = `#${id}-${e.id}`;
             Shiny.setInputValue(id + '_removed-panel', e.id, { priority: 'event' });
           }
         })
@@ -108,6 +115,13 @@ HTMLWidgets.widget({
 
           Shiny.addCustomMessageHandler(el.id + '_move-group', (m) => {
             moveGroup(m, api)
+          })
+
+          Shiny.addCustomMessageHandler(el.id + '_update-options', (m) => {
+            if (m.hasOwnProperty('theme')) {
+              m.theme = matchTheme(m.theme);
+            }
+            api.updateOptions(m);
           })
         }
 

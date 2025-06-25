@@ -17,15 +17,21 @@ class Panel {
   }
 }
 
-// Tab without remove button
-class CustomTab {
+// Tab with custom remove button
+class DefaultTab {
   constructor() {
     this._element = document.createElement('div');
+    this._element.className = 'dv-default-tab';
 
-    this.e1 = document.createElement('div');
-    this.e2 = document.createElement('span');
+    this._content = document.createElement('div');
+    this._content.className = 'dv-default-tab-content';
 
-    this.element.append(this.e1, this.e2);
+    this.action = document.createElement('div');
+    this.action.className = 'dv-default-tab-action';
+    this.action.innerHTML = '<i class="fas fa-xmark" role="presentation" aria-label="close icon"></i>';
+
+    this._element.appendChild(this._content);
+    this._element.appendChild(this.action);
   }
 
   get element() {
@@ -33,7 +39,34 @@ class CustomTab {
   }
 
   init(config) {
+    let dockId = config.containerApi.component.gridview.element.closest('.dockview').attributes.id.textContent;
+    this._element.id = dockId + '-tab-' + config.api.id;
+    this._content.textContent = config.title;
+    this.action.addEventListener('click', (e) => {
+      // Send callback to Shiny for control from the server side
+      Shiny.setInputValue(`${dockId}_panel-to-remove`, config.api.id, { priority: 'event' });
+    })
+  }
+}
+
+// Tab without remove button
+class CustomTab {
+  constructor() {
+    this._element = document.createElement('div');
+  }
+
+  get element() {
+    return this._element;
+  }
+
+  init(config) {
+    let dockId = config.containerApi.component.gridview.element.closest('.dockview').attributes.id.textContent;
+    this._element.id = dockId + '-tab-' + config.api.id;
+    this.e1 = document.createElement('div');
     this.e1.textContent = config.title;
+    this.e2 = document.createElement('span');
+
+    this._element.append(this.e1, this.e2);
   }
 }
 
@@ -91,4 +124,4 @@ class LeftHeader {
   }
 }
 
-export { RightHeader, LeftHeader, Panel, CustomTab };
+export { RightHeader, LeftHeader, Panel, CustomTab, DefaultTab };

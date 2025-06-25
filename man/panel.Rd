@@ -4,7 +4,14 @@
 \alias{panel}
 \title{Dock panel}
 \usage{
-panel(id, title, content, active = TRUE, removable = FALSE, ...)
+panel(
+  id,
+  title,
+  content,
+  active = TRUE,
+  remove = list(enable = FALSE, mode = "auto"),
+  ...
+)
 }
 \arguments{
 \item{id}{Panel unique id.}
@@ -15,7 +22,12 @@ panel(id, title, content, active = TRUE, removable = FALSE, ...)
 
 \item{active}{Is active?}
 
-\item{removable}{Is the panel removable? Default to FALSE.}
+\item{remove}{List with two fields: enable and mode. Enable is a boolean
+and mode is one of \code{manual}, \code{auto} (default to auto). In auto mode,
+dockview JS removes the panel when it is closed and all its content. If you
+need more control over the panel removal, set it to manual so you can explicitly
+call \code{remove_panel()} and perform other tasks. On the server side, a shiny input is available
+\code{input[["<dock_ID>_panel-to-remove"]]} so you can create observers with custom logic.}
 
 \item{...}{Other options passed to the API.
 See \url{https://dockview.dev/docs/api/dockview/panelApi/}.
