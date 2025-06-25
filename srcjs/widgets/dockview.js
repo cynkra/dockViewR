@@ -116,6 +116,13 @@ HTMLWidgets.widget({
           Shiny.addCustomMessageHandler(el.id + '_move-group', (m) => {
             moveGroup(m, api)
           })
+
+          Shiny.addCustomMessageHandler(el.id + '_update-options', (m) => {
+            if (m.hasOwnProperty('theme')) {
+              m.theme = matchTheme(m.theme);
+            }
+            api.updateOptions(m);
+          })
         }
 
       },

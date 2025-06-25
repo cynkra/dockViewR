@@ -26,7 +26,7 @@ dock_view(
 
 \item{add_tab}{Globally controls the add tab behavior. List with enable and callback.
 Enable is a boolean, default to FALSE and callback is a
-JavaScript function passed with \link[htmltwidgets]{JS}.}
+JavaScript function passed with \link[htmlwidgets]{JS}.}
 
 \item{width}{Widget width.}
 
