@@ -1,3 +1,4 @@
 {
-  "dockview": "./srcjs/widgets/dockview.js"
+  "dockview": "./srcjs/widgets/dockview.js",
+  "gridview": "./srcjs/widgets/gridview.js"
 }
