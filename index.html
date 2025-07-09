@@ -57,20 +57,24 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of dockViewR like so:</p>
+<p>The latest version of the dockViewR package can be obtained from <a href="https://cran.r-project.org/web/packages/dockViewR/index.html" class="external-link">CRAN</a>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"dockViewR"</span><span class="op">)</span></span></code></pre></div>
+<p>Or, you can install the development version of dockViewR like so:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"cynkra/dockViewR"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <p>To run the demo app:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/cynkra/dockViewR" class="external-link">dockViewR</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyAppDir</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples/update_theme"</span>, package <span class="op">=</span> <span class="st">"dockViewR"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <details><summary>
 Toggle code
-</summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://datastorm-open.github.io/visNetwork/" class="external-link">visNetwork</a></span><span class="op">)</span></span>
@@ -188,19 +192,19 @@ Toggle code
 <h3 id="software-pre-requisite">Software pre-requisite<a class="anchor" aria-label="anchor" href="#software-pre-requisite"></a>
 </h3>
 <p>To contribute to this project, you’ll need <code>npm</code>, <code>node</code>, and the R package <a href="https://github.com/JohnCoene/packer" class="external-link">packer</a> to compile the JavaScript code. Please follow the slides attached to help you get started <a href="https://rsc.cynkra.com/js4Shiny/#/software-pre-requisites" class="external-link">pre-requisites</a>. When you are in the project, do the following:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"packer"</span><span class="op">)</span></span>
 <span><span class="co"># Restore JavaScript dependencies in package-lock.json (a bit like the renv.lock)</span></span>
 <span><span class="fu">packer</span><span class="fu">::</span><span class="fu">npm_install</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>The JS code uses <a href="https://rsc.cynkra.com/js4Shiny/#/modularisation-code-management" class="external-link">ES6 modules</a>, meaning that you can define a module in a <code>srcjs/component.js</code> script as follows:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="im">export</span> <span class="kw">const</span> blabla <span class="op">=</span> () <span class="kw">=&gt;</span> {</span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">"Blabla"</span>)<span class="op">;</span></span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="im">export</span> <span class="kw">const</span> blabla <span class="op">=</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">"Blabla"</span>)<span class="op">;</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>}</span></code></pre></div>
 <p>and use it in another script, let’s say <code>./otherscript.js</code> like so:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co">// ./otherscript.js</span></span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="im">import</span> { blabla } <span class="im">from</span> <span class="st">'./components.js'</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co">// ./otherscript.js</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="im">import</span> { blabla } <span class="im">from</span> <span class="st">'./components.js'</span></span></code></pre></div>
 <p>Whenever you are done with changing the JS script, you have to rebuild it:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Change the code and then rebundle</span></span>
 <span><span class="fu">packer</span><span class="fu">::</span><span class="fu">bundle</span><span class="op">(</span><span class="st">"development"</span><span class="op">)</span> <span class="co"># For developement mode</span></span>
 <span><span class="fu">packer</span><span class="fu">::</span><span class="fu">bundle</span><span class="op">(</span><span class="op">)</span> <span class="co"># For production. Defaut!</span></span></code></pre></div>
