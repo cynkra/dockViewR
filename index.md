@@ -19,7 +19,15 @@ interactive R documents. It builds on top of
 
 ## Installation
 
-You can install the development version of dockViewR like so:
+The latest version of the dockViewR package can be obtained from
+[CRAN](https://cran.r-project.org/web/packages/dockViewR/index.html):
+
+``` r
+# install.packages("pak")
+pak::pak("dockViewR")
+```
+
+Or, you can install the development version of dockViewR like so:
 
 ``` r
 pak::pak("cynkra/dockViewR")
