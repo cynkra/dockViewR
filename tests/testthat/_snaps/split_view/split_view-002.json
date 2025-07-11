@@ -1,0 +1,11 @@
+{
+  "input": {
+    "obs": 678,
+    "variable": "cyl"
+  },
+  "export": {
+    "active_group": null,
+    "grid": null,
+    "panel_ids": null
+  }
+}
