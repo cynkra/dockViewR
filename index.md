@@ -19,7 +19,15 @@ interactive R documents. It builds on top of
 
 ## Installation
 
-You can install the development version of dockViewR like so:
+The latest version of the dockViewR package can be obtained from
+[CRAN](https://CRAN.R-project.org/package=dockViewR):
+
+``` r
+# install.packages("pak")
+pak::pak("dockViewR")
+```
+
+Or, you can install the development version of dockViewR like so:
 
 ``` r
 pak::pak("cynkra/dockViewR")
@@ -154,17 +162,15 @@ feel free to submit issues, feature requests, or pull requests.
 `{dockViewR}` is an **htmlwidget**, an interactive widget for R, powered
 by a JS library. To get a minimum starting kit:
 
--   “Quick and Dirty” intro to JS for R devs:
-    https://rsc.cynkra.com/js4Shiny/#/welcome.
+-   JavaScript for R devs: https://book.javascript-for-r.com/.
 -   About htmlwidgets: https://www.htmlwidgets.org/develop_intro.html.
 
 ### Software pre-requisite
 
 To contribute to this project, you’ll need `npm`, `node`, and the R
 package `{packer}` to compile the JavaScript code. Please follow the
-slides attached to help you get started
-[pre-requisites](https://rsc.cynkra.com/js4Shiny/#/software-pre-requisites).
-When you are in the project, do the following:
+guide [here](https://packer.john-coene.com/#/guide/installation). When
+you are in the project, do the following:
 
 ``` r
 pak::pak("packer")
@@ -173,7 +179,7 @@ packer::npm_install()
 ```
 
 The JS code uses [ES6
-modules](https://rsc.cynkra.com/js4Shiny/#/modularisation-code-management),
+modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules),
 meaning that you can define a module in a `srcjs/component.js` script as
 follows:
 
