@@ -60,7 +60,13 @@ const addPanel = (panel, api) => {
     }
   }
   let props = { ...panel, ...internals }
-  return (api.addPanel(props))
+  api.addPanel(props);
+  // Resize panel content on panel resize.
+  // This only works if the nested content
+  // can resize correctly.
+  api.getPanel(panel.id).api.onDidDimensionsChange((e) => {
+    window.dispatchEvent(new Event('resize'));
+  })
 }
 
 const movePanel = (m, api) => {

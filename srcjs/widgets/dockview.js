@@ -123,6 +123,14 @@ HTMLWidgets.widget({
             }
             api.updateOptions(m);
           })
+
+          // Panel resize
+          Shiny.addCustomMessageHandler(el.id + '_resize-panel', (m) => {
+            let panel = api.getPanel(m.id);
+            if (panel) {
+              panel.api.setSize(m.options);
+            }
+          })
         }
 
       },
