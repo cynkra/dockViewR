@@ -1,6 +1,6 @@
 # dockViewR 0.2.1
 
-- Fix Windows shaking issue: <https://github.com/mathuo/dockview/issues/988>. Upgrade dockview JS.
+- Upgrade dockview JS to 4.7.0. Fix Windows shaking issue: <https://github.com/mathuo/dockview/issues/988>.
 
 # dockViewR 0.2.0
 
