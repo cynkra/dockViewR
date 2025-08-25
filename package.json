@@ -1,6 +1,6 @@
 {
   "name": "dockviewr",
-  "version": "1.0.0",
+  "version": "0.2.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,7 @@
   "license": "ISC",
   "devDependencies": {
     "css-loader": "^7.1.2",
-    "dockview-core": "^4.4.0",
+    "dockview-core": "^4.7.0",
     "sass-loader": "^16.0.5",
     "style-loader": "^4.0.0",
     "webpack": "^5.98.0",

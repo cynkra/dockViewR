@@ -1,6 +1,6 @@
 Package: dockViewR
 Title: Layout Manager Widget for R and 'shiny' Apps
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: 
     c(
     person("David", "Granjon", , "dgranjon@ymail.com", role = c("aut", "cre")),
