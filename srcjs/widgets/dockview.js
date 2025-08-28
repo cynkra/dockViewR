@@ -98,6 +98,11 @@ HTMLWidgets.widget({
             api.getPanel(m.id).api.setActive();
           })
 
+          // set renderer
+          Shiny.addCustomMessageHandler(el.id + '_set-panel-renderer', (m) => {
+            api.getPanel(m.id).api.setRenderer(m.renderer);
+          })
+
           // Force save dock
           Shiny.addCustomMessageHandler(el.id + '_save-state', (m) => {
             saveDock(id, api)
