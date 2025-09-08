@@ -13,7 +13,7 @@ class Panel {
     this._element.id = dockId + '-' + config.api.id;
     this._element.innerHTML = config.params.content.html
     this._element.className = 'dockview-panel'
-    this._element.style = 'height: 100%; margin: 10px; padding: 10px; overflow: auto;'
+    this._element.style = config.params.style
   }
 }
 

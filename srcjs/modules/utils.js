@@ -46,7 +46,8 @@ const addPanel = (panel, api) => {
   let internals = {
     component: 'default',
     params: {
-      content: panel.content
+      content: panel.content,
+      style: panel.style
     }
   }
 

@@ -10,6 +10,7 @@ panel(
   content,
   active = TRUE,
   remove = list(enable = FALSE, mode = "auto"),
+  style = list(padding = "10px", overflow = "auto", height = "100\%", margin = "10px"),
   ...
 )
 }
@@ -28,6 +29,8 @@ dockview JS removes the panel when it is closed and all its content. If you
 need more control over the panel removal, set it to manual so you can explicitly
 call \code{remove_panel()} and perform other tasks. On the server side, a shiny input is available
 \code{input[["<dock_ID>_panel-to-remove"]]} so you can create observers with custom logic.}
+
+\item{style}{List of CSS style attributes to apply to the panel content. See defaults}
 
 \item{...}{Other options passed to the API.
 See \url{https://dockview.dev/docs/api/dockview/panelApi/}.

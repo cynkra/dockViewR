@@ -224,6 +224,7 @@ dock_view <- function(
 #' need more control over the panel removal, set it to manual so you can explicitly
 #' call `remove_panel()` and perform other tasks. On the server side, a shiny input is available
 #' `input[["<dock_ID>_panel-to-remove"]]` so you can create observers with custom logic.
+#' @param style List of CSS style attributes to apply to the panel content. See defaults
 #' @param ... Other options passed to the API.
 #' See \url{https://dockview.dev/docs/api/dockview/panelApi/}.
 #' If you pass position, it must be a list with 2 fields:
@@ -248,6 +249,12 @@ panel <- function(
   content,
   active = TRUE,
   remove = list(enable = FALSE, mode = "auto"),
+  style = list(
+    padding = "10px",
+    overflow = "auto",
+    height = "100%",
+    margin = "10px"
+  ),
   ...
 ) {
   # We can't check id uniqueness here because panel has no
@@ -259,7 +266,11 @@ panel <- function(
     title = title,
     inactive = !active,
     remove = remove,
-    content = htmltools::renderTags(content)
+    content = htmltools::renderTags(content),
+    style = do.call(
+      htmltools::css,
+      style
+    )
   )
 
   # Extract extra parameters and process

@@ -1,5 +1,8 @@
 # dockViewR 0.2.1
 
+- Added `style` parameter to `panel()`. This allows to customized the style of
+the panel container. It expects a named list with CSS properties and values. We kept
+old default values for backward compatibility, but you can now overwrite them.
 - Upgrade dockview JS to 4.7.0. Fix Windows shaking issue: <https://github.com/mathuo/dockview/issues/988>.
 
 # dockViewR 0.2.0
