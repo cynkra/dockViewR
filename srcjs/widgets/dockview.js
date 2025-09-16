@@ -60,6 +60,11 @@ HTMLWidgets.widget({
           }
         })
 
+        // When restored, we need to sync the new state for Shiny
+        api.onDidLayoutFromJSON(() => {
+          saveDock(id, api)
+        })
+
         api.onDidMaximizedGroupChange((e) => {
           window.dispatchEvent(new Event('resize'));
         })

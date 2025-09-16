@@ -1,5 +1,6 @@
 # dockViewR 0.2.1
 
+- Fix: update input layout state when layout is restored.
 - Added `style` parameter to `panel()`. This allows to customized the style of
 the panel container. It expects a named list with CSS properties and values. We kept
 old default values for backward compatibility, but you can now overwrite them.
