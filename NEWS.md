@@ -1,5 +1,7 @@
 # dockViewR 0.2.1
 
+- Remove unecessary content in saved JSON state (dependencies, head, singletons). They should
+already be present in the app when initialising the graph.
 - Fix: update input layout state when layout is restored.
 - Added `style` parameter to `panel()`. This allows to customized the style of
 the panel container. It expects a named list with CSS properties and values. We kept

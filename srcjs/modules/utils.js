@@ -118,6 +118,22 @@ const defaultPanel = (pnId) => {
 
 const saveDock = (id, api) => {
   const state = api.toJSON();
+  // Strip out unecessary information (deps, head, singletons as they should be already inserted
+  // in the DOM when the widget is created, so no need to keep them forever)
+  state.panels = Object.fromEntries(
+    Object.entries(state.panels).map(([key, value]) => [
+      key,
+      {
+        ...value,
+        params: {
+          ...value.params,
+          content: {
+            html: value.params.content.html // only need the HTML content
+          }
+        }
+      }
+    ])
+  );
   Shiny.setInputValue(id + "_state", state, { priority: 'event' });
 }
 

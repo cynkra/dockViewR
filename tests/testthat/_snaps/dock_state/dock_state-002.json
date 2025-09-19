@@ -38,7 +38,7 @@
       "height": 380,
       "orientation": "HORIZONTAL"
     },
-    "n_states": 3,
+    "n_states": 4,
     "panel_ids": [
       "2",
       "3",
