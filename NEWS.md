@@ -1,5 +1,6 @@
 # dockViewR 0.2.1
 
+- Fix [#48](https://github.com/cynkra/dockViewR/issues/48): dock state is saved before panels are added.
 - Remove unecessary content in saved JSON state (dependencies, head, singletons). They should
 already be present in the app when initialising the graph.
 - Fix: update input layout state when layout is restored.
