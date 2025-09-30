@@ -35,7 +35,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.1" id="dockviewr-021">dockViewR 0.2.1<a class="anchor" aria-label="anchor" href="#dockviewr-021"></a></h2>
-<ul><li>Fix <a href="https://github.com/cynkra/dockViewR/issues/48" class="external-link">#48</a>: dock state is saved before panels are added.</li>
+<ul><li>Fix: options in <code>...</code> were not passed to the dockview JS constructor. (:clown:)</li>
+<li>Fix <a href="https://github.com/cynkra/dockViewR/issues/48" class="external-link">#48</a>: dock state is saved before panels are added.</li>
 <li>Remove unecessary content in saved JSON state (dependencies, head, singletons). They should already be present in the app when initialising the graph.</li>
 <li>Fix: update input layout state when layout is restored.</li>
 <li>Added <code>style</code> parameter to <code><a href="../reference/panel.html">panel()</a></code>. This allows to customized the style of the panel container. It expects a named list with CSS properties and values. We kept old default values for backward compatibility, but you can now overwrite them.</li>
