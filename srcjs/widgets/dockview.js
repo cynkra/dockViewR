@@ -42,7 +42,14 @@ HTMLWidgets.widget({
               case 'custom':
                 return new CustomTab();
             }
-          }
+          },
+          // Spread operator to include all other options from x
+          ...Object.keys(x).reduce((acc, key) => {
+            if (!['theme', 'addTab'].includes(key)) {
+              acc[key] = x[key];
+            }
+            return acc;
+          }, {})
         })
 
         // Init state
