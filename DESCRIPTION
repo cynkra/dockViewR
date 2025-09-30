@@ -17,7 +17,7 @@ Description: Provides R bindings to the 'dockview' 'JavaScript' library <https:/
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE, packages = c("roxy.shinylive"))
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Imports: 
     htmlwidgets,
     htmltools,

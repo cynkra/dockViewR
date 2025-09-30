@@ -98,6 +98,11 @@ HTMLWidgets.widget({
             api.getPanel(m.id).api.setActive();
           })
 
+          Shiny.addCustomMessageHandler(el.id + '_set-panel-title', (m) => {
+            api.getPanel(m.id).api.setTitle(m.title);
+            console.log("Update panel title");
+          })
+
           // Force save dock
           Shiny.addCustomMessageHandler(el.id + '_save-state', (m) => {
             saveDock(id, api)

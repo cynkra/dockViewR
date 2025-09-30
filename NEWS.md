@@ -1,5 +1,6 @@
 # dockViewR 0.2.1
 
+- Add `set_panel_title()` to change the title of a panel from the server of a Shiny app.
 - Added `style` parameter to `panel()`. This allows to customized the style of
 the panel container. It expects a named list with CSS properties and values. We kept
 old default values for backward compatibility, but you can now overwrite them.

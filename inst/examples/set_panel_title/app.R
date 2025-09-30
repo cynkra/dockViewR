@@ -1,0 +1,105 @@
+library(dockViewR)
+library(shiny)
+library(bslib)
+library(visNetwork)
+
+nodes <- data.frame(id = 1:3)
+edges <- data.frame(from = c(1, 2), to = c(1, 3))
+
+ui <- page_fillable(
+  textInput("panel_title", "Panel title"),
+  dockViewOutput("dock")
+)
+
+server <- function(input, output, session) {
+  exportTestValues(
+    panel_ids = get_panels_ids("dock"),
+    active_group = get_active_group("dock"),
+    grid = get_grid("dock")
+  )
+
+  output$dock <- renderDockView({
+    dock_view(
+      panels = list(
+        panel(
+          id = "1",
+          title = "Panel 1",
+          content = tagList(
+            sliderInput(
+              "obs",
+              "Number of observations:",
+              min = 0,
+              max = 1000,
+              value = 500
+            ),
+            plotOutput("distPlot")
+          )
+        ),
+        panel(
+          id = "2",
+          title = "Panel 2",
+          content = tagList(
+            visNetworkOutput("network")
+          ),
+          position = list(
+            referencePanel = "1",
+            direction = "right"
+          ),
+          minimumWidth = 500
+        ),
+        panel(
+          id = "3",
+          title = "Panel 3",
+          content = tagList(
+            selectInput(
+              "variable",
+              "Variable:",
+              c("Cylinders" = "cyl", "Transmission" = "am", "Gears" = "gear")
+            ),
+            tableOutput("data")
+          ),
+          position = list(
+            referencePanel = "2",
+            direction = "below"
+          )
+        )
+      ),
+      theme = "replit"
+    )
+  })
+
+  output$distPlot <- renderPlot({
+    req(input$obs)
+    hist(rnorm(input$obs))
+  })
+
+  output$network <- renderVisNetwork({
+    visNetwork(nodes, edges, width = "100%")
+  })
+
+  output$data <- renderTable(
+    {
+      mtcars[, c("mpg", input$variable), drop = FALSE]
+    },
+    rownames = TRUE
+  )
+
+  output$plot <- renderPlot({
+    dist <- switch(
+      input$dist,
+      norm = rnorm,
+      unif = runif,
+      lnorm = rlnorm,
+      exp = rexp,
+      rnorm
+    )
+
+    hist(dist(500))
+  })
+
+  observeEvent(input$panel_title, {
+    set_panel_title("dock", 1, input$panel_title)
+  }, ignoreInit = TRUE)
+}
+
+shinyApp(ui, server)
