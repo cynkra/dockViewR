@@ -26,7 +26,10 @@ dock_view(
 
 \item{add_tab}{Globally controls the add tab behavior. List with enable and callback.
 Enable is a boolean, default to FALSE and callback is a
-JavaScript function passed with \link[htmlwidgets]{JS}.}
+JavaScript function passed with \link[htmlwidgets]{JS}.
+See \code{\link[=default_add_tab_callback]{default_add_tab_callback()}}. By default, the callback
+sets a Shiny input \code{input[["<dock_ID>_panel-to-add"]]}
+so you can create observers with custom logic.}
 
 \item{width}{Widget width.}
 

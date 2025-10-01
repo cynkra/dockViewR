@@ -14,6 +14,9 @@
 #' @param add_tab Globally controls the add tab behavior. List with enable and callback.
 #' Enable is a boolean, default to FALSE and callback is a
 #' JavaScript function passed with \link[htmlwidgets]{JS}.
+#' See [default_add_tab_callback()]. By default, the callback
+#' sets a Shiny input `input[["<dock_ID>_panel-to-add"]]`
+#' so you can create observers with custom logic.
 #' @param width Widget width.
 #' @param height Widget height.
 #' @param elementId When used outside Shiny.
@@ -113,71 +116,12 @@ dock_view <- function(
   # check reference panels ids
   check_panel_refs(panels, ids)
 
-  if (add_tab$enable) {
-    if (is.null(add_tab$callback)) {
-      add_tab$callback <- JS(
-        "(config) => {
-          const addPanel = (panel, api) => {
-            let internals = {
-              component: 'default',
-              params: {
-                content: panel.content,
-                addTab: panel.addTab
-              }
-            }
-
-            // Disable tab removal.
-            //internals.tabComponent = 'custom';
-            // You can use manual removal.
-            //internals.tabComponent = 'manual';
-            let props = { ...panel, ...internals }
-            return (api.addPanel(props))
-          }
-          const defaultPanel = (pnId) => {
-            return (`
-              <p>Exchange me by running:</p>
-              <p>removeUI(<br>
-                &nbsp;&nbsp;selector = \"#${pnId} > *\",<br>
-                &nbsp;&nbsp;multiple = TRUE<br>
-              )</p>
-              <p>shiny::insertUI(<br>
-                    &nbsp;&nbsp;selector = \"#${pnId}\",<br>
-                    &nbsp;&nbsp;where = \"beforeEnd\",<br>
-                    &nbsp;&nbsp;ui = \"your ui code here\"<br>
-              )</p>
-            `)
-          }
-          const dockId = config.containerApi.component
-            .gridview.element.closest('.dockview')
-            .attributes.id.textContent;
-          const pnId = `panel-${Date.now()}`
-          addPanel({
-            id: pnId,
-            title: 'Panel new',
-            inactive: false,
-            content: {
-              head: '',
-              singletons: [],
-              dependencies: [],
-              html: defaultPanel(dockId + '-' + pnId)
-            },
-            position: { referenceGroup: config.group.id, direction: 'within' }
-          }, config.containerApi);
-        }"
-      )
-    } else {
-      if (!is_js(add_tab$callback)) {
-        stop("`callback` must be a JavaScript function.")
-      }
-    }
-  }
-
   # forward options using x
   x <- list(
     theme = theme,
     panels = panels,
     # camelCase for JS ...
-    addTab = add_tab,
+    addTab = validate_add_tab(add_tab),
     ...
   )
 
@@ -205,6 +149,54 @@ dock_view <- function(
       browser.fill = FALSE,
       padding = 5
     )
+  )
+}
+
+#' @keywords internal
+validate_add_tab <- function(add_tab) {
+  if (!is.list(add_tab) && names(add_tab) != "enable") {
+    stop(
+      "`add_tab` must be a list with two fields: enable (boolean) 
+      and an optional callback (JS function or NULL)."
+    )
+  }
+  if (!is.logical(add_tab$enable) || length(add_tab$enable) != 1) {
+    stop("`add_tab$enable` must be a boolean.")
+  }
+  if (add_tab$enable) {
+    if (!is.null(add_tab$callback)) {
+      validate_js_callback(add_tab$callback)
+    } else {
+      add_tab$callback <- default_add_tab_callback()
+    }
+  }
+  add_tab
+}
+
+#' @keywords internal
+validate_js_callback <- function(callback) {
+  if (!inherits(callback, "JS_EVAL")) {
+    stop(
+      "`callback` must be a JavaScript function created with htmlwidgets::JS()."
+    )
+  }
+}
+
+#' Default add tab callback
+#'
+#' An example of a JavaScript function that can be used as a default
+#' when adding a new tab/panel.
+#'
+#' @export
+default_add_tab_callback <- function() {
+  htmlwidgets::JS(
+    "(config) => {
+      const dockId = config.containerApi.component
+        .gridview.element.closest('.dockview')
+        .attributes.id.textContent;
+      console.log(config);
+      Shiny.setInputValue(`${dockId}_panel-to-add`, config.group.id, { priority: 'event' });
+    }"
   )
 }
 

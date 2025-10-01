@@ -115,7 +115,7 @@ class LeftHeader {
     this._element.style = 'height: 100%; padding: 8px'
     this._element.innerHTML = '<i class="fas fa-plus" role="presentation" aria-label="plus icon"></i>'
     this._element.addEventListener('click', (e) => {
-      config.group._params.params.addTab.callback(config);
+      config.group._params.addTab.callback(config);
     });
   }
   dispose() {

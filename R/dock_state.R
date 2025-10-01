@@ -27,11 +27,12 @@
 #' [save_dock()] and [restore_dock()] are used for their side effect to
 #' allow to respectively serialise and restore a dock object.
 get_dock <- function(dock_id, session = getDefaultReactiveDomain()) {
-  if (is.null(session))
+  if (is.null(session)) {
     stop(sprintf(
       "%s must be called from the server of a Shiny app",
       deparse(sys.call())
     ))
+  }
   session$input[[sprintf("%s_state", dock_id)]]
 }
 
@@ -76,10 +77,18 @@ get_groups <- function(dock_id, session = getDefaultReactiveDomain()) {
 get_groups_ids <- function(dock_id, session = getDefaultReactiveDomain()) {
   unlist(
     lapply(get_groups(dock_id, session), function(group) {
-      group[["data"]][["id"]]
-    }),
-    use.names = FALSE
+      find_group_id(group)
+    })
   )
+}
+
+#' @keywords internal
+find_group_id <- function(x) {
+  if (x[["type"]] == "leaf") {
+    return(x[["data"]][["id"]])
+  } else {
+    unlist(lapply(x[["data"]], find_group_id))
+  }
 }
 
 #' get dock groups panels

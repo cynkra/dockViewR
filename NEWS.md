@@ -1,5 +1,10 @@
 # dockViewR 0.2.1
 
+- In `add_panel()`: if no `referencePanel` or `referenceGroup` is provided, the panel is added relative to the [container](https://dockview.dev/docs/core/panels/add#relative-to-the-container).
+- Validate `referenceGroup` if it is passed when adding a new panel with `add_panel()`. It is compared against
+the output of `get_groups_ids()`.
+- Fix: `get_groups_ids()` now correctly returns all group ids (nested groups were not returned).
+- Reworked `add_tab` parameter in `dock_view()`. By default, there is a `default_add_tab_callback()` that sets `input[["<dock_ID>_panel-to-add"]]`, so you can create observers with custom logic, including removing the panel with `add_panel()`. An example of usage is available at <https://github.com/cynkra/dockViewR/blob/main/inst/examples/add_panel/app.R>.
 - Fix: options in `...` were not passed to the dockview JS constructor. (:clown:)
 - Fix [#48](https://github.com/cynkra/dockViewR/issues/48): dock state is saved before panels are added.
 - Remove unecessary content in saved JSON state (dependencies, head, singletons). They should
@@ -8,7 +13,7 @@ already be present in the app when initialising the graph.
 - Added `style` parameter to `panel()`. This allows to customized the style of
 the panel container. It expects a named list with CSS properties and values. We kept
 old default values for backward compatibility, but you can now overwrite them.
-- Upgrade dockview JS to 4.7.0. Fix Windows shaking issue: <https://github.com/mathuo/dockview/issues/988>.
+- Upgrade dockview JS to 4.9.0. Fix Windows shaking issue: <https://github.com/mathuo/dockview/issues/988>.
 
 # dockViewR 0.2.0
 

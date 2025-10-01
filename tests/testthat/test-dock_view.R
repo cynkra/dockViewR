@@ -25,6 +25,12 @@ test_that("dock_view works", {
           )
         )
       )
+
+      dock_view(panels = list(), add_tab = list(enable = "plop"))
+      dock_view(
+        panels = list(),
+        add_tab = list(enable = TRUE, callback = "plop")
+      )
     }
   )
 
