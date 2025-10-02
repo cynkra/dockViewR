@@ -1,5 +1,8 @@
 # dockViewR 0.2.1
 
+- Allow initialising a dock with no panels (default to `list()`).
+- Added `input[["<dock_ID>_initialized"]]` within an `onRender` callback. Allows to track when the dock is ready
+to perform actions server side.
 - In `add_panel()`: if no `referencePanel` or `referenceGroup` is provided, the panel is added relative to the [container](https://dockview.dev/docs/core/panels/add#relative-to-the-container).
 - Validate `referenceGroup` if it is passed when adding a new panel with `add_panel()`. It is compared against
 the output of `get_groups_ids()`.

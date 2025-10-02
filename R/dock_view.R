@@ -6,7 +6,7 @@
 #' JavaScript library, providing a powerful interface for
 #' creating IDE-like layouts in Shiny applications or R Markdown documents.
 #'
-#' @param panels Widget configuration. Slot for \link{panel}.
+#' @param panels Slot for \link{panel}.
 #' @param ... Other options. See
 #' \url{https://dockview.dev/docs/api/dockview/options/}.
 #' @param theme Theme. One of
@@ -90,7 +90,7 @@
 
 #' shinyApp(ui, server)
 dock_view <- function(
-  panels,
+  panels = list(),
   ...,
   theme = c(
     "light-spaced",
@@ -126,7 +126,7 @@ dock_view <- function(
   )
 
   # create widget
-  htmlwidgets::createWidget(
+  w <- htmlwidgets::createWidget(
     name = "dockview",
     x,
     dependencies = c(
@@ -150,6 +150,23 @@ dock_view <- function(
       padding = 5
     )
   )
+
+  session <- getDefaultReactiveDomain()
+  if (!is.null(session)) {
+    # Initialized callback as dockview does not provide any ...
+    w <- onRender(
+      w,
+      sprintf(
+        "
+      function(el, x) {
+        console.log(el.id);
+        Shiny.setInputValue(`%s${el.id}_initialized`, true);
+      }",
+        session$ns("")
+      )
+    )
+  }
+  w
 }
 
 #' @keywords internal

@@ -5,7 +5,7 @@
 \title{Create a dock view widget}
 \usage{
 dock_view(
-  panels,
+  panels = list(),
   ...,
   theme = c("light-spaced", "light", "abyss", "abyss-spaced", "dark", "vs", "dracula",
     "replit"),
@@ -16,7 +16,7 @@ dock_view(
 )
 }
 \arguments{
-\item{panels}{Widget configuration. Slot for \link{panel}.}
+\item{panels}{Slot for \link{panel}.}
 
 \item{...}{Other options. See
 \url{https://dockview.dev/docs/api/dockview/options/}.}
