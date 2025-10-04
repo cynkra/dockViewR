@@ -1,5 +1,5 @@
 #' Select a panel dynamically
-#' @param dock Dock proxy object created with [dock_view_proxy()
+#' @param dock Dock proxy object created with [dock_view_proxy()].
 #' @param id Panel id.
 #' @param session shiny session object.
 #' See \url{https://dockview.dev/docs/api/dockview/panelApi/}.

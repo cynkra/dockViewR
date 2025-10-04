@@ -7,7 +7,7 @@
 select_panel(dock, id, session = getDefaultReactiveDomain())
 }
 \arguments{
-\item{dock}{Dock proxy object created with [dock_view_proxy()}
+\item{dock}{Dock proxy object created with \code{\link[=dock_view_proxy]{dock_view_proxy()}}.}
 
 \item{id}{Panel id.}
 
