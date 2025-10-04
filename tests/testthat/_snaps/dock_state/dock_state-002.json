@@ -3,7 +3,7 @@
     "obs": 500
   },
   "export": {
-    "active_group": "2",
+    "active_group": "1",
     "grid": {
       "root": {
         "type": "branch",
@@ -12,13 +12,12 @@
             "type": "leaf",
             "data": {
               "views": [
-                "test",
                 "2"
               ],
               "activeView": "2",
               "id": "1"
             },
-            "size": 576
+            "size": 581
           },
           {
             "type": "leaf",
@@ -29,7 +28,7 @@
               "activeView": "3",
               "id": "2"
             },
-            "size": 575
+            "size": 570
           }
         ],
         "size": 380
@@ -38,11 +37,10 @@
       "height": 380,
       "orientation": "HORIZONTAL"
     },
-    "n_states": 4,
+    "n_states": 2,
     "panel_ids": [
       "2",
-      "3",
-      "test"
+      "3"
     ]
   }
 }

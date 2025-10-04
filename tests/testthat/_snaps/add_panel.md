@@ -24,4 +24,10 @@
     Condition
       Error in `validate_position_ref()`:
       ! <Panel (ID: 4)>: invalid value (10) for `referencePanel`. Valid ids are: 2, 3, test.
+    Code
+      add_panel("dock", panel(id = 4, "plop", "Panel 4", position = list(
+        referenceGroup = "pouet", direction = "within")), session = session)
+    Condition
+      Error in `validate_position_ref()`:
+      ! <Panel (ID: 4)>: invalid value (pouet) for `referenceGroup`. Valid ids are: 1, 2.
 

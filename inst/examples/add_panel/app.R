@@ -20,6 +20,7 @@ server <- function(input, output, session) {
 
   output$dock <- renderDockView({
     dock_view(
+      add_tab = list(enable = TRUE),
       panels = list(
         panel(
           id = "1",
@@ -142,6 +143,28 @@ server <- function(input, output, session) {
     remove_panel(
       "dock",
       input[["dock_panel-to-remove"]]
+    )
+  })
+
+  # Manually add a panel after clicking on the + button
+  observeEvent(input[["dock_panel-to-add"]], {
+    add_panel(
+      "dock",
+      panel(
+        id = as.character(as.numeric(tail(get_panels_ids("dock"), 1)) + 1),
+        title = paste(
+          "Panel",
+          as.character(as.numeric(tail(get_panels_ids("dock"), 1)) + 1)
+        ),
+        content = paste(
+          "This is panel",
+          as.character(as.numeric(tail(get_panels_ids("dock"), 1)) + 1)
+        ),
+        position = list(
+          referenceGroup = input[["dock_panel-to-add"]],
+          direction = "within"
+        )
+      )
     )
   })
 }

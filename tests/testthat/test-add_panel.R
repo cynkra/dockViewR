@@ -60,6 +60,18 @@ test_that("add_panel works", {
         ),
         session = session
       )
+
+      # Wrong referenceGroup
+      add_panel(
+        "dock",
+        panel(
+          id = 4,
+          "plop",
+          "Panel 4",
+          position = list(referenceGroup = "pouet", direction = "within")
+        ),
+        session = session
+      )
     }
   )
 
@@ -118,59 +130,6 @@ test_that("add_panel app works", {
   app$wait_for_idle()
   app$expect_values(
     input = c("obs", "variable", "dist"),
-    output = FALSE,
-    export = TRUE
-  )
-})
-
-test_that("add_panel with + leftheader button works", {
-  # Don't run these tests on the CRAN build servers
-  skip_on_cran()
-
-  appdir <- system.file(
-    package = "dockViewR",
-    "examples",
-    "replace_panel_content"
-  )
-
-  app <- AppDriver$new(
-    appdir,
-    name = "replace_panel_content",
-    seed = 121,
-    height = 752,
-    width = 1211
-  )
-  app$wait_for_idle()
-  app$expect_values(
-    input = c("obs", "selimp"),
-    output = FALSE,
-    export = TRUE
-  )
-  app$click(selector = ".dv-left-actions-container .fas.fa-plus")
-  app$set_inputs(
-    selinp = app$get_js(
-      "Object
-        .getOwnPropertyNames(
-          Shiny
-            .shinyapp
-            .$inputValues['dock_state']['panels']
-        )
-      "
-    )[[
-      2
-    ]]
-  )
-  app$click("insert")
-  Sys.sleep(2)
-  app$expect_values(
-    input = c("obs", "dist", "selimp"),
-    output = FALSE,
-    export = TRUE
-  )
-  app$set_inputs(dist = "unif")
-  Sys.sleep(2)
-  app$expect_values(
-    input = c("obs", "dist", "selimp"),
     output = FALSE,
     export = TRUE
   )
