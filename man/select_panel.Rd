@@ -4,11 +4,10 @@
 \alias{select_panel}
 \title{Select a panel dynamically}
 \usage{
-select_panel(dock_id, id, session = getDefaultReactiveDomain())
+select_panel(dock, id, session = getDefaultReactiveDomain())
 }
 \arguments{
-\item{dock_id}{Dock unique id. When using modules the namespace
-is automatically added.}
+\item{dock}{Dock proxy object created with [dock_view_proxy()}
 
 \item{id}{Panel id.}
 
@@ -16,9 +15,7 @@ is automatically added.}
 See \url{https://dockview.dev/docs/api/dockview/panelApi/}.}
 }
 \value{
-This function is called for its side effect.
-It sends a message to JavaScript through the current websocket connection,
-leveraging the shiny session object.
+The dock proxy object, invisibly.
 }
 \description{
 Select a panel dynamically

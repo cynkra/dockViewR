@@ -90,8 +90,7 @@ valid_position_names <- c(
 process_panel_position <- function(
   id,
   position,
-  dock_id = NULL,
-  session = NULL
+  dock_state = NULL
 ) {
   # Check names
   validate_position_names(id, position)
@@ -101,8 +100,11 @@ process_panel_position <- function(
   if (!is.null(position[["referenceGroup"]])) {
     position[["referenceGroup"]] <- as.character(position[["referenceGroup"]])
   }
+  # TBD: this also should handle dock initialization ...
   # Check ref panel id when dynamically injected
-  validate_position_ref(id, position, dock_id, session)
+  if (!is.null(dock_state)) {
+    validate_position_ref(id, position, dock_state)
+  }
   # Check position
   validate_position_direction(id, position)
   invisible(position)
@@ -131,21 +133,17 @@ validate_position_names <- function(id, position) {
 }
 
 #' @keywords internal
-validate_position_ref <- function(id, position, dock_id, session) {
-  if (is.null(dock_id)) {
-    return(invisible())
-  }
-
+validate_position_ref <- function(id, position, dock_state) {
   # Map reference types to their getter functions
   ref_getters <- list(
-    referenceGroup = get_groups_ids,
-    referencePanel = get_panels_ids
+    referenceGroup = dock_state[["group_ids"]],
+    referencePanel = dock_state[["panels_ids"]]
   )
 
   # Find which reference type is present and validate it
   for (ref_type in names(ref_getters)) {
     if (ref_type %in% names(position)) {
-      valid_ids <- ref_getters[[ref_type]](dock_id, session)
+      valid_ids <- ref_getters[[ref_type]]
       ref_value <- position[[ref_type]]
 
       if (!(ref_value %in% valid_ids)) {
@@ -170,6 +168,20 @@ validate_position_direction <- function(id, position) {
       id,
       paste(valid_directions, collapse = ", ")
     ))
+  }
+}
+
+# Helper function to validate panel exists
+validate_panel_exists <- function(panel_id, panel_ids) {
+  if (!(panel_id %in% panel_ids)) {
+    stop(
+      sprintf(
+        "Panel ID '%s' not found. Valid IDs are: %s.",
+        panel_id,
+        paste(panel_ids, collapse = ", ")
+      ),
+      call. = FALSE
+    )
   }
 }
 

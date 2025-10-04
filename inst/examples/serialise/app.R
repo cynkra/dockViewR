@@ -10,10 +10,15 @@ ui <- fluidPage(
     actionButton("restore", "Restore saved layout"),
     selectInput("states", "Select a state", NULL)
   ),
-  dockViewOutput("dock")
+  dockViewOutput("dock"),
+  verbatimTextOutput("dock_state"),
 )
 
 server <- function(input, output, session) {
+  output$dock_state <- renderPrint({
+    input$dock_state
+  })
+
   dock_states <- reactiveVal(NULL)
 
   observeEvent(
