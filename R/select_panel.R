@@ -43,7 +43,7 @@ update_dock_state_on_panel_selected <- function(
   state
 ) {
   # Update active panel for this group
-  dock[["proxy"]][["data"]][["active_panels"]][[panel_group_id]] <- panel_id
+  dock[["proxy"]][["data"]][["active_views"]][[panel_group_id]] <- panel_id
 
   # Update active group if it's different from current
   # For instance, if panels are in tabs, there is no need
@@ -52,23 +52,22 @@ update_dock_state_on_panel_selected <- function(
   if (current_active_group != panel_group_id) {
     dock[["proxy"]][["data"]][["active_group"]] <- panel_group_id
   }
+
+  # Update active panel (active view of the active group)
+  # This should always be updated since we're selecting a new panel
+  dock[["proxy"]][["data"]][["active_panel"]] <- panel_id
 }
 
 validate_panel_not_selected <- function(panel_id, state) {
-  active_group <- state[["active_group"]]
-  active_panels <- state[["active_panels"]]
+  current_active_panel <- get_active_panel(state)
 
-  if (!is.null(active_group) && !is.null(active_panels)) {
-    current_active_panel <- active_panels[[active_group]]
-
-    if (!is.null(current_active_panel) && current_active_panel == panel_id) {
-      stop(
-        sprintf(
-          "Panel ID '%s' is already selected.",
-          panel_id
-        ),
-        call. = FALSE
-      )
-    }
+  if (!is.null(current_active_panel) && current_active_panel == panel_id) {
+    stop(
+      sprintf(
+        "Panel ID '%s' is already selected.",
+        panel_id
+      ),
+      call. = FALSE
+    )
   }
 }

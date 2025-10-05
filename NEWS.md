@@ -1,5 +1,15 @@
 # dockViewR 0.2.1
 
+## Breaking changes
+
+In the previous API, we relied on `input$<dock_id>_state` to perform checks on panel ids but this was no reliable. For instance, calling `add_panel()` in an `observeEvent()`, the state was not up to date as you had to wait for the next reactive flush to get an update of the input. This lead to unconvenient workarounds when manipulating the dock from the server. To fix this, we now introduce a reactive proxy to the dock instance that is used in server side functions.
+
+- Added `dock_view_reactive_proxy()` to create a reactive proxy to a dock instance. While this isn't a breaking change, this actually changes the way other functions work like `add_panel()` or `remove_panel()`.
+- `add_panel()` `dock_id` parameter is changed to `dock`. It now expects a dock proxy created with `dock_view_reactive_proxy()`. This allows to have useful checks on the server side (checking that the panel to add is valid, ...).
+- Same for `remove_panel()`, `select_panel()` and `move_panel()`.
+
+## New features
+
 - Allow initialising a dock with no panels (default to `list()`).
 - Added `input[["<dock_ID>_initialized"]]` within an `onRender` callback. Allows to track when the dock is ready
 to perform actions server side.

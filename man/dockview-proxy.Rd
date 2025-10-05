@@ -20,7 +20,19 @@ By default, this uses the current reactive domain.}
 }
 \value{
 A proxy object of class "dock_view_proxy" that can be used with g6 proxy methods
-such as \code{add_panel()}, \code{remove_panel()}, etc.
+such as \code{add_panel()}, \code{remove_panel()}, etc. It contains:
+\itemize{
+\item \code{id}: The ID of the dockview instance.
+\item \code{session}: The Shiny session object.
+\item \code{data}: A list containing the current state of the dock, including:
+\item \code{panels_ids}: Character vector of panel IDs.
+\item \code{group_ids}: Character vector of group IDs.
+\item \code{panel_groups_map}: Named list mapping group IDs to their panel IDs.
+\item \code{active_views}: Named character vector mapping group IDs to their active panel IDs.
+\item \code{active_group}: The ID of the currently active group.
+\item \code{active_panel}: The ID of the currently active panel within the active group.
+\item \code{timestamp}: The time when the proxy was created or last updated.
+}
 
 A reactive values containing a
 \code{dock_view_proxy} object initialized with

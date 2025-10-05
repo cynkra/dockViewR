@@ -55,7 +55,11 @@ update_dock_state_on_panel_addition <- function(dock, panel) {
   # Update groups based on position
   if (is.null(position)) {
     # Add to active group
-    add_panel_to_existing_group(dock, state[["active_group"]], panel_id)
+    target_group <- state[["active_group"]]
+    add_panel_to_group(dock, target_group, panel_id)
+
+    # Update active view for the target group and active panel
+    update_active_panel_state(dock, panel_id, target_group)
   } else {
     # Get reference info
     ref_info <- get_reference_info(position)
@@ -66,16 +70,22 @@ update_dock_state_on_panel_addition <- function(dock, panel) {
         ref_info[["panel"]],
         state[["panel_groups_map"]]
       )
-      add_panel_to_existing_group(dock, group_id, panel_id)
+      add_panel_to_group(dock, group_id, panel_id)
+
+      # Update active view for this group and active panel
+      update_active_panel_state(dock, panel_id, group_id)
     } else {
       # Create new group
-      create_new_group(dock, panel_id)
+      new_group_id <- create_new_group(dock, panel_id)
+
+      # Update active view for new group and active panel
+      update_active_panel_state(dock, panel_id, new_group_id)
     }
   }
 }
 
 # Helper to add panel to existing group
-add_panel_to_existing_group <- function(dock, group_id, panel_id) {
+add_panel_to_group <- function(dock, group_id, panel_id) {
   if (is.null(group_id)) {
     return()
   }
@@ -98,6 +108,25 @@ create_new_group <- function(dock, panel_id) {
   panel_groups_map <- dock[["proxy"]][["data"]][["panel_groups_map"]]
   next_map_id <- as.character(length(panel_groups_map) + 1)
   dock[["proxy"]][["data"]][["panel_groups_map"]][[next_map_id]] <- panel_id
+
+  # Return the new group ID
+  return(new_group_id)
+}
+
+# Helper to update active panel state
+update_active_panel_state <- function(dock, panel_id, group_id) {
+  if (is.null(group_id)) {
+    return()
+  }
+
+  # Update active view for this group
+  dock[["proxy"]][["data"]][["active_views"]][[group_id]] <- panel_id
+
+  # Update active group to the group containing the new panel
+  dock[["proxy"]][["data"]][["active_group"]] <- group_id
+
+  # Update active panel (active view of the active group)
+  dock[["proxy"]][["data"]][["active_panel"]] <- panel_id
 }
 
 # Helper to get reference information

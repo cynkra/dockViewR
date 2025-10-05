@@ -11,7 +11,18 @@
 #'   By default, this uses the current reactive domain.
 #'
 #' @return A proxy object of class "dock_view_proxy" that can be used with g6 proxy methods
-#'   such as `add_panel()`, `remove_panel()`, etc.
+#'   such as `add_panel()`, `remove_panel()`, etc. It contains:
+#' - `id`: The ID of the dockview instance.
+#' - `session`: The Shiny session object.
+#' - `data`: A list containing the current state of the dock, including:
+#'  - `panels_ids`: Character vector of panel IDs.
+#'  - `group_ids`: Character vector of group IDs.
+#'  - `panel_groups_map`: Named list mapping group IDs to their panel IDs.
+#'  - `active_views`: Named character vector mapping group IDs to their active panel IDs.
+#'  - `active_group`: The ID of the currently active group.
+#'  - `active_panel`: The ID of the currently active panel within the active group.
+#'  - `timestamp`: The time when the proxy was created or last updated.
+#'
 #'
 #' @export
 #' @rdname dockview-proxy
@@ -30,8 +41,9 @@ dock_view_proxy <- function(
   panels_ids <- character(0)
   groups_ids <- character(0)
   panel_groups_map <- list()
-  active_panels <- character(0)
+  active_views <- character(0)
   active_group <- character(0)
+  active_panel <- character(0)
 
   # process data if provided
   if (!is.null(data)) {
@@ -42,9 +54,16 @@ dock_view_proxy <- function(
     # map panel ids to group ids
     panel_groups_map <- get_panel_group(data)
     # get active panel per group
-    active_panels <- get_active_panel_group(data)
+    active_views <- get_active_panel_group(data)
     # get active group id
     active_group <- get_active_group(data)
+    # get active panel id
+    active_panel <- get_active_panel(
+      list(
+        active_group = active_group,
+        active_views = active_views
+      )
+    )
   }
 
   structure(
@@ -55,8 +74,9 @@ dock_view_proxy <- function(
         panels_ids = panels_ids, # Store panel information
         group_ids = group_ids, # Store group information
         panel_groups_map = panel_groups_map, # Map panel IDs to group IDs
-        active_panels = active_panels, # Active panel per group
-        active_group = active_group, # Currently active panel ID
+        active_views = active_views, # Active panel per group
+        active_group = active_group, # Currently active group ID
+        active_panel = active_panel,
         timestamp = Sys.time() # Maybe we need that one day ...
       )
     ),
@@ -252,4 +272,36 @@ get_active_panel_group <- function(layout) {
 
   result <- extract_active(root)
   if (length(result) == 0) NULL else result
+}
+
+#' Get Active Panel
+#'
+#' Retrieves the active panel ID for the currently active group in a dock.
+#'
+#' @param state A list containing the dock state data after
+#' calling [dock_view_reactive_proxy()], typically accessed via
+#'   `dock[["proxy"]][["data"]]`. Must contain:
+#'   - `active_group`: The ID of the currently active group
+#'   - `active_views`: A named list mapping group IDs to their active panel IDs
+#'
+#' @return A character string representing the active panel ID.
+#'
+#' @details
+#' This function is used internally to determine which panel is currently
+#' active within the active group of a dockview. In dockview terminology,
+#' each group can contain multiple panels (e.g., in tabs), but only one
+#' panel per group can be active at a time.
+#'
+#' @seealso
+#' \code{\link{select_panel}} for selecting a different panel,
+#' \code{\link{dock_view_proxy}} for creating the dock proxy object
+#' @export
+get_active_panel <- function(state) {
+  active_group <- state[["active_group"]]
+  active_views <- state[["active_views"]]
+
+  # We need no check since there is always an active group
+  # and an active view.
+
+  active_views[[active_group]]
 }
