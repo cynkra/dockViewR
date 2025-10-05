@@ -6,7 +6,7 @@
 #' JavaScript library, providing a powerful interface for
 #' creating IDE-like layouts in Shiny applications or R Markdown documents.
 #'
-#' @param panels Slot for \link{panel}.
+#' @param panels An unnamed list of [panel()].
 #' @param ... Other options. See
 #' \url{https://dockview.dev/docs/api/dockview/options/}.
 #' @param theme Theme. One of
@@ -116,10 +116,17 @@ dock_view <- function(
   # check reference panels ids
   check_panel_refs(panels, ids)
 
+  if (length(names(panels))) {
+    warning(
+      "Panels should be an unnamed list.",
+      "The names will be ignored."
+    )
+  }
+
   # forward options using x
   x <- list(
     theme = theme,
-    panels = panels,
+    panels = unname(panels),
     # camelCase for JS ...
     addTab = validate_add_tab(add_tab),
     ...
@@ -159,7 +166,6 @@ dock_view <- function(
       sprintf(
         "
       function(el, x) {
-        console.log(el.id);
         Shiny.setInputValue(`%s${el.id}_initialized`, true);
       }",
         session$ns("")
@@ -211,7 +217,6 @@ default_add_tab_callback <- function() {
       const dockId = config.containerApi.component
         .gridview.element.closest('.dockview')
         .attributes.id.textContent;
-      console.log(config);
       Shiny.setInputValue(`${dockId}_panel-to-add`, config.group.id, { priority: 'event' });
     }"
   )

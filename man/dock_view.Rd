@@ -16,7 +16,7 @@ dock_view(
 )
 }
 \arguments{
-\item{panels}{Slot for \link{panel}.}
+\item{panels}{An unnamed list of \code{\link[=panel]{panel()}}.}
 
 \item{...}{Other options. See
 \url{https://dockview.dev/docs/api/dockview/options/}.}
