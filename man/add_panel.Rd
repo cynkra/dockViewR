@@ -4,11 +4,10 @@
 \alias{add_panel}
 \title{Add Panel dynamically}
 \usage{
-add_panel(dock_id, panel, ..., session = getDefaultReactiveDomain())
+add_panel(dock, panel, ..., session = getDefaultReactiveDomain())
 }
 \arguments{
-\item{dock_id}{Dock unique id. When using modules the namespace is
-automatically added.}
+\item{dock}{Dock proxy object created with \code{\link[=dock_view_proxy]{dock_view_proxy()}}.}
 
 \item{panel}{A panel object. See \link{panel} for the different parameters.}
 
@@ -18,9 +17,7 @@ automatically added.}
 See \url{https://dockview.dev/docs/api/dockview/panelApi/}.}
 }
 \value{
-This function is called for its side effect.
-It sends a message to JavaScript through the current websocket connection,
-leveraging the shiny session object.
+The dock proxy object, invisibly.
 }
 \description{
 Add Panel dynamically

@@ -52,9 +52,6 @@ HTMLWidgets.widget({
           }, {})
         })
 
-        // Init state
-        saveDock(id, api)
-
         // Resize panel content on layout change
         // (useful so that plots or widgets resize correctly)
         // Also update the dock state.

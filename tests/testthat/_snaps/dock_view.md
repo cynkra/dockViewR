@@ -22,4 +22,14 @@
     Condition
       Error in `check_panel_refs()`:
       ! <Panel (ID: 4)>: invalid value (10) for `referencePanel`. Valid ids are: 4.
+    Code
+      dock_view(panels = list(), add_tab = list(enable = "plop"))
+    Condition
+      Error in `validate_add_tab()`:
+      ! `add_tab$enable` must be a boolean.
+    Code
+      dock_view(panels = list(), add_tab = list(enable = TRUE, callback = "plop"))
+    Condition
+      Error in `validate_js_callback()`:
+      ! `callback` must be a JavaScript function created with htmlwidgets::JS().
 

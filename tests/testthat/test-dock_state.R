@@ -70,7 +70,13 @@ test_that("dock state app works", {
 
   Sys.sleep(2)
   app$expect_values(input = "obs", output = FALSE, export = TRUE)
-  app$click("restore")
+  app$click("save")
+  app$run_js(
+    "HTMLWidgets.find('#dock').getWidget().component.api.getPanel('test').api.close()"
+  )
   app$wait_for_idle()
+  app$click("save")
+  app$expect_values(input = "obs", output = FALSE, export = TRUE)
+  app$click("restore")
   app$expect_values(input = "obs", output = FALSE, export = TRUE)
 })

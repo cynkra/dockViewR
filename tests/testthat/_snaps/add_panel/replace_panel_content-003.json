@@ -1,9 +1,0 @@
-{
-  "input": {
-    "dist": "unif",
-    "obs": 500
-  },
-  "export": {
-    "n_panels": 2
-  }
-}

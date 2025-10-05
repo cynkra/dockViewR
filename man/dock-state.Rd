@@ -19,7 +19,7 @@ get_panels(dock_id, session = getDefaultReactiveDomain())
 
 get_panels_ids(dock_id, session = getDefaultReactiveDomain())
 
-get_active_group(dock_id, session = getDefaultReactiveDomain())
+get_active_group(layout)
 
 get_grid(dock_id, session = getDefaultReactiveDomain())
 

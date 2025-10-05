@@ -10,14 +10,19 @@ ui <- fluidPage(
     actionButton("restore", "Restore saved layout"),
     selectInput("states", "Select a state", NULL)
   ),
-  dockViewOutput("dock")
+  dockViewOutput("dock"),
+  verbatimTextOutput("dock_state"),
 )
 
 server <- function(input, output, session) {
+  output$dock_state <- renderPrint({
+    input$dock_state
+  })
+
   dock_states <- reactiveVal(NULL)
 
   observeEvent(
-    req(input$dock_state),
+    req(length(input$dock_state$panels) > 0),
     {
       move_panel("dock", id = "test", group = "3", position = "top")
     },
@@ -26,9 +31,6 @@ server <- function(input, output, session) {
 
   observeEvent(input$save, {
     save_dock("dock")
-  })
-
-  observeEvent(req(input$dock_state), {
     states <- c(dock_states(), list(input$dock_state))
     dock_states(setNames(states, seq_along(states)))
   })
