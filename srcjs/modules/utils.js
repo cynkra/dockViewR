@@ -21,7 +21,7 @@ const matchTheme = (theme) => {
     case 'abyss':
       res = themeAbyss
       break
-    case 'abyss/spaced':
+    case 'abyss-spaced':
       res = themeAbyssSpaced
       break
     case 'vs':

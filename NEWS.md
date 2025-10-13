@@ -19,6 +19,7 @@ to perform actions server side.
 - In `add_panel()`: if no `referencePanel` or `referenceGroup` is provided, the panel is added relative to the [container](https://dockview.dev/docs/core/panels/add#relative-to-the-container).
 - Fix: `get_groups_ids()` now correctly returns all group ids (nested groups were not returned).
 - Fix [#52](https://github.com/cynkra/dockViewR/issues/52): Reworked `add_tab` parameter in `dock_view()`. By default, there is a `default_add_tab_callback()` that sets `input[["<dock_ID>_panel-to-add"]]`, so you can create observers with custom logic, including removing the panel with `add_panel()`. An example of usage is available at <https://github.com/cynkra/dockViewR/blob/main/inst/examples/add_panel/app.R>.
+- Fix: typo in `abyss-spaced` theme caused the theme not to be applied.
 - Fix: options in `...` were not passed to the dockview JS constructor. (:clown:)
 - Fix [#48](https://github.com/cynkra/dockViewR/issues/48): dock state is saved before panels are added.
 - Remove unecessary content in saved JSON state (dependencies, head, singletons). They should
