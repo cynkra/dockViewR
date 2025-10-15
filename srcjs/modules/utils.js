@@ -77,12 +77,22 @@ const evalDockView = (callback, mode) => {
   }
 }
 
-const validatedPanel = (api, id, context = '') => {
-  const panel = api.getPanel(`${id}`);
-  if (!panel) {
-    throw new Error(`${context}Panel with ID '${id}' not found`);
+const validatedDockElement = (api, id, type, context = '') => {
+  let fun;
+  switch (type) {
+    case 'panel':
+      fun = (id) => api.getPanel(id);
+      break;
+    case 'group':
+      fun = (id) => api.getGroup(id);
+    default:
+      break;
   }
-  return panel;
+  const res = fun(id);
+  if (!res) {
+    throw new Error(`${context}${type} with ID '${id}' not found`);
+  }
+  return res;
 };
 
 const addPanel = (panel, mode, api) => {
@@ -109,24 +119,29 @@ const addPanel = (panel, mode, api) => {
 
 const removePanel = (id, mode, api) => {
   evalDockView(() => {
-    let panel = validatedPanel(api, id);
+    let panel = validatedDockElement(api, id, 'panel');
     api.removePanel(panel);
   }, mode)
 }
 
 const selectPanel = (id, mode, api) => {
   evalDockView(() => {
-    let panel = validatedPanel(api, id);
+    let panel = validatedDockElement(api, id, 'panel');
     panel.api.setActive();
   }, mode);
 }
 
 const movePanel = (m, mode, api) => {
   evalDockView(() => {
-    let panel = validatedPanel(api, m.id);
+    let panel = validatedDockElement(api, m.id, 'panel');
     // Move relative to another group
     if (m.options.group !== undefined) {
-      let groupTarget = validatedPanel(api, m.options.group, 'Target group ');
+      let groupTarget = validatedDockElement(
+        api,
+        m.options.group,
+        'panel',
+        'Target group '
+      );
       panel.api.moveTo({
         group: groupTarget.api.group,
         position: m.options.position,
@@ -138,32 +153,33 @@ const movePanel = (m, mode, api) => {
   }, mode);
 }
 
-const moveGroup = (m, api) => {
-
-  // TBD validate ids
-
-  let from = api.getGroup(`${m.id}`);
-  // Move relative to another group
-  let target = api.getGroup(`${m.options.to}`);
-  from.api.moveTo({
-    group: target,
-    position: m.options.position
-  });
-  return null;
+const moveGroup = (m, mode, api) => {
+  evalDockView(() => {
+    let from = validatedDockElement(api, m.id, 'group');
+    // Move relative to another group
+    let target = validatedDockElement(api, m.options.to, 'group');
+    from.api.moveTo({
+      group: target,
+      position: m.options.position
+    });
+  }, mode)
 }
 
-const moveGroup2 = (m, api) => {
-
-  // TBD validate ids
-
-  let panel = api.getPanel(`${m.id}`);
-  // Move relative to another group
-  let groupTarget = api.getPanel(`${m.options.to}`);
-  panel.group.api.moveTo({
-    group: groupTarget.api.group,
-    position: m.options.position
-  });
-  return null;
+const moveGroup2 = (m, mode, api) => {
+  evalDockView(() => {
+    let panel = validatedDockElement(api, m.id, 'panel');
+    // Move relative to another group
+    let groupTarget = validatedDockElement(
+      api,
+      m.options.to,
+      'panel',
+      'Target group'
+    );
+    panel.group.api.moveTo({
+      group: groupTarget.api.group,
+      position: m.options.position
+    });
+  }, mode)
 }
 
 const defaultPanel = (pnId) => {

@@ -122,11 +122,11 @@ HTMLWidgets.widget({
             api.fromJSON(m)
           })
           Shiny.addCustomMessageHandler(el.id + '_move-group2', (m) => {
-            moveGroup2(m, api)
+            moveGroup2(m, x.mode, api)
           })
 
           Shiny.addCustomMessageHandler(el.id + '_move-group', (m) => {
-            moveGroup(m, api)
+            moveGroup(m, x.mode, api)
           })
 
           Shiny.addCustomMessageHandler(el.id + '_update-options', (m) => {

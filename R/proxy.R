@@ -142,7 +142,7 @@ move_panel <- function(
 
   options <- list(
     position = position,
-    group = group,
+    group = as.character(group),
     index = index
   )
 
@@ -164,6 +164,8 @@ move_group <- function(
   to,
   position = NULL
 ) {
+  from <- as.character(from)
+  to <- as.character(to)
   validate_move_targets(from, to, "PanelGroup")
   validate_position(position, from)
 
@@ -186,6 +188,8 @@ move_group2 <- function(
   to,
   position = NULL
 ) {
+  from <- as.character(from)
+  to <- as.character(to)
   validate_move_targets(from, to, "Panel")
   validate_position(position, from)
 
