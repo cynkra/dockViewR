@@ -1,6 +1,5 @@
 #' get dock
-#' @param dock Dock unique id. When using modules the namespace is
-#' automatically added.
+#' @param dock Dock proxy created with [dock_view_proxy()].
 #' @export
 #' @note Only works with server side functions like \link{add_panel}.
 #' Don't call it from the UI.
@@ -17,6 +16,10 @@
 #' from [get_panels()].
 #' [get_active_group()] extracts the `activeGroup` component of
 #' [get_dock()] as a string.
+#' [get_active_views()] is a convenience function that returns the active view
+#' in each group.
+#' [get_active_panel()] is a convenience function that returns the active panel
+#' in the active group.
 #' [get_grid()] returns the `grid` element of [get_dock()] which is a list.
 #' [get_groups()] returns a list of panel groups from [get_grid()].
 #' [get_groups_ids()] returns a character vector of groups ids
@@ -97,6 +100,42 @@ get_groups_panels <- function(dock) {
     }),
     get_groups_ids(dock)
   )
+}
+
+#' @keywords internal
+extract_active_view <- function(x) {
+  if (x[["type"]] == "leaf") {
+    active_view <- x[["data"]][["activeView"]]
+    group_id <- x[["data"]][["id"]]
+    if (is.null(active_view) || is.null(group_id)) {
+      return(NULL)
+    }
+    setNames(active_view, group_id)
+  } else if (x[["type"]] == "branch") {
+    unlist(lapply(x[["data"]], extract_active))
+  } else {
+    NULL
+  }
+}
+
+#' get active views
+#' @rdname dock-state
+#' @export
+get_active_views <- function(dock) {
+  root <- get_grid(dock)[["root"]]
+  result <- extract_active_view(root)
+  if (length(result) == 0) NULL else result
+}
+
+#' get active panel
+#' @rdname dock-state
+#' @export
+get_active_panel <- function(dock) {
+  active_group <- get_active_group(dock)
+  active_views <- get_active_views(dock)
+  # We need no check since there is always an active group
+  # and an active view.
+  active_views[[active_group]]
 }
 
 #' save a dock
