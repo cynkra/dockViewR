@@ -66,7 +66,7 @@ get_grid <- function(dock) {
 #' get dock groups
 #' @rdname dock-state
 #' @export
-get_groups <- function(dock_id) {
+get_groups <- function(dock) {
   get_grid(dock)[["root"]][["data"]]
 }
 
@@ -112,7 +112,7 @@ extract_active_view <- function(x) {
     }
     setNames(active_view, group_id)
   } else if (x[["type"]] == "branch") {
-    unlist(lapply(x[["data"]], extract_active))
+    unlist(lapply(x[["data"]], extract_active_view))
   } else {
     NULL
   }

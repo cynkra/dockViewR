@@ -14,12 +14,8 @@ session <- as.environment(
 )
 
 test_that("update_dock_view works", {
-  # Invalid shiny session
-  expect_snapshot(error = TRUE, {
-    update_dock_view("dock", "test")
-  })
-
-  update_dock_view("dock", list(theme = "dark"), session = session)
+  dock_proxy <- dock_view_proxy("dock", session = session)
+  update_dock_view(dock_proxy, list(theme = "dark"))
   expect_identical(session$lastCustomMessage$type, "dock_update-options")
   expect_identical(session$lastCustomMessage$message, list(theme = "dark"))
 })

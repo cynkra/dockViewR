@@ -15,14 +15,8 @@ session <- as.environment(
 
 test_that("remove_panel works", {
   session$input[["dock_state"]] <- test_dock
-  expect_snapshot(
-    error = TRUE,
-    {
-      remove_panel("dock", 4, session = session)
-    }
-  )
-
-  remove_panel("dock", id = "test", session = session)
+  dock_proxy <- dock_view_proxy("dock", session = session)
+  remove_panel(dock_proxy, id = "test")
   expect_identical(session$lastCustomMessage$type, "dock_rm-panel")
   expect_identical(session$lastCustomMessage$message, "test")
 })
@@ -64,6 +58,14 @@ test_that("remove_panel app works", {
   app$set_inputs(selinp = "3")
   app$click("btn")
   app$wait_for_idle()
+  app$expect_values(
+    input = c("obs", "selimp"),
+    output = FALSE,
+    export = TRUE
+  )
+
+  app$click("btn")
+  app$click("btn")
   app$expect_values(
     input = c("obs", "selimp"),
     output = FALSE,

@@ -74,6 +74,28 @@ dock_view_proxy <- function(
   )
 }
 
+#' Update options for dockview instance
+#'
+#' This does not rerender the widget, just update options like global theme.
+#'
+#' @param dock Dock proxy created with [dock_view_proxy()].
+#' @param options List of options for the \link{dock_view} instance.
+#' @return This function is called for its side effect.
+#' It sends a message to JavaScript through the current websocket connection,
+#' leveraging the shiny session object.
+#' @export
+update_dock_view <- function(
+  dock,
+  options
+) {
+  session <- dock[["session"]]
+  dock_id <- dock[["id"]]
+  session$sendCustomMessage(
+    type = sprintf("%s_update-options", session$ns(dock_id)),
+    message = options
+  )
+}
+
 #' Dockview Panel Operations
 #'
 #' Functions to dynamically manipulate panels in a dockview instance.
@@ -138,11 +160,14 @@ move_panel <- function(
   index = NULL
 ) {
   panel_id <- as.character(id)
+  if (!is.null(group)) {
+    group <- as.character(group)
+  }
   validate_position(position, panel_id)
 
   options <- list(
     position = position,
-    group = as.character(group),
+    group = group,
     index = index
   )
 

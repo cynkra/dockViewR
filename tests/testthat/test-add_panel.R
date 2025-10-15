@@ -15,75 +15,45 @@ session <- as.environment(
 
 test_that("add_panel works", {
   session$input[["dock_state"]] <- test_dock
+  dock_proxy <- dock_view_proxy("dock", session = session)
   expect_snapshot(
     error = TRUE,
     {
-      # Duplicated id
-      add_panel(
-        "dock",
-        panel(id = "test", "plop", "Panel 1"),
-        session = session
-      )
+      # No proxy
+      add_panel("dock", panel(id = 4, "plop", "Panel 4"))
 
       # Wrong position names
       add_panel(
-        "dock",
+        dock_proxy,
         panel(
           id = 4,
           "plop",
           "Panel 4",
           position = list(pouet = 3, plop = "test")
-        ),
-        session = session
+        )
       )
 
       # Wrong direction value
       add_panel(
-        "dock",
+        dock_proxy,
         panel(
           id = 4,
           "plop",
           "Panel 4",
           position = list(referencePanel = 1, direction = "top")
-        ),
-        session = session
-      )
-
-      # Wrong referencePanel
-      add_panel(
-        "dock",
-        panel(
-          id = 4,
-          "plop",
-          "Panel 4",
-          position = list(referencePanel = 10, direction = "above")
-        ),
-        session = session
-      )
-
-      # Wrong referenceGroup
-      add_panel(
-        "dock",
-        panel(
-          id = 4,
-          "plop",
-          "Panel 4",
-          position = list(referenceGroup = "pouet", direction = "within")
-        ),
-        session = session
+        )
       )
     }
   )
 
   add_panel(
-    "dock",
+    dock_proxy,
     panel(
       id = 4,
       "plop",
       "Panel 4",
       position = list(referencePanel = "test", direction = "above")
-    ),
-    session = session
+    )
   )
   expect_identical(session$lastCustomMessage$type, "dock_add-panel")
   expect_type(session$lastCustomMessage$message, "list")
@@ -127,6 +97,15 @@ test_that("add_panel app works", {
     export = TRUE
   )
   app$set_inputs(dist = "unif")
+  app$wait_for_idle()
+  app$expect_values(
+    input = c("obs", "variable", "dist"),
+    output = FALSE,
+    export = TRUE
+  )
+
+  # Try add the same panel (will error)
+  app$click("btn")
   app$wait_for_idle()
   app$expect_values(
     input = c("obs", "variable", "dist"),

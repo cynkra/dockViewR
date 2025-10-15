@@ -7,6 +7,7 @@ In the previous API, we relied on `input$<dock_id>_state` to perform checks on p
 - Added `dock_view_proxy()` to create a reactive proxy to a dock instance.
 - `add_panel()` `dock_id` parameter is changed to `dock`. It now expects a dock proxy created with `dock_view_proxy()`. This is to be more consistent with other htmlwidgets. Same applies for `remove_panel()`, `select_panel()` and `move_panel()`.
 - `dock_state()` and all related functions also expect a dock proxy created with `dock_view_proxy()`.
+- `update_dock_view()` also relies on `dock_view_proxy()`.
 
 
 ## New features

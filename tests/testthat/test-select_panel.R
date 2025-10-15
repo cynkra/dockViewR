@@ -15,30 +15,10 @@ session <- as.environment(
 
 test_that("select_panel works", {
   session$input[["dock_state"]] <- test_dock
-  expect_snapshot(
-    error = TRUE,
-    {
-      # Wrong id
-      select_panel(
-        "dock",
-        "blabla",
-        session = session
-      )
-    }
-  )
-
-  select_panel(
-    "dock",
-    "2",
-    session = session
-  )
+  dock_proxy <- dock_view_proxy("dock", session = session)
+  select_panel(dock_proxy, "2")
   expect_identical(session$lastCustomMessage$type, "dock_select-panel")
-  expect_type(session$lastCustomMessage$message, "list")
-  expect_named(
-    session$lastCustomMessage$message,
-    c("id")
-  )
-  expect_identical(session$lastCustomMessage$message$id, "2")
+  expect_identical(session$lastCustomMessage$message, "2")
 })
 
 test_that("select_panel app works", {

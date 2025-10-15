@@ -1,19 +1,13 @@
 # move group works
 
     Code
-      move_group2("dock", "test", 2, session = session)
-      move_group2("dock", 1, "test", session = session)
+      move_group2(dock_proxy, "test", "test")
     Condition
-      Error in `move_group2()`:
-      ! <Panel (ID: 1)>: invalid value (1) for `from`. Valid panel ids are: 2, 3, test.
+      Error in `validate_move_targets()`:
+      ! <Panel (ID: test)>: `from` and `to` must be different group ids.
     Code
-      move_group2("dock", "test", "test", session = session)
+      move_group2(dock_proxy, "test", 2, position = "plop")
     Condition
-      Error in `move_group2()`:
-      ! <Panel (ID: test)>: `from` and `to` must be different panel ids.
-    Code
-      move_group2("dock", "test", 2, position = "plop", session = session)
-    Condition
-      Error in `move_group2()`:
-      ! <Panel (ID: test)>: invalid value for `position`. `position` must be one of left, right, top, bottom, center.
+      Error in `validate_position()`:
+      ! <Panel (ID: test)>: invalid value (plop) for `position`. `position` must be one of left, right, top, bottom, center.
 

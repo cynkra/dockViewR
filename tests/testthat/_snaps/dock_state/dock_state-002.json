@@ -4,6 +4,11 @@
   },
   "export": {
     "active_group": "1",
+    "active_panel": "2",
+    "active_views": {
+      "1": "2",
+      "2": "3"
+    },
     "grid": {
       "root": {
         "type": "branch",
@@ -17,7 +22,7 @@
               "activeView": "2",
               "id": "1"
             },
-            "size": 581
+            "size": 1041
           },
           {
             "type": "leaf",
@@ -28,15 +33,19 @@
               "activeView": "3",
               "id": "2"
             },
-            "size": 570
+            "size": 95
           }
         ],
         "size": 380
       },
-      "width": 1161,
+      "width": 1146,
       "height": 380,
       "orientation": "HORIZONTAL"
     },
+    "group_ids": [
+      "1",
+      "2"
+    ],
     "n_states": 2,
     "panel_ids": [
       "2",

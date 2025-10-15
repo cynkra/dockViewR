@@ -15,41 +15,32 @@ session <- as.environment(
 
 test_that("move_panel works", {
   session$input[["dock_state"]] <- test_dock
+  dock_proxy <- dock_view_proxy("dock", session = session)
   expect_snapshot(
     error = TRUE,
     {
-      # Wrong id
-      move_panel("dock", 4, session = session)
       # Wrong position
       move_panel(
-        "dock",
+        dock_proxy,
         id = "test",
         index = 3,
-        position = "testposition",
-        session = session
+        position = "testposition"
       )
-      # Index error
-      move_panel("dock", 3, session = session)
-      move_panel("dock", 3, index = -2, session = session)
-      move_panel("dock", 3, index = 20, session = session)
-      # Group does not exist
-      move_panel("dock", 3, group = 4, session = session)
     }
   )
 
-  move_panel("dock", id = "test", index = 3, session = session)
+  move_panel(dock_proxy, id = "test", index = 3)
   expect_identical(session$lastCustomMessage$type, "dock_move-panel")
   expect_type(session$lastCustomMessage$message, "list")
   expect_length(session$lastCustomMessage$message, 2)
   expect_identical(session$lastCustomMessage$message$id, "test")
-  expect_identical(session$lastCustomMessage$message$options$index, 2)
+  expect_identical(session$lastCustomMessage$message$options$index, 3)
 
   move_panel(
-    "dock",
+    dock_proxy,
     id = "test",
     group = 3,
-    position = "bottom",
-    session = session
+    position = "bottom"
   )
 })
 

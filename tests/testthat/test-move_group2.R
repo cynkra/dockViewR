@@ -15,20 +15,19 @@ session <- as.environment(
 
 test_that("move group works", {
   session$input[["dock_state"]] <- test_dock
+  dock_proxy <- dock_view_proxy("dock", session = session)
 
   expect_snapshot(error = TRUE, {
-    move_group2("dock", "test", 2, session = session)
-    move_group2("dock", 1, "test", session = session)
-    move_group2("dock", "test", "test", session = session)
-    move_group2("dock", "test", 2, position = "plop", session = session)
+    move_group2(dock_proxy, "test", "test")
+    move_group2(dock_proxy, "test", 2, position = "plop")
   })
 
-  move_group2("dock", "test", 2, position = "right", session = session)
+  move_group2(dock_proxy, "test", 2, position = "right")
   expect_identical(session$lastCustomMessage$type, "dock_move-group2")
   expect_type(session$lastCustomMessage$message, "list")
   expect_identical(session$lastCustomMessage$message$id, "test")
   expect_type(session$lastCustomMessage$message$options, "list")
-  expect_identical(session$lastCustomMessage$message$options$to, 2)
+  expect_identical(session$lastCustomMessage$message$options$to, "2")
   expect_identical(session$lastCustomMessage$message$options$position, "right")
 })
 

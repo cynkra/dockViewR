@@ -25,7 +25,7 @@ get_active_group(dock)
 
 get_grid(dock)
 
-get_groups(dock_id)
+get_groups(dock)
 
 get_groups_ids(dock)
 

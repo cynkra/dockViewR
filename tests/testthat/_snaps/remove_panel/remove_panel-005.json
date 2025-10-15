@@ -1,0 +1,23 @@
+{
+  "input": {
+    "obs": 731
+  },
+  "export": {
+    "active_group": null,
+    "grid": {
+      "root": {
+        "type": "branch",
+        "data": [
+
+        ],
+        "size": 520.5
+      },
+      "width": 1143,
+      "height": 520.5,
+      "orientation": "HORIZONTAL"
+    },
+    "panel_ids": [
+
+    ]
+  }
+}
