@@ -3,7 +3,7 @@ import 'dockview-core/dist/styles/dockview.css'
 import { createDockview } from "dockview-core";
 
 import { Panel, RightHeader, LeftHeader, CustomTab, DefaultTab } from '../modules/components'
-import { matchTheme, addPanel, movePanel, saveDock, moveGroup, moveGroup2 } from '../modules/utils';
+import { matchTheme, addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2 } from '../modules/utils';
 
 HTMLWidgets.widget({
 
@@ -90,24 +90,24 @@ HTMLWidgets.widget({
 
         // Init panels
         x.panels.map((panel) => {
-          addPanel(panel, api);
+          addPanel(panel, x.mode, api);
         });
 
         if (HTMLWidgets.shinyMode) {
           Shiny.addCustomMessageHandler(el.id + '_add-panel', (panel) => {
-            addPanel(panel, api);
+            addPanel(panel, x.mode, api);
           });
 
           Shiny.addCustomMessageHandler(el.id + '_rm-panel', (id) => {
-            api.removePanel(api.getPanel(id));
+            removePanel(id, x.mode, api);
           })
 
           Shiny.addCustomMessageHandler(el.id + '_move-panel', (m) => {
-            movePanel(m, api)
+            movePanel(m, x.mode, api)
           })
 
-          Shiny.addCustomMessageHandler(el.id + '_select-panel', (m) => {
-            api.getPanel(m.id).api.setActive();
+          Shiny.addCustomMessageHandler(el.id + '_select-panel', (id) => {
+            selectPanel(id, x.mode, api);
           })
 
           // Force save dock

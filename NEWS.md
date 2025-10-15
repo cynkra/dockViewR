@@ -1,12 +1,13 @@
-# dockViewR 0.2.1
+# dockViewR 0.3.0
 
 ## Breaking changes
 
-In the previous API, we relied on `input$<dock_id>_state` to perform checks on panel ids but this was no reliable. For instance, calling `add_panel()` in an `observeEvent()`, the state was not up to date as you had to wait for the next reactive flush to get an update of the input. This lead to unconvenient workarounds when manipulating the dock from the server. To fix this, we now introduce a reactive proxy to the dock instance that is used in server side functions.
+In the previous API, we relied on `input$<dock_id>_state` to perform checks on panel ids but this was no reliable. For instance, calling `add_panel()` in an `observeEvent()`, the state was not up to date as you had to wait for the next reactive flush to get an update of the input. This lead to unconvenient workarounds when manipulating the dock from the server. Now, checks are performed UI side an raise JS warnings in the console and optionally Shiny notification when `options(dockViewR.mode = "dev")`.
 
-- Added `dock_view_reactive_proxy()` to create a reactive proxy to a dock instance. While this isn't a breaking change, this actually changes the way other functions work like `add_panel()` or `remove_panel()`.
-- `add_panel()` `dock_id` parameter is changed to `dock`. It now expects a dock proxy created with `dock_view_reactive_proxy()`. This allows to have useful checks on the server side (checking that the panel to add is valid, ...).
-- Same for `remove_panel()`, `select_panel()` and `move_panel()`.
+- Added `dock_view_proxy()` to create a reactive proxy to a dock instance.
+- `add_panel()` `dock_id` parameter is changed to `dock`. It now expects a dock proxy created with `dock_view_proxy()`. This is to be more consistent with other htmlwidgets. Same applies for `remove_panel()`, `select_panel()` and `move_panel()`.
+- `dock_state()` and all related functions also expect a dock proxy created with `dock_view_proxy()`.
+
 
 ## New features
 
@@ -14,8 +15,6 @@ In the previous API, we relied on `input$<dock_id>_state` to perform checks on p
 - Added `input[["<dock_ID>_initialized"]]` within an `onRender` callback. Allows to track when the dock is ready
 to perform actions server side.
 - In `add_panel()`: if no `referencePanel` or `referenceGroup` is provided, the panel is added relative to the [container](https://dockview.dev/docs/core/panels/add#relative-to-the-container).
-- Validate `referenceGroup` if it is passed when adding a new panel with `add_panel()`. It is compared against
-the output of `get_groups_ids()`.
 - Fix: `get_groups_ids()` now correctly returns all group ids (nested groups were not returned).
 - Reworked `add_tab` parameter in `dock_view()`. By default, there is a `default_add_tab_callback()` that sets `input[["<dock_ID>_panel-to-add"]]`, so you can create observers with custom logic, including removing the panel with `add_panel()`. An example of usage is available at <https://github.com/cynkra/dockViewR/blob/main/inst/examples/add_panel/app.R>.
 - Fix: options in `...` were not passed to the dockview JS constructor. (:clown:)

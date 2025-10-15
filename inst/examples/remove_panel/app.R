@@ -3,6 +3,8 @@ library(shiny)
 library(bslib)
 library(visNetwork)
 
+options("dockViewR.mode" = "dev")
+
 nodes <- data.frame(id = 1:3)
 edges <- data.frame(from = c(1, 2), to = c(1, 3))
 
@@ -13,16 +15,18 @@ ui <- page_fillable(
 )
 
 server <- function(input, output, session) {
+  dock_proxy <- dock_view_proxy("dock")
+
   exportTestValues(
-    panel_ids = get_panels_ids("dock"),
-    active_group = get_active_group("dock"),
-    grid = get_grid("dock")
+    panel_ids = get_panels_ids(dock_proxy),
+    active_group = get_active_group(dock_proxy),
+    grid = get_grid(dock_proxy)
   )
-  observeEvent(get_panels_ids("dock"), {
+  observeEvent(get_panels_ids(dock_proxy), {
     updateSelectInput(
       session = session,
       inputId = "selinp",
-      choices = get_panels_ids("dock")
+      choices = get_panels_ids(dock_proxy)
     )
   })
 
@@ -107,7 +111,7 @@ server <- function(input, output, session) {
 
   observeEvent(input$btn, {
     req(input$selinp)
-    remove_panel("dock", input$selinp)
+    remove_panel(dock_proxy, input$selinp)
   })
 }
 

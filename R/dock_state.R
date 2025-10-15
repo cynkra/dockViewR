@@ -1,7 +1,6 @@
 #' get dock
-#' @param dock_id Dock unique id. When using modules the namespace is
+#' @param dock Dock unique id. When using modules the namespace is
 #' automatically added.
-#' @param session shiny session object.
 #' @export
 #' @note Only works with server side functions like \link{add_panel}.
 #' Don't call it from the UI.
@@ -26,57 +25,54 @@
 #' the ids of each panel within each group.
 #' [save_dock()] and [restore_dock()] are used for their side effect to
 #' allow to respectively serialise and restore a dock object.
-get_dock <- function(dock_id, session = getDefaultReactiveDomain()) {
-  if (is.null(session)) {
-    stop(sprintf(
-      "%s must be called from the server of a Shiny app",
-      deparse(sys.call())
-    ))
-  }
+get_dock <- function(dock) {
+  stopifnot(inherits(dock, "dock_view_proxy"))
+  session <- dock[["session"]]
+  dock_id <- dock[["id"]]
   session$input[[sprintf("%s_state", dock_id)]]
 }
 
 #' get dock panels
 #' @rdname dock-state
 #' @export
-get_panels <- function(dock_id, session = getDefaultReactiveDomain()) {
-  get_dock(dock_id, session)[["panels"]]
+get_panels <- function(dock) {
+  get_dock(dock)[["panels"]]
 }
 
 #' get dock panels ids
 #' @rdname dock-state
 #' @export
-get_panels_ids <- function(dock_id, session = getDefaultReactiveDomain()) {
-  names(get_panels(dock_id, session))
+get_panels_ids <- function(dock) {
+  names(get_panels(dock))
 }
 
 #' get dock active group
 #' @rdname dock-state
 #' @export
-get_active_group <- function(dock_id, session = getDefaultReactiveDomain()) {
-  get_dock(dock_id, session)[["activeGroup"]]
+get_active_group <- function(dock) {
+  get_dock(dock)[["activeGroup"]]
 }
 
 #' get dock grid
 #' @rdname dock-state
 #' @export
-get_grid <- function(dock_id, session = getDefaultReactiveDomain()) {
-  get_dock(dock_id, session)[["grid"]]
+get_grid <- function(dock) {
+  get_dock(dock)[["grid"]]
 }
 
 #' get dock groups
 #' @rdname dock-state
 #' @export
-get_groups <- function(dock_id, session = getDefaultReactiveDomain()) {
-  get_grid(dock_id, session)[["root"]][["data"]]
+get_groups <- function(dock_id) {
+  get_grid(dock)[["root"]][["data"]]
 }
 
 #' get dock groups ids
 #' @rdname dock-state
 #' @export
-get_groups_ids <- function(dock_id, session = getDefaultReactiveDomain()) {
+get_groups_ids <- function(dock) {
   unlist(
-    lapply(get_groups(dock_id, session), function(group) {
+    lapply(get_groups(dock), function(group) {
       find_group_id(group)
     })
   )
@@ -94,33 +90,41 @@ find_group_id <- function(x) {
 #' get dock groups panels
 #' @rdname dock-state
 #' @export
-get_groups_panels <- function(dock_id, session = getDefaultReactiveDomain()) {
+get_groups_panels <- function(dock) {
   setNames(
-    lapply(get_groups(dock_id, session), function(group) {
+    lapply(get_groups(dock), function(group) {
       group[["data"]][["views"]]
     }),
-    get_groups_ids(dock_id, session)
+    get_groups_ids(dock)
   )
 }
 
 #' save a dock
 #' @rdname dock-state
 #' @export
-save_dock <- function(dock_id, session = getDefaultReactiveDomain()) {
+save_dock <- function(dock) {
+  session <- dock[["session"]]
+  dock_id <- dock[["id"]]
   session$sendCustomMessage(
     sprintf("%s_save-state", session$ns(dock_id)),
     list()
   )
+
+  invisible(dock)
 }
 
 #' restore a dock
 #' @rdname dock-state
 #' @param data Data representing a serialised dock object.
 #' @export
-restore_dock <- function(dock_id, data, session = getDefaultReactiveDomain()) {
+restore_dock <- function(dock, data) {
+  session <- dock[["session"]]
+  dock_id <- dock[["id"]]
   stopifnot(is.list(data))
   session$sendCustomMessage(
     sprintf("%s_restore-state", session$ns(dock_id)),
     data
   )
+
+  invisible(dock)
 }

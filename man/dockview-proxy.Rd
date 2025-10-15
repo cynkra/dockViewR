@@ -2,49 +2,28 @@
 % Please edit documentation in R/proxy.R
 \name{dock_view_proxy}
 \alias{dock_view_proxy}
-\alias{dock_view_reactive_proxy}
 \title{Create a proxy object to modify an existing dockview instance}
 \usage{
 dock_view_proxy(id, data = NULL, session = getDefaultReactiveDomain())
-
-dock_view_reactive_proxy(id, session = getDefaultReactiveDomain())
 }
 \arguments{
 \item{id}{Character string matching the ID of the dockview instance to be modified.}
 
-\item{data}{Optional initial data to set the state of the dockview.
-Use in conjunction with \code{\link[=dock_view_reactive_proxy]{dock_view_reactive_proxy()}}.}
+\item{data}{Unused parameter (for future compatibility).}
 
 \item{session}{The Shiny session object within which the graph exists.
 By default, this uses the current reactive domain.}
 }
 \value{
-A proxy object of class "dock_view_proxy" that can be used with g6 proxy methods
+A proxy object of class "dock_view_proxy" that can be used with dockview proxy methods
 such as \code{add_panel()}, \code{remove_panel()}, etc. It contains:
 \itemize{
 \item \code{id}: The ID of the dockview instance.
 \item \code{session}: The Shiny session object.
-\item \code{data}: A list containing the current state of the dock, including:
-\item \code{panels_ids}: Character vector of panel IDs.
-\item \code{group_ids}: Character vector of group IDs.
-\item \code{panel_groups_map}: Named list mapping group IDs to their panel IDs.
-\item \code{active_views}: Named character vector mapping group IDs to their active panel IDs.
-\item \code{active_group}: The ID of the currently active group.
-\item \code{active_panel}: The ID of the currently active panel within the active group.
-\item \code{timestamp}: The time when the proxy was created or last updated.
 }
-
-A reactive values containing a
-\code{dock_view_proxy} object initialized with
-the initial state of the dock. This value is updated
-each time the dock state changes (caused by a user action)
-or from the server side using the proxy methods like
-\code{\link[=add_panel]{add_panel()}}, \code{\link[=remove_panel]{remove_panel()}}, etc.
 }
 \description{
 This function creates a proxy object that can be used to update an existing dockview
 instance after it has been rendered in the UI. The proxy allows for server-side
 modifications of the graph without completely re-rendering it.
-
-Proxy that is updated each time the dock state changes.
 }

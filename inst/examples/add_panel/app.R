@@ -3,6 +3,8 @@ library(shiny)
 library(bslib)
 library(visNetwork)
 
+options("dockViewR.mode" = "dev")
+
 nodes <- data.frame(id = 1:3)
 edges <- data.frame(from = c(1, 2), to = c(1, 3))
 
@@ -12,10 +14,12 @@ ui <- page_fillable(
 )
 
 server <- function(input, output, session) {
+  dock_proxy <- dock_view_proxy("dock")
+
   exportTestValues(
-    panel_ids = get_panels_ids("dock"),
-    active_group = get_active_group("dock"),
-    grid = get_grid("dock")
+    panel_ids = get_panels_ids(dock_proxy),
+    active_group = get_active_group(dock_proxy),
+    grid = get_grid(dock_proxy)
   )
 
   output$dock <- renderDockView({
@@ -122,7 +126,7 @@ server <- function(input, output, session) {
       remove = list(enable = TRUE, mode = "manual")
     )
     add_panel(
-      "dock",
+      dock_proxy,
       pnl
     )
   })
@@ -141,7 +145,7 @@ server <- function(input, output, session) {
       type = "message"
     )
     remove_panel(
-      "dock",
+      dock_proxy,
       input[["dock_panel-to-remove"]]
     )
   })
@@ -149,7 +153,7 @@ server <- function(input, output, session) {
   # Manually add a panel after clicking on the + button
   observeEvent(input[["dock_panel-to-add"]], {
     add_panel(
-      "dock",
+      dock_proxy,
       panel(
         id = as.character(as.numeric(tail(get_panels_ids("dock"), 1)) + 1),
         title = paste(

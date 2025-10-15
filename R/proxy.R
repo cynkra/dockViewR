@@ -1,3 +1,42 @@
+# Helper function to validate dock proxy and extract session info
+validate_dock_proxy <- function(dock) {
+  stopifnot(inherits(dock, "dock_view_proxy"))
+  list(
+    session = dock[["session"]],
+    dock_id = dock[["id"]]
+  )
+}
+
+# Helper function to send custom message
+send_dock_message <- function(dock, action, data = NULL) {
+  dock_info <- validate_dock_proxy(dock)
+  message_type <- sprintf(
+    "%s_%s",
+    dock_info$session$ns(dock_info$dock_id),
+    action
+  )
+  dock_info$session$sendCustomMessage(message_type, data)
+  invisible(dock)
+}
+
+# Helper function to validate position
+validate_position <- function(position, context_id = NULL) {
+  if (!is.null(position) && !(position %in% valid_positions)) {
+    context <- if (!is.null(context_id)) {
+      sprintf(" (ID: %s)", context_id)
+    } else {
+      ""
+    }
+    stop(sprintf(
+      "<%s%s>: invalid value (%s) for `position`. `position` must be one of %s.",
+      "Panel",
+      context,
+      position,
+      paste(valid_positions, collapse = ", ")
+    ))
+  }
+}
+
 #' Create a proxy object to modify an existing dockview instance
 #'
 #' This function creates a proxy object that can be used to update an existing dockview
@@ -5,25 +44,14 @@
 #' modifications of the graph without completely re-rendering it.
 #'
 #' @param id Character string matching the ID of the dockview instance to be modified.
-#' @param data Optional initial data to set the state of the dockview.
-#' Use in conjunction with [dock_view_reactive_proxy()].
+#' @param data Unused parameter (for future compatibility).
 #' @param session The Shiny session object within which the graph exists.
 #'   By default, this uses the current reactive domain.
 #'
-#' @return A proxy object of class "dock_view_proxy" that can be used with g6 proxy methods
+#' @return A proxy object of class "dock_view_proxy" that can be used with dockview proxy methods
 #'   such as `add_panel()`, `remove_panel()`, etc. It contains:
 #' - `id`: The ID of the dockview instance.
 #' - `session`: The Shiny session object.
-#' - `data`: A list containing the current state of the dock, including:
-#'  - `panels_ids`: Character vector of panel IDs.
-#'  - `group_ids`: Character vector of group IDs.
-#'  - `panel_groups_map`: Named list mapping group IDs to their panel IDs.
-#'  - `active_views`: Named character vector mapping group IDs to their active panel IDs.
-#'  - `active_group`: The ID of the currently active group.
-#'  - `active_panel`: The ID of the currently active panel within the active group.
-#'  - `timestamp`: The time when the proxy was created or last updated.
-#'
-#'
 #' @export
 #' @rdname dockview-proxy
 dock_view_proxy <- function(
@@ -37,271 +65,147 @@ dock_view_proxy <- function(
     )
   }
 
-  # TBD: validate data structure if provided
-  panels_ids <- character(0)
-  groups_ids <- character(0)
-  panel_groups_map <- list()
-  active_views <- character(0)
-  active_group <- character(0)
-  active_panel <- character(0)
-
-  # process data if provided
-  if (!is.null(data)) {
-    # extract panel ids
-    panels_ids <- get_panel_ids(data)
-    # extract group ids
-    group_ids <- get_group_ids(data)
-    # map panel ids to group ids
-    panel_groups_map <- get_panel_group(data)
-    # get active panel per group
-    active_views <- get_active_panel_group(data)
-    # get active group id
-    active_group <- get_active_group(data)
-    # get active panel id
-    active_panel <- get_active_panel(
-      list(
-        active_group = active_group,
-        active_views = active_views
-      )
-    )
-  }
-
   structure(
     list(
       id = id,
-      session = session,
-      data = list(
-        panels_ids = panels_ids, # Store panel information
-        group_ids = group_ids, # Store group information
-        panel_groups_map = panel_groups_map, # Map panel IDs to group IDs
-        active_views = active_views, # Active panel per group
-        active_group = active_group, # Currently active group ID
-        active_panel = active_panel,
-        timestamp = Sys.time() # Maybe we need that one day ...
-      )
+      session = session
     ),
     class = "dock_view_proxy"
   )
 }
 
-#' A reactive version of the dock_view_proxy
+#' Dockview Panel Operations
 #'
-#' Proxy that is updated each time the dock state changes.
+#' Functions to dynamically manipulate panels in a dockview instance.
 #'
-#' @return A reactive values containing a
-#' `dock_view_proxy` object initialized with
-#' the initial state of the dock. This value is updated
-#' each time the dock state changes (caused by a user action)
-#' or from the server side using the proxy methods like
-#' [add_panel()], [remove_panel()], etc.
+#' @param dock Dock proxy object created with [dock_view_proxy()].
+#' @param panel A panel object (for `add_panel`). See \link{panel} for parameters.
+#' @param id Panel ID (character string).
+#' @param position Panel/group position: one of "left", "right", "top", "bottom", "center".
+#' @param group ID of a panel that belongs to the target group (for `move_panel`).
+#' @param index Panel index within a group (for `move_panel`).
+#' @param from Source group/panel ID (for move operations).
+#' @param to Destination group/panel ID (for move operations).
+#' @param ... Additional options (currently unused).
 #'
-#' @export
-#' @rdname dockview-proxy
-dock_view_reactive_proxy <- function(
-  id,
-  session = getDefaultReactiveDomain()
-) {
-  input <- session$input
-  state_id <- sprintf("%s_state", id)
-
-  vals <- reactiveValues(proxy = NULL)
-  # Check for initialization and listen to state changes
-  observeEvent(
-    {
-      req(input[[sprintf("%s_initialized", id)]])
-      input[[state_id]]
-    },
-    {
-      vals$proxy <- dock_view_proxy(
-        id,
-        data = input[[state_id]],
-        session
-      )
-    }
-  )
-  vals
-}
-
-#' Extract Panel IDs from Dock Layout
-#'
-#' Retrieves all panel identifiers from a dock layout structure.
-#'
-#' @param layout A dock layout list containing grid and panels structures.
-#' @return A character vector of panel IDs, or
-#' NULL if no panels exist.
-#' @export
-#' @rdname dockview-proxy-utils
-get_panel_ids <- function(layout) {
-  panels <- layout[["panels"]]
-  if (is.null(panels) || length(panels) == 0) {
-    return(NULL)
-  }
-  names(panels)
-}
-
-#' Extract Group IDs from Dock Layout
-#'
-#' Recursively traverses the dock grid structure to extract all group identifiers.
-#'
-#' @return A character vector of group IDs in
-#' traversal order, or NULL if no groups exist.
-#' @export
-#' @rdname dockview-proxy-utils
-get_group_ids <- function(layout) {
-  extract_group_ids <- function(node) {
-    if (node[["type"]] == "leaf") {
-      return(node[["data"]][["id"]])
-    } else if (node[["type"]] == "branch") {
-      return(unlist(lapply(node[["data"]], extract_group_ids)))
-    }
-    NULL
-  }
-
-  root <- layout[["grid"]][["root"]]
-  if (is.null(root)) {
-    return(NULL)
-  }
-
-  result <- extract_group_ids(root)
-  if (length(result) == 0) NULL else result
-}
-
-#' Map Groups to Their Panels
-#'
-#' Creates a mapping between group IDs and the panel IDs they contain.
-#'
-#' @return A named list where names are group IDs
-#' and values are character vectors of panel IDs,
-#' or NULL if no groups exist.
-#' @export
-#' @rdname dockview-proxy-utils
-get_panel_group <- function(layout) {
-  root <- layout[["grid"]][["root"]]
-  if (is.null(root)) {
-    return(NULL)
-  }
-
-  map_panels <- function(node) {
-    if (is.null(node)) {
-      return(list())
-    }
-
-    if (node[["type"]] == "leaf") {
-      views <- node[["data"]][["views"]]
-      group_id <- node[["data"]][["id"]]
-
-      if (is.null(views) || length(views) == 0) {
-        return(list())
-      }
-
-      # Create a list with group_id as name and panels as value
-      result <- list()
-      result[[group_id]] <- unlist(views)
-      return(result)
-    } else if (node[["type"]] == "branch") {
-      # Use do.call and c to combine all child results
-      child_results <- lapply(node[["data"]], map_panels)
-      do.call(c, child_results)
-    } else {
-      list()
-    }
-  }
-
-  result <- map_panels(root)
-  if (length(result) == 0) {
-    return(NULL)
-  }
-  result
-}
-
-#' Find a panel in a group mapping
-#'
-#' Given a panel ID and a mapping of groups to panels,
-#' returns the group ID that contains the specified panel.
-#'
-#' @param id Panel ID to search for.
-#' @param panel_groups_map Returned by [get_panel_group()].
-#' @return A character string representing the group ID
-#' containing the panel, or NULL if not found.
-#' @export
-find_panel_group <- function(id, panel_groups_map) {
-  names(panel_groups_map)[sapply(panel_groups_map, function(x) id %in% x)]
-}
-
-#' Get Active Group ID
-#'
-#' Retrieves the currently active group identifier from the dock layout.
-#'
-#' @return A character string representing the active
-#' group ID, or NULL if none set.
-#' @export
-#' @rdname dockview-proxy-utils
-get_active_group <- function(layout) {
-  layout[["activeGroup"]]
-}
-
-#' Get Active Panel for Each Group
-#'
-#' Creates a mapping between group IDs and their currently active panel IDs.
-#'
-#' @return A named character vector where names are
-#' group IDs and values are active panel IDs, or
-#' NULL if no groups exist.
-#' @export
-#' @rdname dockview-proxy-utils
-get_active_panel_group <- function(layout) {
-  root <- layout[["grid"]][["root"]]
-  if (is.null(root)) {
-    return(NULL)
-  }
-
-  extract_active <- function(node) {
-    if (node[["type"]] == "leaf") {
-      active_view <- node[["data"]][["activeView"]]
-      group_id <- node[["data"]][["id"]]
-      if (is.null(active_view) || is.null(group_id)) {
-        return(NULL)
-      }
-      setNames(active_view, group_id)
-    } else if (node[["type"]] == "branch") {
-      unlist(lapply(node[["data"]], extract_active))
-    } else {
-      NULL
-    }
-  }
-
-  result <- extract_active(root)
-  if (length(result) == 0) NULL else result
-}
-
-#' Get Active Panel
-#'
-#' Retrieves the active panel ID for the currently active group in a dock.
-#'
-#' @param state A list containing the dock state data after
-#' calling [dock_view_reactive_proxy()], typically accessed via
-#'   `dock[["proxy"]][["data"]]`. Must contain:
-#'   - `active_group`: The ID of the currently active group
-#'   - `active_views`: A named list mapping group IDs to their active panel IDs
-#'
-#' @return A character string representing the active panel ID.
+#' @return All functions return the dock proxy object invisibly, allowing for method chaining.
 #'
 #' @details
-#' This function is used internally to determine which panel is currently
-#' active within the active group of a dockview. In dockview terminology,
-#' each group can contain multiple panels (e.g., in tabs), but only one
-#' panel per group can be active at a time.
+#' - `add_panel()`: Adds a new panel to the dockview
+#' - `remove_panel()`: Removes an existing panel
+#' - `select_panel()`: Selects/focuses a specific panel
+#' - `move_panel()`: Moves a panel to a new position
+#' - `move_group()`: Moves a group using group IDs
+#' - `move_group2()`: Moves a group using panel IDs
 #'
-#' @seealso
-#' \code{\link{select_panel}} for selecting a different panel,
-#' \code{\link{dock_view_proxy}} for creating the dock proxy object
+#' @seealso [panel()]
 #' @export
-get_active_panel <- function(state) {
-  active_group <- state[["active_group"]]
-  active_views <- state[["active_views"]]
+#' @rdname panel-operations
+add_panel <- function(dock, panel, ...) {
+  panel_id <- as.character(panel[["id"]])
+  panel[["id"]] <- panel_id
 
-  # We need no check since there is always an active group
-  # and an active view.
+  # Process position if provided
+  position <- panel[["position"]]
+  if (!is.null(position)) {
+    panel[["position"]] <- process_panel_position(panel_id, position)
+  }
 
-  active_views[[active_group]]
+  send_dock_message(dock, "add-panel", panel)
+}
+
+#' @export
+#' @rdname panel-operations
+remove_panel <- function(dock, id) {
+  panel_id <- as.character(id)
+  send_dock_message(dock, "rm-panel", panel_id)
+}
+
+#' @export
+#' @rdname panel-operations
+select_panel <- function(dock, id) {
+  panel_id <- as.character(id)
+  send_dock_message(dock, "select-panel", panel_id)
+}
+
+#' @export
+#' @rdname panel-operations
+move_panel <- function(
+  dock,
+  id,
+  position = NULL,
+  group = NULL,
+  index = NULL
+) {
+  panel_id <- as.character(id)
+  validate_position(position, panel_id)
+
+  options <- list(
+    position = position,
+    group = group,
+    index = index
+  )
+
+  send_dock_message(
+    dock,
+    "move-panel",
+    list(
+      id = panel_id,
+      options = dropNulls(options)
+    )
+  )
+}
+
+#' @export
+#' @rdname panel-operations
+move_group <- function(
+  dock,
+  from,
+  to,
+  position = NULL
+) {
+  validate_move_targets(from, to, "PanelGroup")
+  validate_position(position, from)
+
+  options <- list(to = to, position = position)
+  send_dock_message(
+    dock,
+    "move-group",
+    list(
+      id = from,
+      options = dropNulls(options)
+    )
+  )
+}
+
+#' @export
+#' @rdname panel-operations
+move_group2 <- function(
+  dock,
+  from,
+  to,
+  position = NULL
+) {
+  validate_move_targets(from, to, "Panel")
+  validate_position(position, from)
+
+  options <- list(to = to, position = position)
+  send_dock_message(
+    dock,
+    "move-group2",
+    list(
+      id = from,
+      options = dropNulls(options)
+    )
+  )
+}
+
+validate_move_targets <- function(from, to, context) {
+  if (from == to) {
+    stop(sprintf(
+      "<%s (ID: %s)>: `from` and `to` must be different group ids.",
+      context,
+      from
+    ))
+  }
 }

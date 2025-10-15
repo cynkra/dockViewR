@@ -129,6 +129,7 @@ dock_view <- function(
     panels = unname(panels),
     # camelCase for JS ...
     addTab = validate_add_tab(add_tab),
+    mode = get_dock_view_mode(),
     ...
   )
 
@@ -173,6 +174,23 @@ dock_view <- function(
     )
   }
   w
+}
+
+#' @keywords internal
+validate_dock_view_mode <- function(mode) {
+  if (!(mode %in% c("dev", "prod"))) {
+    stop(sprintf(
+      "`dockViewR.mode` option must be one of 'dev' or 'prod'. Current value: '%s'",
+      mode
+    ))
+  }
+  invisible(mode)
+}
+
+#' @keywords internal
+get_dock_view_mode <- function() {
+  mode <- getOption("dockViewR.mode", "prod")
+  validate_dock_view_mode(mode)
 }
 
 #' @keywords internal

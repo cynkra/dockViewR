@@ -42,7 +42,50 @@ const matchTheme = (theme) => {
   return (res)
 }
 
-const addPanel = (panel, api) => {
+const sendNotification = (message, type = "error", duration = null) => {
+  if (HTMLWidgets.shinyMode) {
+    Shiny.notifications.show({
+      html: message,
+      type: type,
+      duration: duration
+    });
+  } else {
+    alert(message);
+  }
+}
+
+// Custom eval depending on dockViewR mode
+const evalDockView = (callback, mode) => {
+  switch (mode) {
+    case 'dev':
+      try {
+        callback();
+      } catch (error) {
+        // Get the caller function name from stack trace
+        const stack = new Error().stack;
+        const callerMatch = stack.split('\n')[2]?.match(/at (\w+)/);
+        const callerName = callerMatch ? callerMatch[1] : 'unknown';
+
+        sendNotification(`Error in ${callerName}: ${error.message}`);
+      }
+      break;
+    case 'prod':
+      callback();
+      break;
+    default:
+      break;
+  }
+}
+
+const validatedPanel = (api, id, context = '') => {
+  const panel = api.getPanel(`${id}`);
+  if (!panel) {
+    throw new Error(`${context}Panel with ID '${id}' not found`);
+  }
+  return panel;
+};
+
+const addPanel = (panel, mode, api) => {
   let internals = {
     component: 'default',
     params: {
@@ -60,26 +103,45 @@ const addPanel = (panel, api) => {
       internals.tabComponent = 'manual';
     }
   }
-  let props = { ...panel, ...internals }
-  return (api.addPanel(props))
+  let props = { ...panel, ...internals };
+  evalDockView(() => api.addPanel(props), mode)
 }
 
-const movePanel = (m, api) => {
-  let panel = api.getPanel(`${m.id}`);
-  // Move relative to another group
-  if (m.options.group !== undefined) {
-    let groupTarget = api.getPanel(`${m.options.group}`)
-    panel.api.moveTo({
-      group: groupTarget.api.group,
-      position: m.options.position,
-    })
-    return null;
-  }
-  // Moce panel inside the same group using 'index' only
-  panel.api.moveTo(m.options);
+const removePanel = (id, mode, api) => {
+  evalDockView(() => {
+    let panel = validatedPanel(api, id);
+    api.removePanel(panel);
+  }, mode)
+}
+
+const selectPanel = (id, mode, api) => {
+  evalDockView(() => {
+    let panel = validatedPanel(api, id);
+    panel.api.setActive();
+  }, mode);
+}
+
+const movePanel = (m, mode, api) => {
+  evalDockView(() => {
+    let panel = validatedPanel(api, m.id);
+    // Move relative to another group
+    if (m.options.group !== undefined) {
+      let groupTarget = validatedPanel(api, m.options.group, 'Target group ');
+      panel.api.moveTo({
+        group: groupTarget.api.group,
+        position: m.options.position,
+      })
+      return null;
+    }
+    // Move panel inside the same group using 'index' only
+    panel.api.moveTo(m.options);
+  }, mode);
 }
 
 const moveGroup = (m, api) => {
+
+  // TBD validate ids
+
   let from = api.getGroup(`${m.id}`);
   // Move relative to another group
   let target = api.getGroup(`${m.options.to}`);
@@ -91,6 +153,9 @@ const moveGroup = (m, api) => {
 }
 
 const moveGroup2 = (m, api) => {
+
+  // TBD validate ids
+
   let panel = api.getPanel(`${m.id}`);
   // Move relative to another group
   let groupTarget = api.getPanel(`${m.options.to}`);
@@ -141,4 +206,4 @@ const saveDock = (id, api) => {
   Shiny.setInputValue(id + "_state", state, { priority: 'event' });
 }
 
-export { matchTheme, addPanel, movePanel, defaultPanel, saveDock, moveGroup, moveGroup2 };
+export { matchTheme, addPanel, removePanel, selectPanel, movePanel, defaultPanel, saveDock, moveGroup, moveGroup2 };

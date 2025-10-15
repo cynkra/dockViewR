@@ -13,31 +13,29 @@
 \alias{restore_dock}
 \title{get dock}
 \usage{
-get_dock(dock_id, session = getDefaultReactiveDomain())
+get_dock(dock)
 
-get_panels(dock_id, session = getDefaultReactiveDomain())
+get_panels(dock)
 
-get_panels_ids(dock_id, session = getDefaultReactiveDomain())
+get_panels_ids(dock)
 
-get_active_group(layout)
+get_active_group(dock)
 
-get_grid(dock_id, session = getDefaultReactiveDomain())
+get_grid(dock)
 
-get_groups(dock_id, session = getDefaultReactiveDomain())
+get_groups(dock_id)
 
-get_groups_ids(dock_id, session = getDefaultReactiveDomain())
+get_groups_ids(dock)
 
-get_groups_panels(dock_id, session = getDefaultReactiveDomain())
+get_groups_panels(dock)
 
-save_dock(dock_id, session = getDefaultReactiveDomain())
+save_dock(dock)
 
-restore_dock(dock_id, data, session = getDefaultReactiveDomain())
+restore_dock(dock, data)
 }
 \arguments{
-\item{dock_id}{Dock unique id. When using modules the namespace is
+\item{dock}{Dock unique id. When using modules the namespace is
 automatically added.}
-
-\item{session}{shiny session object.}
 
 \item{data}{Data representing a serialised dock object.}
 }
