@@ -24,14 +24,6 @@ server <- function(input, output, session) {
 
   dock_proxy <- dock_view_proxy("dock")
 
-  observeEvent(
-    req(length(input$dock_state$panels) > 0),
-    {
-      move_panel(dock_proxy, id = "test", group = "3", position = "top")
-    },
-    once = TRUE
-  )
-
   observeEvent(input$save, {
     save_dock(dock_proxy)
     states <- c(dock_states(), list(input$dock_state))

@@ -1,13 +1,12 @@
 {
   "input": {
-    "obs": 500
+
   },
   "export": {
-    "active_group": "3",
-    "active_panel": "test",
+    "active_group": "2",
+    "active_panel": "3",
     "active_views": {
       "1": "2",
-      "3": "test",
       "2": "3"
     },
     "grid": {
@@ -18,6 +17,7 @@
             "type": "leaf",
             "data": {
               "views": [
+                "test",
                 "2"
               ],
               "activeView": "2",
@@ -26,32 +26,15 @@
             "size": 95
           },
           {
-            "type": "branch",
-            "data": [
-              {
-                "type": "leaf",
-                "data": {
-                  "views": [
-                    "test"
-                  ],
-                  "activeView": "test",
-                  "id": "3"
-                },
-                "size": 95
-              },
-              {
-                "type": "leaf",
-                "data": {
-                  "views": [
-                    "3"
-                  ],
-                  "activeView": "3",
-                  "id": "2"
-                },
-                "size": 95
-              }
-            ],
-            "size": -5
+            "type": "leaf",
+            "data": {
+              "views": [
+                "3"
+              ],
+              "activeView": "3",
+              "id": "2"
+            },
+            "size": 95
           }
         ],
         "size": 0
@@ -62,7 +45,6 @@
     },
     "group_ids": [
       "1",
-      "3",
       "2"
     ],
     "n_states": 0,
