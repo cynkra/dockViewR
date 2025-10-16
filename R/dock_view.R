@@ -195,7 +195,12 @@ get_dock_view_mode <- function() {
 
 #' @keywords internal
 validate_add_tab <- function(add_tab) {
-  if (!is.list(add_tab) && names(add_tab) != "enable") {
+  if (
+    !is.list(add_tab) ||
+      (is.list(add_tab) &&
+        !length(names(add_tab)) ||
+        !("enable" %in% names(add_tab)))
+  ) {
     stop(
       "`add_tab` must be a list with two fields: enable (boolean) 
       and an optional callback (JS function or NULL)."

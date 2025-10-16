@@ -33,3 +33,16 @@
       Error in `validate_js_callback()`:
       ! `callback` must be a JavaScript function created with htmlwidgets::JS().
 
+# validate js callback works
+
+    Code
+      validate_js_callback(1)
+    Condition
+      Error in `validate_js_callback()`:
+      ! `callback` must be a JavaScript function created with htmlwidgets::JS().
+    Code
+      validate_js_callback("blabla")
+    Condition
+      Error in `validate_js_callback()`:
+      ! `callback` must be a JavaScript function created with htmlwidgets::JS().
+

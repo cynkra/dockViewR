@@ -42,6 +42,13 @@ test_that("move_panel works", {
     group = 3,
     position = "bottom"
   )
+
+  expect_identical(session$lastCustomMessage$type, "dock_move-panel")
+  expect_type(session$lastCustomMessage$message, "list")
+  expect_length(session$lastCustomMessage$message, 2)
+  expect_identical(session$lastCustomMessage$message$id, "test")
+  expect_identical(session$lastCustomMessage$message$options$group, "3")
+  expect_identical(session$lastCustomMessage$message$options$position, "bottom")
 })
 
 test_that("move_panel app works", {

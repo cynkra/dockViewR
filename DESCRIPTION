@@ -32,7 +32,8 @@ Suggests:
     quarto,
     thematic,
     listviewer,
-    jsonlite
+    jsonlite,
+    withr
 URL: https://github.com/cynkra/dockViewR, https://cynkra.github.io/dockViewR/
 BugReports: https://github.com/cynkra/dockViewR/issues
 Config/testthat/edition: 3
