@@ -88,12 +88,7 @@ update_dock_view <- function(
   dock,
   options
 ) {
-  session <- dock[["session"]]
-  dock_id <- dock[["id"]]
-  session$sendCustomMessage(
-    type = sprintf("%s_update-options", session$ns(dock_id)),
-    message = options
-  )
+  send_dock_message(dock, "update-options", options)
 }
 
 #' Dockview Panel Operations
