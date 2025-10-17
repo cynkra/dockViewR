@@ -24,7 +24,7 @@ server <- function(input, output, session) {
 
   output$dock <- renderDockView({
     dock_view(
-      add_tab = list(enable = TRUE),
+      add_tab = new_add_tab_plugin(enable = TRUE),
       panels = list(
         panel(
           id = "1",
@@ -123,7 +123,7 @@ server <- function(input, output, session) {
         referencePanel = "1",
         direction = "within"
       ),
-      remove = list(enable = TRUE, mode = "manual")
+      remove = new_remove_tab_plugin(enable = TRUE, mode = "manual")
     )
     add_panel(
       dock_proxy,
@@ -155,14 +155,14 @@ server <- function(input, output, session) {
     add_panel(
       dock_proxy,
       panel(
-        id = as.character(as.numeric(tail(get_panels_ids("dock"), 1)) + 1),
+        id = as.character(as.numeric(tail(get_panels_ids(dock_proxy), 1)) + 1),
         title = paste(
           "Panel",
-          as.character(as.numeric(tail(get_panels_ids("dock"), 1)) + 1)
+          as.character(as.numeric(tail(get_panels_ids(dock_proxy), 1)) + 1)
         ),
         content = paste(
           "This is panel",
-          as.character(as.numeric(tail(get_panels_ids("dock"), 1)) + 1)
+          as.character(as.numeric(tail(get_panels_ids(dock_proxy), 1)) + 1)
         ),
         position = list(
           referenceGroup = input[["dock_panel-to-add"]],

@@ -94,8 +94,10 @@ HTMLWidgets.widget({
         });
 
         if (HTMLWidgets.shinyMode) {
-          Shiny.addCustomMessageHandler(el.id + '_add-panel', (panel) => {
-            addPanel(panel, x.mode, api);
+          Shiny.addCustomMessageHandler(el.id + '_add-panel', (m) => {
+            // Transform the removeCallback string into a function
+            window.HTMLWidgets.evaluateStringMember(m.panel, m.evals)
+            addPanel(m.panel, x.mode, api);
           });
 
           Shiny.addCustomMessageHandler(el.id + '_rm-panel', (id) => {

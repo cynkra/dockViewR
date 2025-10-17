@@ -25,12 +25,6 @@ test_that("dock_view works", {
           )
         )
       )
-
-      dock_view(panels = list(), add_tab = list(enable = "plop"))
-      dock_view(
-        panels = list(),
-        add_tab = list(enable = TRUE, callback = "plop")
-      )
     }
   )
 
@@ -62,44 +56,10 @@ test_that("dock_view works", {
   )
 })
 
-test_that("validate js callback works", {
-  expect_snapshot(
-    {
-      validate_js_callback(1)
-      validate_js_callback("blabla")
-    },
-    error = TRUE
-  )
-})
-
-test_that("add tab callback", {
-  expect_true(is_js(default_add_tab_callback()))
-})
-
 test_that("get dock view mode", {
   expect_identical(get_dock_view_mode(), "prod")
   withr::local_options("dockViewR.mode" = "dev")
   expect_identical(get_dock_view_mode(), "dev")
   withr::local_options("dockViewR.mode" = "pouet")
   expect_snapshot(get_dock_view_mode(), error = TRUE)
-})
-
-test_that("validate add tab works", {
-  expect_snapshot(
-    {
-      validate_add_tab("hello")
-      validate_add_tab(list())
-      validate_add_tab(list(h = 2))
-      validate_add_tab(list(enable = 1))
-      validate_add_tab(list(enable = TRUE, callback = 1))
-      validate_add_tab(list(enable = TRUE, callback = "plop"))
-    },
-    error = TRUE
-  )
-
-  add_tab <- list(enable = TRUE)
-  add_tab <- validate_add_tab(add_tab)
-  expect_identical(add_tab$callback, default_add_tab_callback())
-  add_tab <- list(enable = TRUE, callback = JS("console.log('hello');"))
-  validate_add_tab(add_tab)
 })

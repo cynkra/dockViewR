@@ -22,27 +22,12 @@
     Condition
       Error in `check_panel_refs()`:
       ! <Panel (ID: 4)>: invalid value (10) for `referencePanel`. Valid ids are: 4.
-    Code
-      dock_view(panels = list(), add_tab = list(enable = "plop"))
-    Condition
-      Error in `validate_add_tab()`:
-      ! `add_tab$enable` must be a boolean.
-    Code
-      dock_view(panels = list(), add_tab = list(enable = TRUE, callback = "plop"))
-    Condition
-      Error in `validate_js_callback()`:
-      ! `callback` must be a JavaScript function created with htmlwidgets::JS().
 
-# validate js callback works
+# get dock view mode
 
     Code
-      validate_js_callback(1)
+      get_dock_view_mode()
     Condition
-      Error in `validate_js_callback()`:
-      ! `callback` must be a JavaScript function created with htmlwidgets::JS().
-    Code
-      validate_js_callback("blabla")
-    Condition
-      Error in `validate_js_callback()`:
-      ! `callback` must be a JavaScript function created with htmlwidgets::JS().
+      Error in `validate_dock_view_mode()`:
+      ! `dockViewR.mode` option must be one of 'dev' or 'prod'. Current value: 'pouet'
 

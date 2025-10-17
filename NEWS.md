@@ -9,6 +9,8 @@ In the previous API, we relied on `input$<dock_id>_state` to perform checks on p
 - `dock_state()` and all related functions also expect a dock proxy created with `dock_view_proxy()`.
 - `update_dock_view()` also relies on `dock_view_proxy()`.
 
+We reworked the infrastructure around adding and removing tabs using `new_add_tab_plugin()` and `new_remove_tab_plugin()`. See the updated documentation for more details. This also impacts the way `add_tab` and `remove` parameters are used in `dock_view()` and `panel()` respectively, which weren't very safe in the previous API.
+
 ## New features
 
 - Fix [#53](https://github.com/cynkra/dockViewR/issues/53): Added `get_active_views()]`, a convenience function that returns the active view in each group and `get_active_panel()]`, another convenience function that returns the active panel in the active group.

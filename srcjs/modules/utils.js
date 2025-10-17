@@ -111,6 +111,9 @@ const addPanel = (panel, mode, api) => {
   } else {
     if (panel.remove.mode === 'manual') {
       internals.tabComponent = 'manual';
+      if (panel.remove.callback !== undefined) {
+        internals.params.removeCallback = panel.remove.callback;
+      }
     }
   }
   let props = { ...panel, ...internals };
@@ -182,21 +185,6 @@ const moveGroup2 = (m, mode, api) => {
   }, mode)
 }
 
-const defaultPanel = (pnId) => {
-  return (`
-    <p>Exchange me by running:</p>
-    <p>removeUI(<br>
-      &nbsp;&nbsp;selector = "#${pnId} > *",<br>
-      &nbsp;&nbsp;multiple = TRUE<br>
-    )</p>
-    <p>shiny::insertUI(<br>
-          &nbsp;&nbsp;selector = "#${pnId}",<br>
-          &nbsp;&nbsp;where = "beforeEnd",<br>
-          &nbsp;&nbsp;ui = "your ui code here"<br>
-    )</p>
-  `)
-}
-
 const clean_dock_state = (state) => {
   // Strip out unecessary information (deps, head, singletons as they should be already inserted
   // in the DOM when the widget is created, so no need to keep them forever)
@@ -222,4 +210,4 @@ const saveDock = (id, api) => {
   Shiny.setInputValue(id + "_state", state, { priority: 'event' });
 }
 
-export { matchTheme, addPanel, removePanel, selectPanel, movePanel, defaultPanel, saveDock, moveGroup, moveGroup2 };
+export { matchTheme, addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2 };

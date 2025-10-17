@@ -128,7 +128,15 @@ add_panel <- function(dock, panel, ...) {
     panel[["position"]] <- process_panel_position(panel_id, position)
   }
 
-  send_dock_message(dock, "add-panel", panel)
+  send_dock_message(
+    dock,
+    "add-panel",
+    # So that we correctly process the JS elements
+    # We could use JSevals(panel) but in practice
+    # I don't expect any other JS element. That's also
+    # something we control internally.
+    list(panel = panel, evals = "remove.callback")
+  )
 }
 
 #' @export

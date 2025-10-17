@@ -9,7 +9,7 @@ dock_view(
   ...,
   theme = c("light-spaced", "light", "abyss", "abyss-spaced", "dark", "vs", "dracula",
     "replit"),
-  add_tab = list(enable = FALSE, callback = NULL),
+  add_tab = new_add_tab_plugin(),
   width = NULL,
   height = NULL,
   elementId = NULL
