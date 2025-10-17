@@ -1,47 +1,3 @@
-import {
-  themeAbyss,
-  themeDark,
-  themeLight,
-  themeVisualStudio,
-  themeDracula,
-  themeReplit,
-  themeAbyssSpaced,
-  themeLightSpaced
-} from "dockview-core";
-
-const matchTheme = (theme) => {
-  let res;
-  switch (theme) {
-    case 'light':
-      res = themeLight
-      break
-    case 'light-spaced':
-      res = themeLightSpaced
-      break
-    case 'abyss':
-      res = themeAbyss
-      break
-    case 'abyss-spaced':
-      res = themeAbyssSpaced
-      break
-    case 'vs':
-      res = themeVisualStudio
-      break
-    case 'dark':
-      res = themeDark
-      break
-    case 'dracula':
-      res = themeDracula
-      break
-    case 'replit':
-      res = themeReplit
-      break
-    default:
-      res = themeLightSpaced
-  }
-  return (res)
-}
-
 const sendNotification = (message, type = "error", duration = null) => {
   if (HTMLWidgets.shinyMode) {
     Shiny.notifications.show({
@@ -207,7 +163,7 @@ const clean_dock_state = (state) => {
 
 const saveDock = (id, api) => {
   const state = clean_dock_state(api.toJSON())
-  Shiny.setInputValue(id + "_state", state, { priority: 'event' });
+  Shiny.setInputValue(id + "_state", state);
 }
 
-export { matchTheme, addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2 };
+export { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2 };

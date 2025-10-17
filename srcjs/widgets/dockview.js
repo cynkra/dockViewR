@@ -1,9 +1,9 @@
 import 'widgets';
-import 'dockview-core/dist/styles/dockview.css'
-import { createDockview } from "dockview-core";
-
-import { Panel, RightHeader, LeftHeader, CustomTab, DefaultTab } from '../modules/components'
-import { matchTheme, addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2 } from '../modules/utils';
+import 'dockview-core/dist/styles/dockview.css';
+import { setDockViewCallbacks } from '../modules/callbacks';
+import { saveDock } from '../modules/proxy';
+import { setShinyHandlers } from '../modules/handlers';
+import { instantiateDock, initDockPanels } from '../modules/dock';
 
 HTMLWidgets.widget({
 
@@ -20,123 +20,20 @@ HTMLWidgets.widget({
       renderValue: function (x, id = el.id) {
 
         // Instantiate dockView
-        api = createDockview(document.getElementById(id), {
-          theme: matchTheme(x.theme),
-          createRightHeaderActionComponent: (options) => {
-            return new RightHeader(options)
-          },
-          createLeftHeaderActionComponent: (options) => {
-            options._params.params.addTab = x.addTab;
-            return new LeftHeader(options)
-          },
-          createComponent: (options) => {
-            switch (options.name) {
-              case 'default':
-                return new Panel(options)
-            }
-          },
-          createTabComponent: (options) => {
-            switch (options.name) {
-              case 'manual':
-                return new DefaultTab();
-              case 'custom':
-                return new CustomTab();
-            }
-          },
-          // Spread operator to include all other options from x
-          ...Object.keys(x).reduce((acc, key) => {
-            if (!['theme', 'addTab'].includes(key)) {
-              acc[key] = x[key];
-            }
-            return acc;
-          }, {})
-        })
+        api = instantiateDock(id, x);
 
-        // Resize panel content on layout change
-        // (useful so that plots or widgets resize correctly)
-        // Also update the dock state.
-        api.onDidLayoutChange(() => {
-          window.dispatchEvent(new Event('resize'));
-          if (HTMLWidgets.shinyMode) {
-            saveDock(id, api)
-            api.panels.map((panel) => {
-              let pane = `#${id}-${panel.id}`;
-              Shiny.initializeInputs($(pane));
-              Shiny.bindAll($(pane));
-            })
-          }
-        })
+        // Init state
+        saveDock(id, api)
 
-        // When restored, we need to sync the new state for Shiny
-        api.onDidLayoutFromJSON(() => {
-          saveDock(id, api)
-        })
-
-        api.onDidMaximizedGroupChange((e) => {
-          window.dispatchEvent(new Event('resize'));
-        })
-
-        api.onDidAddPanel((e) => {
-          if (HTMLWidgets.shinyMode) {
-            Shiny.setInputValue(id + '_added-panel', e.id, { priority: 'event' });
-          }
-        })
-
-        api.onDidRemovePanel((e) => {
-          if (HTMLWidgets.shinyMode) {
-            Shiny.setInputValue(id + '_removed-panel', e.id, { priority: 'event' });
-          }
-        })
+        // Set API callbacks: onAddPanel, ...
+        setDockViewCallbacks(id, api);
 
         // Init panels
-        x.panels.map((panel) => {
-          addPanel(panel, x.mode, api);
-        });
+        initDockPanels(x, api);
 
+        // Set any Shiny handlers for proxy operations
         if (HTMLWidgets.shinyMode) {
-          Shiny.addCustomMessageHandler(el.id + '_add-panel', (m) => {
-            // Transform the removeCallback string into a function
-            window.HTMLWidgets.evaluateStringMember(m.panel, m.evals)
-            addPanel(m.panel, x.mode, api);
-          });
-
-          Shiny.addCustomMessageHandler(el.id + '_rm-panel', (id) => {
-            removePanel(id, x.mode, api);
-          })
-
-          Shiny.addCustomMessageHandler(el.id + '_move-panel', (m) => {
-            movePanel(m, x.mode, api)
-          })
-
-          Shiny.addCustomMessageHandler(el.id + '_select-panel', (id) => {
-            selectPanel(id, x.mode, api);
-          })
-
-          // Force save dock
-          Shiny.addCustomMessageHandler(el.id + '_save-state', (m) => {
-            saveDock(id, api)
-          })
-
-          // Restore layout
-          Shiny.addCustomMessageHandler(el.id + '_restore-state', (m) => {
-            // Avoid duplicate input/output warning when rebinding
-            Shiny.unbindAll($(`#${id} .dockview-panel`))
-            api.fromJSON(m)
-          })
-          Shiny.addCustomMessageHandler(el.id + '_move-group2', (m) => {
-            moveGroup2(m, x.mode, api)
-          })
-
-          Shiny.addCustomMessageHandler(el.id + '_move-group', (m) => {
-            moveGroup(m, x.mode, api)
-          })
-
-          Shiny.addCustomMessageHandler(el.id + '_update-options', (m) => {
-            if (m.hasOwnProperty('theme')) {
-              m.theme = matchTheme(m.theme);
-            }
-            api.updateOptions(m);
-          })
+          setShinyHandlers(id, x.mode, api);
         }
 
       },
