@@ -1,6 +1,7 @@
 library(shiny)
 library(bslib)
 library(dockViewR)
+library(listviewer)
 
 ui <- fluidPage(
   h1("Serialise dock state"),
@@ -10,34 +11,33 @@ ui <- fluidPage(
     actionButton("restore", "Restore saved layout"),
     selectInput("states", "Select a state", NULL)
   ),
-  dockViewOutput("dock")
+  dockViewOutput("dock"),
+  reactjsonOutput("dock_state"),
 )
 
 server <- function(input, output, session) {
-  dock_states <- reactiveVal(NULL)
-
-  observeEvent(
-    req(input$dock_state),
-    {
-      move_panel("dock", id = "test", group = "3", position = "top")
-    },
-    once = TRUE
-  )
-
-  observeEvent(input$save, {
-    save_dock("dock")
+  output$dock_state <- renderReactjson({
+    reactjson(jsonlite::toJSON(input$dock_state))
   })
 
-  observeEvent(req(input$dock_state), {
+  dock_states <- reactiveVal(NULL)
+
+  dock_proxy <- dock_view_proxy("dock")
+
+  observeEvent(input$save, {
+    save_dock(dock_proxy)
     states <- c(dock_states(), list(input$dock_state))
     dock_states(setNames(states, seq_along(states)))
   })
 
   exportTestValues(
     n_states = length(dock_states()),
-    panel_ids = get_panels_ids("dock"),
-    active_group = get_active_group("dock"),
-    grid = get_grid("dock")
+    panel_ids = get_panels_ids(dock_proxy),
+    group_ids = get_groups_ids(dock_proxy),
+    active_group = get_active_group(dock_proxy),
+    active_views = get_active_views(dock_proxy),
+    active_panel = get_active_panel(dock_proxy),
+    grid = get_grid(dock_proxy)
   )
 
   observeEvent(dock_states(), {
@@ -45,7 +45,11 @@ server <- function(input, output, session) {
   })
 
   observeEvent(input$restore, {
-    restore_dock("dock", dock_states()[[input$states]])
+    if (!length(dock_states())) {
+      showNotification("No saved states", type = "error")
+      return(NULL)
+    }
+    restore_dock(dock_proxy, dock_states()[[input$states]])
   })
 
   output$dock <- renderDockView({

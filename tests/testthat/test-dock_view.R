@@ -28,6 +28,20 @@ test_that("dock_view works", {
     }
   )
 
+  # Named panels raised a warning as names
+  # are ignored.
+  expect_warning(
+    dock_view(
+      panels = list(
+        a = panel(
+          id = 1,
+          title = "title",
+          content = shiny::h1("content")
+        )
+      )
+    )
+  )
+
   expect_s3_class(
     dock_view(
       panels = list(
@@ -40,4 +54,12 @@ test_that("dock_view works", {
     ),
     "dockview"
   )
+})
+
+test_that("get dock view mode", {
+  expect_identical(get_dock_view_mode(), "prod")
+  withr::local_options("dockViewR.mode" = "dev")
+  expect_identical(get_dock_view_mode(), "dev")
+  withr::local_options("dockViewR.mode" = "pouet")
+  expect_snapshot(get_dock_view_mode(), error = TRUE)
 })

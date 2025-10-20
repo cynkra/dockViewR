@@ -56,6 +56,24 @@ shiny::tags$iframe(
 )
 ```
 
+An alternative way to add panels is to use the `+` icon next to the panel tabs. For this,
+you make sure to initialize the dock with `add_tab = list(enable = TRUE)`. By default, a callback function sets a Shiny input value `input$<dock_id>_panel-to-add` to the id of group where the panel should belong. You can listen to this input on the server side to manually call `add_panel()`. Make sure that the panel is passed like so:
+
+```r
+add_panel(
+  dock_id,
+  panel = panel(
+    id = "new_id", 
+    position = list(
+      referenceGroup = input[["<dock_id>_panel-to-add"]],
+      direction = "right"
+    )
+  )
+)
+```
+
+To add a floating panel, you can set `floating = TRUE` when calling `add_panel()`.
+
 ## Dynamically remove panels
 
 You can remove __panels__ from an existing __dock__ with `remove_panel()` which expects the `id` of the panel to remove, in addition to the dock `id`.
@@ -306,54 +324,6 @@ url <- roxy.shinylive::create_shinylive_url(code, header = FALSE)
 ```
 
 ```{r serialise_iframe, echo = FALSE, eval = TRUE}
-shiny::tags$iframe(
-  class = "border border-5 rounded shadow-lg",
-  src = url,
-  width = "125%",
-  height = "900px"
-)
-```
-
-## Replace panel content
-
-You may have noticed that you can add panels on the fly by using the `+` icon next to the panel tab.
-This panel has a unique id given on the fly and you can't know it when you start the app. Using the dock state,
-you can find this new id and replace the panel content with `shiny::insertUI()` and `shiny::removeUI()`, as shown below. In brief,
-the expected selector would be something like `#<DOCK_ID>-<PANEL_ID > *` (with `multiple = TRUE` to remove elements).
-
-```{r replace_panel_content, eval=FALSE, echo = FALSE}
-library(dockViewR)
-shinyAppDir(system.file(
-  "examples/replace_panel_content",
-  package = "dockViewR"
-))
-```
-
-<details>
-<summary>Toggle code</summary>
-
-```{r, results="asis", echo=FALSE, warning=FALSE, comment = ""}
-dockViewR:::print_r_code("examples/replace_panel_content/app.R")
-```
-
-</details>
-
-<br/>
-
-```{r replace_panel_content_url, echo = FALSE, results = 'asis'}
-# extract the code from knitr code chunks by ID
-code <- paste0(
-  c(
-    "webr::install(\"dockViewR\", repos = \"https://rinterface.github.io/rinterface-wasm-cran/\")",
-    knitr::knit_code$get("replace_panel_content")
-  ),
-  collapse = "\n"
-)
-
-url <- roxy.shinylive::create_shinylive_url(code, header = FALSE)
-```
-
-```{r replace_panel_content_iframe, echo = FALSE, eval = TRUE}
 shiny::tags$iframe(
   class = "border border-5 rounded shadow-lg",
   src = url,

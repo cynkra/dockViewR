@@ -2,6 +2,8 @@ library(shiny)
 library(bslib)
 library(dockViewR)
 
+options("dockViewR.mode" = "dev")
+
 ui <- fluidPage(
   h1("Panels within the same group"),
   actionButton("move", "Move Panel 1"),
@@ -12,10 +14,12 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
+  dock_proxy <- dock_view_proxy("dock")
+
   exportTestValues(
-    panel_ids = get_panels_ids("dock"),
-    active_group = get_active_group("dock"),
-    grid = get_grid("dock")
+    panel_ids = get_panels_ids(dock_proxy),
+    active_group = get_active_group(dock_proxy),
+    grid = get_grid(dock_proxy)
   )
 
   output$dock <- renderDockView({
@@ -101,17 +105,19 @@ server <- function(input, output, session) {
 
   observeEvent(input$move, {
     move_panel(
-      "dock",
-      id = "1",
+      dock_proxy,
+      id = 1,
       index = 3
     )
   })
 
+  dock_proxy2 <- dock_view_proxy("dock2")
+
   observeEvent(input$move2, {
     move_panel(
-      "dock2",
-      id = "1",
-      group = "3",
+      dock_proxy2,
+      id = 1,
+      group = 3,
       position = "bottom"
     )
   })

@@ -3,6 +3,8 @@ library(bslib)
 library(visNetwork)
 library(dockViewR)
 
+options("dockViewR.mode" = "dev")
+
 nodes <- data.frame(id = 1:3)
 edges <- data.frame(from = c(1, 2), to = c(1, 3))
 
@@ -12,16 +14,18 @@ ui <- page_fillable(
 )
 
 server <- function(input, output, session) {
+  dock_proxy <- dock_view_proxy("dock")
+
   exportTestValues(
-    panel_ids = get_panels_ids("dock"),
-    active_group = get_active_group("dock"),
-    grid = get_grid("dock")
+    panel_ids = get_panels_ids(dock_proxy),
+    active_group = get_active_group(dock_proxy),
+    grid = get_grid(dock_proxy)
   )
 
   observeEvent(
-    req(length(get_panels_ids("dock")) > 0),
+    req(length(get_panels_ids(dock_proxy)) > 0),
     {
-      panels <- get_panels_ids("dock")
+      panels <- get_panels_ids(dock_proxy)
       updateSelectInput(
         session,
         "selected",
@@ -33,7 +37,7 @@ server <- function(input, output, session) {
   )
 
   observeEvent(req(nchar(input$selected) > 0), {
-    select_panel("dock", input$selected)
+    select_panel(dock_proxy, input$selected)
   })
 
   output$dock <- renderDockView({

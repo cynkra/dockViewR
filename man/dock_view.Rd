@@ -5,18 +5,18 @@
 \title{Create a dock view widget}
 \usage{
 dock_view(
-  panels,
+  panels = list(),
   ...,
   theme = c("light-spaced", "light", "abyss", "abyss-spaced", "dark", "vs", "dracula",
     "replit"),
-  add_tab = list(enable = FALSE, callback = NULL),
+  add_tab = new_add_tab_plugin(),
   width = NULL,
   height = NULL,
   elementId = NULL
 )
 }
 \arguments{
-\item{panels}{Widget configuration. Slot for \link{panel}.}
+\item{panels}{An unnamed list of \code{\link[=panel]{panel()}}.}
 
 \item{...}{Other options. See
 \url{https://dockview.dev/docs/api/dockview/options/}.}
@@ -26,7 +26,10 @@ dock_view(
 
 \item{add_tab}{Globally controls the add tab behavior. List with enable and callback.
 Enable is a boolean, default to FALSE and callback is a
-JavaScript function passed with \link[htmlwidgets]{JS}.}
+JavaScript function passed with \link[htmlwidgets]{JS}.
+See \code{\link[=default_add_tab_callback]{default_add_tab_callback()}}. By default, the callback
+sets a Shiny input \code{input[["<dock_ID>_panel-to-add"]]}
+so you can create observers with custom logic.}
 
 \item{width}{Widget width.}
 

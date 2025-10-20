@@ -1,6 +1,8 @@
 library(shiny)
 library(dockViewR)
 
+options("dockViewR.mode" = "dev")
+
 ui <- fluidPage(
   actionButton(
     "move",
@@ -11,10 +13,12 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
+  dock_proxy <- dock_view_proxy("dock")
+
   exportTestValues(
-    panel_ids = get_panels_ids("dock"),
-    active_group = get_active_group("dock"),
-    grid = get_grid("dock")
+    panel_ids = get_panels_ids(dock_proxy),
+    active_group = get_active_group(dock_proxy),
+    grid = get_grid(dock_proxy)
   )
   output$dock <- renderDockView({
     dock_view(
@@ -76,9 +80,9 @@ server <- function(input, output, session) {
 
   observeEvent(input$move, {
     move_group2(
-      "dock",
-      from = "1",
-      to = "3",
+      dock_proxy,
+      from = 1,
+      to = 3,
       position = "right"
     )
   })

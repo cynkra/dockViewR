@@ -1,4 +1,10 @@
-import { addPanel, defaultPanel } from './utils';
+const getDockId = (config) => {
+  const gridView = config.containerApi.component.gridview;
+  const res = gridView.element.closest('.dockview').attributes.id.textContent;
+  config.dockId = res;
+  return res;
+}
+
 class Panel {
   get element() {
     return this._element
@@ -9,7 +15,7 @@ class Panel {
   }
 
   init(config) {
-    let dockId = config.containerApi.component.gridview.element.closest('.dockview').attributes.id.textContent;
+    let dockId = getDockId(config);
     this._element.id = dockId + '-' + config.api.id;
     this._element.innerHTML = config.params.content.html
     this._element.className = 'dockview-panel'
@@ -39,12 +45,12 @@ class DefaultTab {
   }
 
   init(config) {
-    let dockId = config.containerApi.component.gridview.element.closest('.dockview').attributes.id.textContent;
+    let dockId = getDockId(config);
     this._element.id = dockId + '-tab-' + config.api.id;
     this._content.textContent = config.title;
     this.action.addEventListener('click', (e) => {
       // Send callback to Shiny for control from the server side
-      Shiny.setInputValue(`${dockId}_panel-to-remove`, config.api.id, { priority: 'event' });
+      config.params.removeCallback(config)
     })
   }
 }
@@ -60,7 +66,7 @@ class CustomTab {
   }
 
   init(config) {
-    let dockId = config.containerApi.component.gridview.element.closest('.dockview').attributes.id.textContent;
+    let dockId = getDockId(config);
     this._element.id = dockId + '-tab-' + config.api.id;
     this.e1 = document.createElement('div');
     this.e1.textContent = config.title;
@@ -111,11 +117,13 @@ class LeftHeader {
 
   init(config) {
     // If addTab is false, we do not need to render this component
-    if (!config.group._params.params.addTab.enable) return null;
+    let params = config.group._params.params;
+    let dockId = getDockId(config);
+    if (!params.addTab.enable) return null;
     this._element.style = 'height: 100%; padding: 8px'
     this._element.innerHTML = '<i class="fas fa-plus" role="presentation" aria-label="plus icon"></i>'
     this._element.addEventListener('click', (e) => {
-      config.group._params.params.addTab.callback(config);
+      params.addTab.callback(config);
     });
   }
   dispose() {

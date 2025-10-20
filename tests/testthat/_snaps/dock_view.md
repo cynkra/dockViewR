@@ -23,3 +23,11 @@
       Error in `check_panel_refs()`:
       ! <Panel (ID: 4)>: invalid value (10) for `referencePanel`. Valid ids are: 4.
 
+# get dock view mode
+
+    Code
+      get_dock_view_mode()
+    Condition
+      Error in `validate_dock_view_mode()`:
+      ! `dockViewR.mode` option must be one of 'dev' or 'prod'. Current value: 'pouet'
+
