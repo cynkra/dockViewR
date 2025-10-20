@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">dockViewR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,23 +34,48 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.2.1" id="dockviewr-021">dockViewR 0.2.1<a class="anchor" aria-label="anchor" href="#dockviewr-021"></a></h2>
-<ul><li>Fix: typo in <code>abyss-spaced</code> theme caused the theme not to be applied.</li>
+<h2 class="pkg-version" data-toc-text="0.3.0" id="dockviewr-030">dockViewR 0.3.0<a class="anchor" aria-label="anchor" href="#dockviewr-030"></a></h2>
+<div class="section level3">
+<h3 id="breaking-changes-0-3-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-3-0"></a></h3>
+<p>In the previous API, we relied on <code>input$&lt;dock_id&gt;_state</code> to perform checks on panel ids but this was no reliable. For instance, calling <code><a href="../reference/panel-operations.html">add_panel()</a></code> in an <code><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent()</a></code>, the state was not up to date as you had to wait for the next reactive flush to get an update of the input. This lead to unconvenient workarounds when manipulating the dock from the server. Now, checks are performed UI side an raise JS warnings in the console and optionally Shiny notification when <code>options(dockViewR.mode = "dev")</code>.</p>
+<ul><li>Added <code><a href="../reference/dockview-proxy.html">dock_view_proxy()</a></code> to create a reactive proxy to a dock instance.</li>
+<li>
+<code><a href="../reference/panel-operations.html">add_panel()</a></code> <code>dock_id</code> parameter is changed to <code>dock</code>. It now expects a dock proxy created with <code><a href="../reference/dockview-proxy.html">dock_view_proxy()</a></code>. This is to be more consistent with other htmlwidgets. Same applies for <code><a href="../reference/panel-operations.html">remove_panel()</a></code>, <code><a href="../reference/panel-operations.html">select_panel()</a></code> and <code><a href="../reference/panel-operations.html">move_panel()</a></code>.</li>
+<li>
+<code>dock_state()</code> and all related functions also expect a dock proxy created with <code><a href="../reference/dockview-proxy.html">dock_view_proxy()</a></code>.</li>
+<li>
+<code><a href="../reference/update_dock_view.html">update_dock_view()</a></code> also relies on <code><a href="../reference/dockview-proxy.html">dock_view_proxy()</a></code>.</li>
+<li>All proxy method return the dock invisibly so you can chain calls.</li>
+</ul><p>We reworked the infrastructure around adding and removing tabs using <code><a href="../reference/dock_view_plugins.html">new_add_tab_plugin()</a></code> and <code><a href="../reference/dock_view_plugins.html">new_remove_tab_plugin()</a></code>. See the updated documentation for more details. This also impacts the way <code>add_tab</code> and <code>remove</code> parameters are used in <code><a href="../reference/dock_view.html">dock_view()</a></code> and <code><a href="../reference/panel.html">panel()</a></code> respectively, which weren’t very safe in the previous API.</p>
+</div>
+<div class="section level3">
+<h3 id="new-features-0-3-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-3-0"></a></h3>
+<ul><li>Add new <code>input[["&lt;dock_ID&gt;_n-panels"]]</code>, <code>input[["&lt;dock_ID&gt;_n-groups"]]</code>,<code>input[["&lt;dock_ID&gt;_active-panel"]]</code>, <code>input[["&lt;dock_ID&gt;_active-group"]]</code> as subset of <code>input[["&lt;dock_ID&gt;_state"]]</code>. Priority is normal so any observer listening to those input won’t trigger when there is no change in the layout.</li>
+<li>Add new <code>input[["&lt;dock_ID&gt;_restored"]]</code> as a callback when the dock get restored after calling <code><a href="../reference/dock-state.html">restore_dock()</a></code>.</li>
+<li>Fix <a href="https://github.com/cynkra/dockViewR/issues/53" class="external-link">#53</a>: Added <code>get_active_views()]</code>, a convenience function that returns the active view in each group and <code>get_active_panel()]</code>, another convenience function that returns the active panel in the active group.</li>
+<li>Allow initialising a dock with no panels (default to <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code>).</li>
+<li>Added <code>input[["&lt;dock_ID&gt;_initialized"]]</code> within an <code>onRender</code> callback. Allows to track when the dock is ready to perform actions server side.</li>
+<li>In <code><a href="../reference/panel-operations.html">add_panel()</a></code>: if no <code>referencePanel</code> or <code>referenceGroup</code> is provided, the panel is added relative to the <a href="https://dockview.dev/docs/core/panels/add#relative-to-the-container" class="external-link">container</a>.</li>
+<li>Fix: <code><a href="../reference/dock-state.html">get_groups_ids()</a></code> now correctly returns all group ids (nested groups were not returned).</li>
+<li>Fix <a href="https://github.com/cynkra/dockViewR/issues/52" class="external-link">#52</a>: Reworked <code>add_tab</code> parameter in <code><a href="../reference/dock_view.html">dock_view()</a></code>. By default, there is a <code><a href="../reference/default_add_tab_callback.html">default_add_tab_callback()</a></code> that sets <code>input[["&lt;dock_ID&gt;_panel-to-add"]]</code>, so you can create observers with custom logic, including removing the panel with <code><a href="../reference/panel-operations.html">add_panel()</a></code>. An example of usage is available at <a href="https://github.com/cynkra/dockViewR/blob/main/inst/examples/add_panel/app.R" class="external-link uri">https://github.com/cynkra/dockViewR/blob/main/inst/examples/add_panel/app.R</a>.</li>
+<li>Fix: typo in <code>abyss-spaced</code> theme caused the theme not to be applied.</li>
+<li>Fix: typo in <code>abyss-spaced</code> theme caused the theme not to be applied.</li>
 <li>Fix: options in <code>...</code> were not passed to the dockview JS constructor. (:clown:)</li>
 <li>Fix <a href="https://github.com/cynkra/dockViewR/issues/48" class="external-link">#48</a>: dock state is saved before panels are added.</li>
 <li>Remove unecessary content in saved JSON state (dependencies, head, singletons). They should already be present in the app when initialising the graph.</li>
 <li>Fix: update input layout state when layout is restored.</li>
-<li>Added <code>style</code> parameter to <code><a href="../reference/panel.html">panel()</a></code>. This allows to customized the style of the panel container. It expects a named list with CSS properties and values. We kept old default values for backward compatibility, but you can now overwrite them.</li>
-<li>Upgrade dockview JS to 4.7.0. Fix Windows shaking issue: <a href="https://github.com/mathuo/dockview/issues/988" class="external-link uri">https://github.com/mathuo/dockview/issues/988</a>.</li>
+<li>Added <code>style</code> parameter to <code><a href="../reference/panel.html">panel()</a></code>. This allows to customize the style of the panel container. It expects a named list with CSS properties and values. We kept old default values for backward compatibility, but you can now overwrite them.</li>
+<li>Upgrade dockview JS to 4.9.0. Fix Windows shaking issue: <a href="https://github.com/mathuo/dockview/issues/988" class="external-link uri">https://github.com/mathuo/dockview/issues/988</a>.</li>
 </ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="dockviewr-020">dockViewR 0.2.0<a class="anchor" aria-label="anchor" href="#dockviewr-020"></a></h2><p class="text-muted">CRAN release: 2025-07-10</p>
 <ul><li>Bump <a href="https://github.com/mathuo/dockview/releases/tag/v4.4.0" class="external-link">dockview</a> JS to 4.4.0.</li>
 <li>Add <code><a href="../reference/update_dock_view.html">update_dock_view()</a></code> to update a dock instance from the server of a Shiny app.</li>
 <li>Add <code>input[["&lt;dock_ID&gt;_added-panel"]]</code> to track which panel has been added. This can be useful in a shiny app context.</li>
 <li>Add <code>input[["&lt;dock_ID&gt;_removed-panel"]]</code> to track which panel has been removed. This can be useful in a shiny app context.</li>
-<li>Add <code><a href="../reference/select_panel.html">select_panel()</a></code> function to select a specific panel by id from the server.</li>
-<li>Add <code>remove</code> parameter to <code><a href="../reference/add_panel.html">add_panel()</a></code> to allow panels to be removable or not. It expects a list with two fields: enable and mode. Enable is a boolean (default to FALSE) and mode is one of <code>manual</code>, <code>auto</code> (default to auto). In auto mode, dockview JS removes the panel when it is closed and all its content. If you need more control over the panel removal, set it to manual. Doing so, clicking on remove triggers a custom input on the server side, <code>input[["&lt;dock_ID&gt;_panel-to-remove"]]</code>, so you can create observers with custom logic, including removing the panel with <code><a href="../reference/remove_panel.html">remove_panel()</a></code>. An example of usage is available at <a href="https://github.com/cynkra/dockViewR/blob/main/inst/examples/add_panel/app.R" class="external-link uri">https://github.com/cynkra/dockViewR/blob/main/inst/examples/add_panel/app.R</a>.</li>
+<li>Add <code><a href="../reference/panel-operations.html">select_panel()</a></code> function to select a specific panel by id from the server.</li>
+<li>Add <code>remove</code> parameter to <code><a href="../reference/panel-operations.html">add_panel()</a></code> to allow panels to be removable or not. It expects a list with two fields: enable and mode. Enable is a boolean (default to FALSE) and mode is one of <code>manual</code>, <code>auto</code> (default to auto). In auto mode, dockview JS removes the panel when it is closed and all its content. If you need more control over the panel removal, set it to manual. Doing so, clicking on remove triggers a custom input on the server side, <code>input[["&lt;dock_ID&gt;_panel-to-remove"]]</code>, so you can create observers with custom logic, including removing the panel with <code><a href="../reference/panel-operations.html">remove_panel()</a></code>. An example of usage is available at <a href="https://github.com/cynkra/dockViewR/blob/main/inst/examples/add_panel/app.R" class="external-link uri">https://github.com/cynkra/dockViewR/blob/main/inst/examples/add_panel/app.R</a>.</li>
 <li>Add <code>add_tab</code> parameter to <code><a href="../reference/dock_view.html">dock_view()</a></code> to allow controlling the add tab behavior. By default, it is disabled. You can activate it by passing <code>list(enable = TRUE)</code>. By default, a JS callback inserts a panel into the dock with instructions on how to overwrite it by content created from the server of a Shiny app. This control is global, that is, you can’t have panel for which add_tab is enabled and another for which it is disabled due to constraints imposed by the JS api.</li>
 </ul></div>
     <div class="section level2">

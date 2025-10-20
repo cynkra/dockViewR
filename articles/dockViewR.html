@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">dockViewR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,7 @@
 
     <section class="level2"><h2 id="dynamically-add-panel">Dynamically add panel<a class="anchor" aria-label="anchor" href="#dynamically-add-panel"></a>
 </h2>
-<p>You can add <strong>panels</strong> to an existing <strong>dock</strong> with <code><a href="../reference/add_panel.html">add_panel()</a></code> which expects a <code><a href="../reference/panel.html">panel()</a></code> object.</p>
+<p>You can add <strong>panels</strong> to an existing <strong>dock</strong> with <code><a href="../reference/panel-operations.html">add_panel()</a></code> which expects a <code><a href="../reference/panel.html">panel()</a></code> object.</p>
 <details><summary>
 Toggle code
 </summary><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -73,6 +73,8 @@ Toggle code
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://datastorm-open.github.io/visNetwork/" class="external-link">visNetwork</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"dockViewR.mode"</span> <span class="op">=</span> <span class="st">"dev"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">nodes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span></span>
 <span><span class="va">edges</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
@@ -83,14 +85,17 @@ Toggle code
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">dock_proxy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dockview-proxy.html">dock_view_proxy</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span></span>
+<span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/exportTestValues.html" class="external-link">exportTestValues</a></span><span class="op">(</span></span>
-<span>    panel_ids <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span>,</span>
-<span>    active_group <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_active_group</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span>,</span>
-<span>    grid <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_grid</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span></span>
+<span>    panel_ids <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
+<span>    active_group <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_active_group</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
+<span>    grid <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_grid</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">output</span><span class="op">$</span><span class="va">dock</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dock_view-shiny.html">renderDockView</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>    <span class="fu"><a href="../reference/dock_view.html">dock_view</a></span><span class="op">(</span></span>
+<span>      add_tab <span class="op">=</span> <span class="fu"><a href="../reference/dock_view_plugins.html">new_add_tab_plugin</a></span><span class="op">(</span>enable <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>      panels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>        <span class="fu"><a href="../reference/panel.html">panel</a></span><span class="op">(</span></span>
 <span>          id <span class="op">=</span> <span class="st">"1"</span>,</span>
@@ -189,10 +194,10 @@ Toggle code
 <span>        referencePanel <span class="op">=</span> <span class="st">"1"</span>,</span>
 <span>        direction <span class="op">=</span> <span class="st">"within"</span></span>
 <span>      <span class="op">)</span>,</span>
-<span>      remove <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>enable <span class="op">=</span> <span class="cn">TRUE</span>, mode <span class="op">=</span> <span class="st">"manual"</span><span class="op">)</span></span>
+<span>      remove <span class="op">=</span> <span class="fu"><a href="../reference/dock_view_plugins.html">new_remove_tab_plugin</a></span><span class="op">(</span>enable <span class="op">=</span> <span class="cn">TRUE</span>, mode <span class="op">=</span> <span class="st">"manual"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
-<span>    <span class="fu"><a href="../reference/add_panel.html">add_panel</a></span><span class="op">(</span></span>
-<span>      <span class="st">"dock"</span>,</span>
+<span>    <span class="fu"><a href="../reference/panel-operations.html">add_panel</a></span><span class="op">(</span></span>
+<span>      <span class="va">dock_proxy</span>,</span>
 <span>      <span class="va">pnl</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
@@ -210,9 +215,31 @@ Toggle code
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Removing panel:"</span>, <span class="va">input</span><span class="op">[[</span><span class="st">"dock_panel-to-remove"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,</span>
 <span>      type <span class="op">=</span> <span class="st">"message"</span></span>
 <span>    <span class="op">)</span></span>
-<span>    <span class="fu"><a href="../reference/remove_panel.html">remove_panel</a></span><span class="op">(</span></span>
-<span>      <span class="st">"dock"</span>,</span>
+<span>    <span class="fu"><a href="../reference/panel-operations.html">remove_panel</a></span><span class="op">(</span></span>
+<span>      <span class="va">dock_proxy</span>,</span>
 <span>      <span class="va">input</span><span class="op">[[</span><span class="st">"dock_panel-to-remove"</span><span class="op">]</span><span class="op">]</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="co"># Manually add a panel after clicking on the + button</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">[[</span><span class="st">"dock_panel-to-add"</span><span class="op">]</span><span class="op">]</span>, <span class="op">{</span></span>
+<span>    <span class="fu"><a href="../reference/panel-operations.html">add_panel</a></span><span class="op">(</span></span>
+<span>      <span class="va">dock_proxy</span>,</span>
+<span>      <span class="fu"><a href="../reference/panel.html">panel</a></span><span class="op">(</span></span>
+<span>        id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>        title <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span></span>
+<span>          <span class="st">"Panel"</span>,</span>
+<span>          <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span></span>
+<span>        <span class="op">)</span>,</span>
+<span>        content <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span></span>
+<span>          <span class="st">"This is panel"</span>,</span>
+<span>          <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span></span>
+<span>        <span class="op">)</span>,</span>
+<span>        position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>          referenceGroup <span class="op">=</span> <span class="va">input</span><span class="op">[[</span><span class="st">"dock_panel-to-add"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>          direction <span class="op">=</span> <span class="st">"within"</span></span>
+<span>        <span class="op">)</span></span>
+<span>      <span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
@@ -224,16 +251,31 @@ Toggle code
 <iframe class="border border-5 rounded shadow-lg" src="https://shinylive.io/r/app/#h=0&amp;code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YACZECAawBqLONSxDcAAgZxURdooC8ioQAtSpVO0QB6EwzbkGAMygE4GAOYtSugK50MLIuctwbdnAAtNRQ7DBBBAxQECZCAJQCENwsjFAMAJ58ohLSsliJHLpsGQCC6AAiLAx87BmccDAY1izccIJgcAAesKht7CZQwsIA+qgxcNwKiuMSUI5wWjoiYlIycgnxYAC+ALpAA" width="125%" height="900px"></iframe>
 </div>
 </div>
+<p>An alternative way to add panels is to use the <code>+</code> icon next to the panel tabs. For this, you make sure to initialize the dock with <code>add_tab = list(enable = TRUE)</code>. By default, a callback function sets a Shiny input value <code>input$&lt;dock_id&gt;_panel-to-add</code> to the id of group where the panel should belong. You can listen to this input on the server side to manually call <code><a href="../reference/panel-operations.html">add_panel()</a></code>. Make sure that the panel is passed like so:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/panel-operations.html">add_panel</a></span><span class="op">(</span></span>
+<span>  <span class="va">dock_id</span>,</span>
+<span>  panel <span class="op">=</span> <span class="fu"><a href="../reference/panel.html">panel</a></span><span class="op">(</span></span>
+<span>    id <span class="op">=</span> <span class="st">"new_id"</span>, </span>
+<span>    position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      referenceGroup <span class="op">=</span> <span class="va">input</span><span class="op">[[</span><span class="st">"&lt;dock_id&gt;_panel-to-add"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>      direction <span class="op">=</span> <span class="st">"right"</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>To add a floating panel, you can set <code>floating = TRUE</code> when calling <code><a href="../reference/panel-operations.html">add_panel()</a></code>.</p>
 </section><section class="level2"><h2 id="dynamically-remove-panels">Dynamically remove panels<a class="anchor" aria-label="anchor" href="#dynamically-remove-panels"></a>
 </h2>
-<p>You can remove <strong>panels</strong> from an existing <strong>dock</strong> with <code><a href="../reference/remove_panel.html">remove_panel()</a></code> which expects the <code>id</code> of the panel to remove, in addition to the dock <code>id</code>.</p>
+<p>You can remove <strong>panels</strong> from an existing <strong>dock</strong> with <code><a href="../reference/panel-operations.html">remove_panel()</a></code> which expects the <code>id</code> of the panel to remove, in addition to the dock <code>id</code>.</p>
 <details><summary>
 Toggle code
-</summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/cynkra/dockViewR" class="external-link">dockViewR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://datastorm-open.github.io/visNetwork/" class="external-link">visNetwork</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"dockViewR.mode"</span> <span class="op">=</span> <span class="st">"dev"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">nodes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span></span>
 <span><span class="va">edges</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
@@ -245,16 +287,18 @@ Toggle code
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">dock_proxy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dockview-proxy.html">dock_view_proxy</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span></span>
+<span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/exportTestValues.html" class="external-link">exportTestValues</a></span><span class="op">(</span></span>
-<span>    panel_ids <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span>,</span>
-<span>    active_group <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_active_group</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span>,</span>
-<span>    grid <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_grid</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span></span>
+<span>    panel_ids <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
+<span>    active_group <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_active_group</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
+<span>    grid <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_grid</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span>, <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>, <span class="op">{</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/updateSelectInput.html" class="external-link">updateSelectInput</a></span><span class="op">(</span></span>
 <span>      session <span class="op">=</span> <span class="va">session</span>,</span>
 <span>      inputId <span class="op">=</span> <span class="st">"selinp"</span>,</span>
-<span>      choices <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span></span>
+<span>      choices <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span></span>
@@ -339,7 +383,7 @@ Toggle code
 <span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">btn</span>, <span class="op">{</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/req.html" class="external-link">req</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">selinp</span><span class="op">)</span></span>
-<span>    <span class="fu"><a href="../reference/remove_panel.html">remove_panel</a></span><span class="op">(</span><span class="st">"dock"</span>, <span class="va">input</span><span class="op">$</span><span class="va">selinp</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="../reference/panel-operations.html">remove_panel</a></span><span class="op">(</span><span class="va">dock_proxy</span>, <span class="va">input</span><span class="op">$</span><span class="va">selinp</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
@@ -352,7 +396,7 @@ Toggle code
 </div>
 </section><section class="level2"><h2 id="dynamically-move-panel">Dynamically move panel<a class="anchor" aria-label="anchor" href="#dynamically-move-panel"></a>
 </h2>
-<p>You can <strong>move</strong> individual panels in the dock with <code><a href="../reference/move_panel.html">move_panel()</a></code> which expects:</p>
+<p>You can <strong>move</strong> individual panels in the dock with <code><a href="../reference/panel-operations.html">move_panel()</a></code> which expects:</p>
 <ul>
 <li>The dock id.</li>
 <li>The panel id: can be a string or numeric value.</li>
@@ -363,10 +407,12 @@ Toggle code
 </ul>
 <details><summary>
 Toggle code
-</summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/cynkra/dockViewR" class="external-link">dockViewR</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"dockViewR.mode"</span> <span class="op">=</span> <span class="st">"dev"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h1</a></span><span class="op">(</span><span class="st">"Panels within the same group"</span><span class="op">)</span>,</span>
@@ -378,10 +424,12 @@ Toggle code
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">dock_proxy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dockview-proxy.html">dock_view_proxy</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span></span>
+<span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/exportTestValues.html" class="external-link">exportTestValues</a></span><span class="op">(</span></span>
-<span>    panel_ids <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span>,</span>
-<span>    active_group <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_active_group</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span>,</span>
-<span>    grid <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_grid</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span></span>
+<span>    panel_ids <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
+<span>    active_group <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_active_group</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
+<span>    grid <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_grid</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">output</span><span class="op">$</span><span class="va">dock</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dock_view-shiny.html">renderDockView</a></span><span class="op">(</span><span class="op">{</span></span>
@@ -466,18 +514,20 @@ Toggle code
 <span>  <span class="op">)</span></span>
 <span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">move</span>, <span class="op">{</span></span>
-<span>    <span class="fu"><a href="../reference/move_panel.html">move_panel</a></span><span class="op">(</span></span>
-<span>      <span class="st">"dock"</span>,</span>
-<span>      id <span class="op">=</span> <span class="st">"1"</span>,</span>
+<span>    <span class="fu"><a href="../reference/panel-operations.html">move_panel</a></span><span class="op">(</span></span>
+<span>      <span class="va">dock_proxy</span>,</span>
+<span>      id <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>      index <span class="op">=</span> <span class="fl">3</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span></span>
+<span>  <span class="va">dock_proxy2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dockview-proxy.html">dock_view_proxy</a></span><span class="op">(</span><span class="st">"dock2"</span><span class="op">)</span></span>
+<span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">move2</span>, <span class="op">{</span></span>
-<span>    <span class="fu"><a href="../reference/move_panel.html">move_panel</a></span><span class="op">(</span></span>
-<span>      <span class="st">"dock2"</span>,</span>
-<span>      id <span class="op">=</span> <span class="st">"1"</span>,</span>
-<span>      group <span class="op">=</span> <span class="st">"3"</span>,</span>
+<span>    <span class="fu"><a href="../reference/panel-operations.html">move_panel</a></span><span class="op">(</span></span>
+<span>      <span class="va">dock_proxy2</span>,</span>
+<span>      id <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>      group <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>      position <span class="op">=</span> <span class="st">"bottom"</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
@@ -495,26 +545,30 @@ Toggle code
 <p>You can move <strong>groups</strong> of panels using 2 different APIs described below.</p>
 <section class="level3"><h3 id="group-point-of-view">Group point of view<a class="anchor" aria-label="anchor" href="#group-point-of-view"></a>
 </h3>
-<p>To move a <strong>group</strong> of panel(s), <code><a href="../reference/move_group.html">move_group()</a></code> works by selecting the group <strong>source</strong> id, that is <code>from</code>, and the group <strong>target</strong> id, <code>to</code>. Position is relative to the <code>to</code>.</p>
+<p>To move a <strong>group</strong> of panel(s), <code><a href="../reference/panel-operations.html">move_group()</a></code> works by selecting the group <strong>source</strong> id, that is <code>from</code>, and the group <strong>target</strong> id, <code>to</code>. Position is relative to the <code>to</code>.</p>
 <details><summary>
 Toggle code
-</summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/cynkra/dockViewR" class="external-link">dockViewR</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"dockViewR.mode"</span> <span class="op">=</span> <span class="st">"dev"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html" class="external-link">actionButton</a></span><span class="op">(</span></span>
 <span>    <span class="st">"move"</span>,</span>
-<span>    <span class="st">"Move Group with group-id 1 to the righ of group with group-id 2"</span></span>
+<span>    <span class="st">"Move Group with group-id 1 at the bottom of group with group-id 3"</span></span>
 <span>  <span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="../reference/dock_view-shiny.html">dockViewOutput</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span>,</span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">dock_proxy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dockview-proxy.html">dock_view_proxy</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span></span>
+<span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/exportTestValues.html" class="external-link">exportTestValues</a></span><span class="op">(</span></span>
-<span>    panel_ids <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span>,</span>
-<span>    active_group <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_active_group</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span>,</span>
-<span>    grid <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_grid</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span></span>
+<span>    panel_ids <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
+<span>    active_group <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_active_group</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
+<span>    grid <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_grid</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span>  <span class="va">output</span><span class="op">$</span><span class="va">dock</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dock_view-shiny.html">renderDockView</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>    <span class="fu"><a href="../reference/dock_view.html">dock_view</a></span><span class="op">(</span></span>
@@ -575,11 +629,11 @@ Toggle code
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">move</span>, <span class="op">{</span></span>
-<span>    <span class="fu"><a href="../reference/move_group.html">move_group</a></span><span class="op">(</span></span>
-<span>      <span class="st">"dock"</span>,</span>
-<span>      from <span class="op">=</span> <span class="st">"1"</span>,</span>
-<span>      to <span class="op">=</span> <span class="st">"2"</span>,</span>
-<span>      position <span class="op">=</span> <span class="st">"right"</span></span>
+<span>    <span class="fu"><a href="../reference/panel-operations.html">move_group</a></span><span class="op">(</span></span>
+<span>      <span class="va">dock_proxy</span>,</span>
+<span>      from <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>      to <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>      position <span class="op">=</span> <span class="st">"bottom"</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
@@ -596,9 +650,11 @@ Toggle code
 <p>Another approach is possible with <code>move_group2</code>, which works from the point of view of a panel. This means given <code>from</code> which the panel id, <a href="https://github.com/cynkra/dockViewR" class="external-link">dockViewR</a> is able to find the group where it belongs to. Same for the <code>to</code>. This way you don’t have to worry about group ids, which are implicit.</p>
 <details><summary>
 Toggle code
-</summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/cynkra/dockViewR" class="external-link">dockViewR</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"dockViewR.mode"</span> <span class="op">=</span> <span class="st">"dev"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html" class="external-link">actionButton</a></span><span class="op">(</span></span>
@@ -610,10 +666,12 @@ Toggle code
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">dock_proxy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dockview-proxy.html">dock_view_proxy</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span></span>
+<span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/exportTestValues.html" class="external-link">exportTestValues</a></span><span class="op">(</span></span>
-<span>    panel_ids <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span>,</span>
-<span>    active_group <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_active_group</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span>,</span>
-<span>    grid <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_grid</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span></span>
+<span>    panel_ids <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
+<span>    active_group <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_active_group</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
+<span>    grid <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_grid</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span>  <span class="va">output</span><span class="op">$</span><span class="va">dock</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dock_view-shiny.html">renderDockView</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>    <span class="fu"><a href="../reference/dock_view.html">dock_view</a></span><span class="op">(</span></span>
@@ -674,10 +732,10 @@ Toggle code
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">move</span>, <span class="op">{</span></span>
-<span>    <span class="fu"><a href="../reference/move_group2.html">move_group2</a></span><span class="op">(</span></span>
-<span>      <span class="st">"dock"</span>,</span>
-<span>      from <span class="op">=</span> <span class="st">"1"</span>,</span>
-<span>      to <span class="op">=</span> <span class="st">"3"</span>,</span>
+<span>    <span class="fu"><a href="../reference/panel-operations.html">move_group2</a></span><span class="op">(</span></span>
+<span>      <span class="va">dock_proxy</span>,</span>
+<span>      from <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>      to <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>      position <span class="op">=</span> <span class="st">"right"</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
@@ -694,7 +752,7 @@ Toggle code
 </h2>
 <p>You can access the <strong>state</strong> of the dock which can return something like:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dockViewR</span><span class="fu">:::</span><span class="va">test_dock</span></span>
 <span><span class="co">#&gt; $grid</span></span>
 <span><span class="co">#&gt; $grid$root</span></span>
@@ -859,7 +917,7 @@ Toggle code
 </div>
 <p>The dock state is a deeply nested list:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="fu">dockViewR</span><span class="fu">:::</span><span class="va">test_dock</span><span class="op">)</span></span>
 <span><span class="co">#&gt; List of 3</span></span>
 <span><span class="co">#&gt;  $ grid       :List of 4</span></span>
@@ -958,10 +1016,11 @@ Toggle code
 <p>Each time a panel moves, or a group is maximized, the dock state is updated.</p>
 <details><summary>
 Toggle code
-</summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/cynkra/dockViewR" class="external-link">dockViewR</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/timelyportfolio/listviewer" class="external-link">listviewer</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h1</a></span><span class="op">(</span><span class="st">"Serialise dock state"</span><span class="op">)</span>,</span>
@@ -971,34 +1030,33 @@ Toggle code
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html" class="external-link">actionButton</a></span><span class="op">(</span><span class="st">"restore"</span>, <span class="st">"Restore saved layout"</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/selectInput.html" class="external-link">selectInput</a></span><span class="op">(</span><span class="st">"states"</span>, <span class="st">"Select a state"</span>, <span class="cn">NULL</span><span class="op">)</span></span>
 <span>  <span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="../reference/dock_view-shiny.html">dockViewOutput</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/dock_view-shiny.html">dockViewOutput</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/listviewer/man/reactjson-shiny.html" class="external-link">reactjsonOutput</a></span><span class="op">(</span><span class="st">"dock_state"</span><span class="op">)</span>,</span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">dock_states</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactiveVal.html" class="external-link">reactiveVal</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span></span>
-<span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/req.html" class="external-link">req</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">dock_state</span><span class="op">)</span>,</span>
-<span>    <span class="op">{</span></span>
-<span>      <span class="fu"><a href="../reference/move_panel.html">move_panel</a></span><span class="op">(</span><span class="st">"dock"</span>, id <span class="op">=</span> <span class="st">"test"</span>, group <span class="op">=</span> <span class="st">"3"</span>, position <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span></span>
-<span>    <span class="op">}</span>,</span>
-<span>    once <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span>  <span class="op">)</span></span>
-<span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">save</span>, <span class="op">{</span></span>
-<span>    <span class="fu"><a href="../reference/dock-state.html">save_dock</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span></span>
+<span>  <span class="va">output</span><span class="op">$</span><span class="va">dock_state</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/listviewer/man/reactjson-shiny.html" class="external-link">renderReactjson</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/pkg/listviewer/man/reactjson.html" class="external-link">reactjson</a></span><span class="op">(</span><span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://jeroen.r-universe.dev/jsonlite/reference/fromJSON.html" class="external-link">toJSON</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">dock_state</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/req.html" class="external-link">req</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">dock_state</span><span class="op">)</span>, <span class="op">{</span></span>
+<span>  <span class="va">dock_states</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactiveVal.html" class="external-link">reactiveVal</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">dock_proxy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dockview-proxy.html">dock_view_proxy</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">save</span>, <span class="op">{</span></span>
+<span>    <span class="fu"><a href="../reference/dock-state.html">save_dock</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span></span>
 <span>    <span class="va">states</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu">dock_states</span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">dock_state</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="fu">dock_states</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="va">states</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">states</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/exportTestValues.html" class="external-link">exportTestValues</a></span><span class="op">(</span></span>
 <span>    n_states <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu">dock_states</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    panel_ids <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span>,</span>
-<span>    active_group <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_active_group</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span>,</span>
-<span>    grid <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_grid</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span></span>
+<span>    panel_ids <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
+<span>    group_ids <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_groups_ids</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
+<span>    active_group <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_active_group</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
+<span>    active_views <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_active_views</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
+<span>    active_panel <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_active_panel</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
+<span>    grid <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_grid</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="fu">dock_states</span><span class="op">(</span><span class="op">)</span>, <span class="op">{</span></span>
@@ -1006,7 +1064,11 @@ Toggle code
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">restore</span>, <span class="op">{</span></span>
-<span>    <span class="fu"><a href="../reference/dock-state.html">restore_dock</a></span><span class="op">(</span><span class="st">"dock"</span>, <span class="fu">dock_states</span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="va">input</span><span class="op">$</span><span class="va">states</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu">dock_states</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/showNotification.html" class="external-link">showNotification</a></span><span class="op">(</span><span class="st">"No saved states"</span>, type <span class="op">=</span> <span class="st">"error"</span><span class="op">)</span></span>
+<span>      <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span>    <span class="fu"><a href="../reference/dock-state.html">restore_dock</a></span><span class="op">(</span><span class="va">dock_proxy</span>, <span class="fu">dock_states</span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="va">input</span><span class="op">$</span><span class="va">states</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">output</span><span class="op">$</span><span class="va">dock</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dock_view-shiny.html">renderDockView</a></span><span class="op">(</span><span class="op">{</span></span>
@@ -1060,111 +1122,6 @@ Toggle code
 <div class="cell">
 <div class="cell-output-display">
 <iframe class="border border-5 rounded shadow-lg" src="https://shinylive.io/r/app/#h=0&amp;code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YACZECAawBqLONSxDcAAgZxURdooC8ioQAtSpVO0QB6EwzbkGAMygE4GAOYtSugK50MLIuctwbdnAAtNRQ7DBBBAxQECZCAJQCENwsjFAMAJ58ohLSsliJHLpsGQCC6AAiLAx87BmccDAY1izccIJgcAAesKht7Cbs-iw8LEMKiqh24lCOcFo6ImJSMnIJ8WAAvgC6QA" width="125%" height="900px"></iframe>
-</div>
-</div>
-</section><section class="level2"><h2 id="replace-panel-content">Replace panel content<a class="anchor" aria-label="anchor" href="#replace-panel-content"></a>
-</h2>
-<p>You may have noticed that you can add panels on the fly by using the <code>+</code> icon next to the panel tab. This panel has a unique id given on the fly and you can’t know it when you start the app. Using the dock state, you can find this new id and replace the panel content with <code><a href="https://rdrr.io/pkg/shiny/man/insertUI.html" class="external-link">shiny::insertUI()</a></code> and <code><a href="https://rdrr.io/pkg/shiny/man/insertUI.html" class="external-link">shiny::removeUI()</a></code>, as shown below. In brief, the expected selector would be something like <code>#&lt;DOCK_ID&gt;-&lt;PANEL_ID &gt; *</code> (with <code>multiple = TRUE</code> to remove elements).</p>
-<details><summary>
-Toggle code
-</summary><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/cynkra/dockViewR" class="external-link">dockViewR</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/bslib/" class="external-link">bslib</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rstudio.github.io/bslib/reference/page_fillable.html" class="external-link">page_fillable</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">div</a></span><span class="op">(</span></span>
-<span>    class <span class="op">=</span> <span class="st">"d-flex justify-content-center"</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html" class="external-link">actionButton</a></span><span class="op">(</span><span class="st">"insert"</span>, <span class="st">"Insert inside panel"</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/selectInput.html" class="external-link">selectInput</a></span><span class="op">(</span><span class="st">"selinp"</span>, <span class="st">"Panel ids"</span>, choices <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
-<span>  <span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="../reference/dock_view-shiny.html">dockViewOutput</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/exportTestValues.html" class="external-link">exportTestValues</a></span><span class="op">(</span></span>
-<span>    n_panels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
-<span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span>, <span class="op">{</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/updateSelectInput.html" class="external-link">updateSelectInput</a></span><span class="op">(</span></span>
-<span>      session <span class="op">=</span> <span class="va">session</span>,</span>
-<span>      inputId <span class="op">=</span> <span class="st">"selinp"</span>,</span>
-<span>      choices <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">}</span><span class="op">)</span></span>
-<span></span>
-<span>  <span class="va">output</span><span class="op">$</span><span class="va">dock</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dock_view-shiny.html">renderDockView</a></span><span class="op">(</span><span class="op">{</span></span>
-<span>    <span class="fu"><a href="../reference/dock_view.html">dock_view</a></span><span class="op">(</span></span>
-<span>      add_tab <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>enable <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>      panels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        <span class="fu"><a href="../reference/panel.html">panel</a></span><span class="op">(</span></span>
-<span>          id <span class="op">=</span> <span class="st">"1"</span>,</span>
-<span>          title <span class="op">=</span> <span class="st">"Panel 1"</span>,</span>
-<span>          content <span class="op">=</span> <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span></span>
-<span>            <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sliderInput.html" class="external-link">sliderInput</a></span><span class="op">(</span></span>
-<span>              <span class="st">"obs"</span>,</span>
-<span>              <span class="st">"Number of observations:"</span>,</span>
-<span>              min <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>              max <span class="op">=</span> <span class="fl">1000</span>,</span>
-<span>              value <span class="op">=</span> <span class="fl">500</span></span>
-<span>            <span class="op">)</span>,</span>
-<span>            <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/plotOutput.html" class="external-link">plotOutput</a></span><span class="op">(</span><span class="st">"distPlot"</span><span class="op">)</span></span>
-<span>          <span class="op">)</span></span>
-<span>        <span class="op">)</span></span>
-<span>      <span class="op">)</span>,</span>
-<span>      theme <span class="op">=</span> <span class="st">"replit"</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">}</span><span class="op">)</span></span>
-<span></span>
-<span>  <span class="va">output</span><span class="op">$</span><span class="va">distPlot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPlot.html" class="external-link">renderPlot</a></span><span class="op">(</span><span class="op">{</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/req.html" class="external-link">req</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">obs</span><span class="op">)</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">obs</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="op">}</span><span class="op">)</span></span>
-<span></span>
-<span>  <span class="va">output</span><span class="op">$</span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPlot.html" class="external-link">renderPlot</a></span><span class="op">(</span><span class="op">{</span></span>
-<span>    <span class="va">dist</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/switch.html" class="external-link">switch</a></span><span class="op">(</span></span>
-<span>      <span class="va">input</span><span class="op">$</span><span class="va">dist</span>,</span>
-<span>      norm <span class="op">=</span> <span class="va">rnorm</span>,</span>
-<span>      unif <span class="op">=</span> <span class="va">runif</span>,</span>
-<span>      lnorm <span class="op">=</span> <span class="va">rlnorm</span>,</span>
-<span>      exp <span class="op">=</span> <span class="va">rexp</span>,</span>
-<span>      <span class="va">rnorm</span></span>
-<span>    <span class="op">)</span></span>
-<span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="fl">500</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="op">}</span><span class="op">)</span></span>
-<span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">insert</span>, <span class="op">{</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/insertUI.html" class="external-link">removeUI</a></span><span class="op">(</span></span>
-<span>      selector <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"#dock-%s &gt; *"</span>, <span class="va">input</span><span class="op">$</span><span class="va">selinp</span><span class="op">)</span>,</span>
-<span>      multiple <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span>    <span class="op">)</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/insertUI.html" class="external-link">insertUI</a></span><span class="op">(</span></span>
-<span>      selector <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"#dock-%s"</span>, <span class="va">input</span><span class="op">$</span><span class="va">selinp</span><span class="op">)</span>,</span>
-<span>      where <span class="op">=</span> <span class="st">"beforeEnd"</span>,</span>
-<span>      ui <span class="op">=</span> <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/radioButtons.html" class="external-link">radioButtons</a></span><span class="op">(</span></span>
-<span>          <span class="st">"dist"</span>,</span>
-<span>          <span class="st">"Distribution type:"</span>,</span>
-<span>          <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>            <span class="st">"Normal"</span> <span class="op">=</span> <span class="st">"norm"</span>,</span>
-<span>            <span class="st">"Uniform"</span> <span class="op">=</span> <span class="st">"unif"</span>,</span>
-<span>            <span class="st">"Log-normal"</span> <span class="op">=</span> <span class="st">"lnorm"</span>,</span>
-<span>            <span class="st">"Exponential"</span> <span class="op">=</span> <span class="st">"exp"</span></span>
-<span>          <span class="op">)</span></span>
-<span>        <span class="op">)</span>,</span>
-<span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/plotOutput.html" class="external-link">plotOutput</a></span><span class="op">(</span><span class="st">"plot"</span><span class="op">)</span></span>
-<span>      <span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">}</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></code></pre></div>
-</details><p><br></p>
-<div class="cell">
-<div class="cell-output-display">
-<iframe class="border border-5 rounded shadow-lg" src="https://shinylive.io/r/app/#h=0&amp;code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6YACZECAawBqLONSxDcAAgZxURdooC8ioQAtSpVO0QB6EwzbkGAMygE4GAOYtSugK50MLIuctwbdnAAtNRQ7DBBBAxQECZCAJQCENwsjFAMAJ58ohLSsliJHLpsGQCC6AAiLAx87BmccDAY1izccIIQijpgcAAesKht7Oaq3IEA+qgxcNzjxGQUpApJXVMSUI5wWt05UjJyQknx8WAAvgC6QA" width="125%" height="900px"></iframe>
 </div>
 </div>
 </section><script id="quarto-html-after-body" type="application/javascript">

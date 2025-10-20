@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">dockViewR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,13 +45,19 @@
 
       <dl><dt>
 
-          <code><a href="add_panel.html">add_panel()</a></code>
+          <code><a href="default_add_tab_callback.html">default_add_tab_callback()</a></code>
 
         </dt>
-        <dd>Add Panel dynamically</dd>
+        <dd>Default add tab callback</dd>
       </dl><dl><dt>
 
-          <code><a href="dock-state.html">get_dock()</a></code> <code><a href="dock-state.html">get_panels()</a></code> <code><a href="dock-state.html">get_panels_ids()</a></code> <code><a href="dock-state.html">get_active_group()</a></code> <code><a href="dock-state.html">get_grid()</a></code> <code><a href="dock-state.html">get_groups()</a></code> <code><a href="dock-state.html">get_groups_ids()</a></code> <code><a href="dock-state.html">get_groups_panels()</a></code> <code><a href="dock-state.html">save_dock()</a></code> <code><a href="dock-state.html">restore_dock()</a></code>
+          <code><a href="default_remove_tab_callback.html">default_remove_tab_callback()</a></code>
+
+        </dt>
+        <dd>Default remove tab callback</dd>
+      </dl><dl><dt>
+
+          <code><a href="dock-state.html">get_dock()</a></code> <code><a href="dock-state.html">get_panels()</a></code> <code><a href="dock-state.html">get_panels_ids()</a></code> <code><a href="dock-state.html">get_active_group()</a></code> <code><a href="dock-state.html">get_grid()</a></code> <code><a href="dock-state.html">get_groups()</a></code> <code><a href="dock-state.html">get_groups_ids()</a></code> <code><a href="dock-state.html">get_groups_panels()</a></code> <code><a href="dock-state.html">get_active_views()</a></code> <code><a href="dock-state.html">get_active_panel()</a></code> <code><a href="dock-state.html">save_dock()</a></code> <code><a href="dock-state.html">restore_dock()</a></code>
 
         </dt>
         <dd>get dock</dd>
@@ -69,40 +75,46 @@
         <dd>Create a dock view widget</dd>
       </dl><dl><dt>
 
-          <code><a href="move_group.html">move_group()</a></code>
+          <code><a href="dock_view_plugins.html">new_dock_view_plugin()</a></code> <code><a href="dock_view_plugins.html">new_add_tab_plugin()</a></code> <code><a href="dock_view_plugins.html">new_remove_tab_plugin()</a></code>
 
         </dt>
-        <dd>Move a group dynamically</dd>
+        <dd>Create dock view plugins</dd>
       </dl><dl><dt>
 
-          <code><a href="move_group2.html">move_group2()</a></code>
+          <code><a href="dockview-proxy.html">dock_view_proxy()</a></code>
 
         </dt>
-        <dd>Move a group dynamically</dd>
+        <dd>Create a proxy object to modify an existing dockview instance</dd>
       </dl><dl><dt>
 
-          <code><a href="move_panel.html">move_panel()</a></code>
+          <code><a href="is_add_tab_plugin.html">is_add_tab_plugin()</a></code>
 
         </dt>
-        <dd>Move Panel dynamically</dd>
+        <dd>Check if object is an add tab plugin</dd>
+      </dl><dl><dt>
+
+          <code><a href="is_dock_view_plugin.html">is_dock_view_plugin()</a></code>
+
+        </dt>
+        <dd>Check if object is a dock view plugin of specific type</dd>
+      </dl><dl><dt>
+
+          <code><a href="is_remove_tab_plugin.html">is_remove_tab_plugin()</a></code>
+
+        </dt>
+        <dd>Check if object is a remove tab plugin</dd>
+      </dl><dl><dt>
+
+          <code><a href="panel-operations.html">add_panel()</a></code> <code><a href="panel-operations.html">remove_panel()</a></code> <code><a href="panel-operations.html">select_panel()</a></code> <code><a href="panel-operations.html">move_panel()</a></code> <code><a href="panel-operations.html">move_group()</a></code> <code><a href="panel-operations.html">move_group2()</a></code>
+
+        </dt>
+        <dd>Dockview Panel Operations</dd>
       </dl><dl><dt>
 
           <code><a href="panel.html">panel()</a></code>
 
         </dt>
         <dd>Dock panel</dd>
-      </dl><dl><dt>
-
-          <code><a href="remove_panel.html">remove_panel()</a></code>
-
-        </dt>
-        <dd>Remove Panel dynamically</dd>
-      </dl><dl><dt>
-
-          <code><a href="select_panel.html">select_panel()</a></code>
-
-        </dt>
-        <dd>Select a panel dynamically</dd>
       </dl><dl><dt>
 
           <code><a href="update_dock_view.html">update_dock_view()</a></code>

@@ -7,18 +7,21 @@
 <url><loc>https://cynkra.github.io/dockViewR/authors.html</loc></url>
 <url><loc>https://cynkra.github.io/dockViewR/index.html</loc></url>
 <url><loc>https://cynkra.github.io/dockViewR/news/index.html</loc></url>
-<url><loc>https://cynkra.github.io/dockViewR/reference/add_panel.html</loc></url>
+<url><loc>https://cynkra.github.io/dockViewR/reference/default_add_tab_callback.html</loc></url>
+<url><loc>https://cynkra.github.io/dockViewR/reference/default_remove_tab_callback.html</loc></url>
 <url><loc>https://cynkra.github.io/dockViewR/reference/dock-state.html</loc></url>
 <url><loc>https://cynkra.github.io/dockViewR/reference/dockViewR-package.html</loc></url>
 <url><loc>https://cynkra.github.io/dockViewR/reference/dock_view-shiny.html</loc></url>
 <url><loc>https://cynkra.github.io/dockViewR/reference/dock_view.html</loc></url>
+<url><loc>https://cynkra.github.io/dockViewR/reference/dock_view_plugins.html</loc></url>
+<url><loc>https://cynkra.github.io/dockViewR/reference/dockview-proxy.html</loc></url>
 <url><loc>https://cynkra.github.io/dockViewR/reference/index.html</loc></url>
-<url><loc>https://cynkra.github.io/dockViewR/reference/move_group.html</loc></url>
-<url><loc>https://cynkra.github.io/dockViewR/reference/move_group2.html</loc></url>
-<url><loc>https://cynkra.github.io/dockViewR/reference/move_panel.html</loc></url>
+<url><loc>https://cynkra.github.io/dockViewR/reference/is_add_tab_plugin.html</loc></url>
+<url><loc>https://cynkra.github.io/dockViewR/reference/is_dock_view_plugin.html</loc></url>
+<url><loc>https://cynkra.github.io/dockViewR/reference/is_remove_tab_plugin.html</loc></url>
+<url><loc>https://cynkra.github.io/dockViewR/reference/panel-operations.html</loc></url>
 <url><loc>https://cynkra.github.io/dockViewR/reference/panel.html</loc></url>
-<url><loc>https://cynkra.github.io/dockViewR/reference/remove_panel.html</loc></url>
-<url><loc>https://cynkra.github.io/dockViewR/reference/select_panel.html</loc></url>
 <url><loc>https://cynkra.github.io/dockViewR/reference/update_dock_view.html</loc></url>
+<url><loc>https://cynkra.github.io/dockViewR/reference/validate_plugins.html</loc></url>
 </urlset>
 

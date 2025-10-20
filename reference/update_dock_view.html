@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">dockViewR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,7 +30,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Update options for dockview instance</h1>
-      <small class="dont-index">Source: <a href="https://github.com/cynkra/dockViewR/blob/main/R/dock_view.R" class="external-link"><code>R/dock_view.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/cynkra/dockViewR/blob/main/R/proxy.R" class="external-link"><code>R/proxy.R</code></a></small>
       <div class="d-none name"><code>update_dock_view.Rd</code></div>
     </div>
 
@@ -40,23 +40,19 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">update_dock_view</span><span class="op">(</span><span class="va">dock_id</span>, <span class="va">options</span>, session <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/domains.html" class="external-link">getDefaultReactiveDomain</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">update_dock_view</span><span class="op">(</span><span class="va">dock</span>, <span class="va">options</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-dock-id">dock_id<a class="anchor" aria-label="anchor" href="#arg-dock-id"></a></dt>
-<dd><p>The id of the dock view widget to update.</p></dd>
+<dl><dt id="arg-dock">dock<a class="anchor" aria-label="anchor" href="#arg-dock"></a></dt>
+<dd><p>Dock proxy created with <code><a href="dockview-proxy.html">dock_view_proxy()</a></code>.</p></dd>
 
 
 <dt id="arg-options">options<a class="anchor" aria-label="anchor" href="#arg-options"></a></dt>
 <dd><p>List of options for the <a href="dock_view.html">dock_view</a> instance.</p></dd>
-
-
-<dt id="arg-session">session<a class="anchor" aria-label="anchor" href="#arg-session"></a></dt>
-<dd><p>Shiny session object.</p></dd>
 
 </dl></div>
     <div class="section level2">

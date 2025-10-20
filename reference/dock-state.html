@@ -7,6 +7,8 @@ get dock grid
 get dock groups
 get dock groups ids
 get dock groups panels
+get active views
+get active panel
 save a dock
 restore a dock"><meta property="og:description" content="get dock
 get dock panels
@@ -16,6 +18,8 @@ get dock grid
 get dock groups
 get dock groups ids
 get dock groups panels
+get active views
+get active panel
 save a dock
 restore a dock"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -25,7 +29,7 @@ restore a dock"></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">dockViewR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,44 +65,45 @@ restore a dock"></head><body>
 <p>get dock groups</p>
 <p>get dock groups ids</p>
 <p>get dock groups panels</p>
+<p>get active views</p>
+<p>get active panel</p>
 <p>save a dock</p>
 <p>restore a dock</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_dock</span><span class="op">(</span><span class="va">dock_id</span>, session <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/domains.html" class="external-link">getDefaultReactiveDomain</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_dock</span><span class="op">(</span><span class="va">dock</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">get_panels</span><span class="op">(</span><span class="va">dock_id</span>, session <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/domains.html" class="external-link">getDefaultReactiveDomain</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">get_panels</span><span class="op">(</span><span class="va">dock</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">get_panels_ids</span><span class="op">(</span><span class="va">dock_id</span>, session <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/domains.html" class="external-link">getDefaultReactiveDomain</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">get_panels_ids</span><span class="op">(</span><span class="va">dock</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">get_active_group</span><span class="op">(</span><span class="va">dock_id</span>, session <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/domains.html" class="external-link">getDefaultReactiveDomain</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">get_active_group</span><span class="op">(</span><span class="va">dock</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">get_grid</span><span class="op">(</span><span class="va">dock_id</span>, session <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/domains.html" class="external-link">getDefaultReactiveDomain</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">get_grid</span><span class="op">(</span><span class="va">dock</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">get_groups</span><span class="op">(</span><span class="va">dock_id</span>, session <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/domains.html" class="external-link">getDefaultReactiveDomain</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">get_groups</span><span class="op">(</span><span class="va">dock</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">get_groups_ids</span><span class="op">(</span><span class="va">dock_id</span>, session <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/domains.html" class="external-link">getDefaultReactiveDomain</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">get_groups_ids</span><span class="op">(</span><span class="va">dock</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">get_groups_panels</span><span class="op">(</span><span class="va">dock_id</span>, session <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/domains.html" class="external-link">getDefaultReactiveDomain</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">get_groups_panels</span><span class="op">(</span><span class="va">dock</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">save_dock</span><span class="op">(</span><span class="va">dock_id</span>, session <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/domains.html" class="external-link">getDefaultReactiveDomain</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">get_active_views</span><span class="op">(</span><span class="va">dock</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">restore_dock</span><span class="op">(</span><span class="va">dock_id</span>, <span class="va">data</span>, session <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/domains.html" class="external-link">getDefaultReactiveDomain</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">get_active_panel</span><span class="op">(</span><span class="va">dock</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">save_dock</span><span class="op">(</span><span class="va">dock</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">restore_dock</span><span class="op">(</span><span class="va">dock</span>, <span class="va">data</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-dock-id">dock_id<a class="anchor" aria-label="anchor" href="#arg-dock-id"></a></dt>
-<dd><p>Dock unique id. When using modules the namespace is
-automatically added.</p></dd>
-
-
-<dt id="arg-session">session<a class="anchor" aria-label="anchor" href="#arg-session"></a></dt>
-<dd><p>shiny session object.</p></dd>
+<dl><dt id="arg-dock">dock<a class="anchor" aria-label="anchor" href="#arg-dock"></a></dt>
+<dd><p>Dock proxy created with <code><a href="dockview-proxy.html">dock_view_proxy()</a></code>.</p></dd>
 
 
 <dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
@@ -117,6 +122,10 @@ value of <code>get_dock()</code>.
 from <code>get_panels()</code>.
 <code>get_active_group()</code> extracts the <code>activeGroup</code> component of
 <code>get_dock()</code> as a string.
+<code>get_active_views()</code> is a convenience function that returns the active view
+in each group.
+<code>get_active_panel()</code> is a convenience function that returns the active panel
+in the active group.
 <code>get_grid()</code> returns the <code>grid</code> element of <code>get_dock()</code> which is a list.
 <code>get_groups()</code> returns a list of panel groups from <code>get_grid()</code>.
 <code>get_groups_ids()</code> returns a character vector of groups ids
@@ -128,7 +137,7 @@ allow to respectively serialise and restore a dock object.</p>
     </div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
-    <p>Only works with server side functions like <a href="add_panel.html">add_panel</a>.
+    <p>Only works with server side functions like <a href="panel-operations.html">add_panel</a>.
 Don't call it from the UI.</p>
     </div>
 
