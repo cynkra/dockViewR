@@ -170,13 +170,9 @@ dock_view <- function(
     # Initialized callback as dockview does not provide any ...
     w <- onRender(
       w,
-      sprintf(
-        "
-      function(el, x) {
-        Shiny.setInputValue(`%s${el.id}_initialized`, true);
-      }",
-        session$ns("")
-      )
+      "function(el, x) {
+        Shiny.setInputValue(`${el.id}_initialized`, true);
+      }"
     )
   }
   w
