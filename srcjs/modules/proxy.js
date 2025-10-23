@@ -10,6 +10,10 @@ const sendNotification = (message, type = "error", duration = null) => {
   }
 }
 
+const isEmptyObj = (obj) => {
+  return Object.keys(obj).length === 0;
+}
+
 // Custom eval depending on dockViewR mode
 const evalDockView = (callback, mode) => {
   switch (mode) {
@@ -141,28 +145,51 @@ const moveGroup2 = (m, mode, api) => {
   }, mode)
 }
 
+const serializeFunction = (func) => {
+  if (typeof func === 'function') {
+    return {
+      __IS_FUNCTION__: true,
+      source: func.toString()
+    };
+  }
+  // do not process if not a function
+  return func;
+};
+
 const clean_dock_state = (state) => {
-  // Strip out unecessary information (deps, head, singletons as they should be already inserted
-  // in the DOM when the widget is created, so no need to keep them forever)
+  // Strip out unecessary information (deps, head, singletons...)
+  if (isEmptyObj(state.panels)) return state;
+
   state.panels = Object.fromEntries(
-    Object.entries(state.panels).map(([key, value]) => [
-      key,
-      {
-        ...value,
-        params: {
-          ...value.params,
-          content: {
-            html: value.params.content.html // only need the HTML content
-          }
+    Object.entries(state.panels).map(([key, value]) => {
+
+      // Create a new params object based on the old one
+      const newParams = {
+        ...value.params,
+        content: {
+          html: value.params.content.html
         }
+      };
+
+      // Modify removCallback if it exists
+      if (newParams.removeCallback) {
+        newParams.removeCallback = serializeFunction(newParams.removeCallback);
       }
-    ])
+
+      return [
+        key,
+        {
+          ...value,
+          params: newParams
+        }
+      ];
+    })
   );
-  return (state)
-}
+  return state;
+};
 
 const saveDock = (id, api) => {
-  const state = clean_dock_state(api.toJSON())
+  const state = clean_dock_state(api.toJSON());
   Shiny.setInputValue(id + "_state", state);
 }
 
