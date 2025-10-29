@@ -145,3 +145,19 @@ validate_position_direction <- function(id, position) {
 is_js <- function(x) {
   inherits(x, "JS_EVAL")
 }
+
+chr_ply <- function(x, fun, ..., length = 1L, use_names = FALSE) {
+  vapply(x, fun, character(length), ..., USE.NAMES = use_names)
+}
+
+chr_xtr <- function(x, i, ...) {
+  chr_ply(x, `[[`, i, ...)
+}
+
+glue_plur <- function(..., envir = parent.frame()) {
+  cli::pluralize(..., .envir = envir)
+}
+
+abort <- function(..., class = character(), envir = parent.frame()) {
+  rlang::abort(glue_plur(..., envir = envir), c(class, "dockview_error"))
+}

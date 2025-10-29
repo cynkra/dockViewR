@@ -21,7 +21,9 @@ RoxygenNote: 7.3.3
 Imports: 
     htmlwidgets,
     htmltools,
-    shiny
+    shiny,
+    rlang,
+    cli
 Suggests:
     knitr,
     rmarkdown,

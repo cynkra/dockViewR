@@ -1,19 +1,3 @@
-empty_dock_layout <- function() {
-  list(
-    grid = list(
-      root = list(
-        type = "branch",
-        data = list(),
-        size = 0
-      ),
-      width = 0,
-      height = 0,
-      orientation = "HORIZONTAL"
-    ),
-    panels = structure(list(), names = character(0)) # named list()
-  )
-}
-
 side_by_side_layout <- function() {
   list(
     grid = list(
