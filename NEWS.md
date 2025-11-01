@@ -31,7 +31,7 @@ to perform actions server side.
 already be present in the app when initialising the graph.
 - Fix: update input layout state when layout is restored.
 - Added `style` parameter to `panel()`. This allows to customize the style of the panel container. It expects a named list with CSS properties and values. We kept old default values for backward compatibility, but you can now overwrite them.
-- Upgrade dockview JS to 4.9.0. Fix Windows shaking issue: <https://github.com/mathuo/dockview/issues/988>.
+- Upgrade dockview JS to 4.10.0. Fix Windows shaking issue: <https://github.com/mathuo/dockview/issues/988>.
 
 # dockViewR 0.2.0
 
