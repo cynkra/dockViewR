@@ -9,35 +9,38 @@
 \alias{get_groups}
 \alias{get_groups_ids}
 \alias{get_groups_panels}
+\alias{get_active_views}
+\alias{get_active_panel}
 \alias{save_dock}
 \alias{restore_dock}
 \title{get dock}
 \usage{
-get_dock(dock_id, session = getDefaultReactiveDomain())
+get_dock(dock)
 
-get_panels(dock_id, session = getDefaultReactiveDomain())
+get_panels(dock)
 
-get_panels_ids(dock_id, session = getDefaultReactiveDomain())
+get_panels_ids(dock)
 
-get_active_group(dock_id, session = getDefaultReactiveDomain())
+get_active_group(dock)
 
-get_grid(dock_id, session = getDefaultReactiveDomain())
+get_grid(dock)
 
-get_groups(dock_id, session = getDefaultReactiveDomain())
+get_groups(dock)
 
-get_groups_ids(dock_id, session = getDefaultReactiveDomain())
+get_groups_ids(dock)
 
-get_groups_panels(dock_id, session = getDefaultReactiveDomain())
+get_groups_panels(dock)
 
-save_dock(dock_id, session = getDefaultReactiveDomain())
+get_active_views(dock)
 
-restore_dock(dock_id, data, session = getDefaultReactiveDomain())
+get_active_panel(dock)
+
+save_dock(dock)
+
+restore_dock(dock, data)
 }
 \arguments{
-\item{dock_id}{Dock unique id. When using modules the namespace is
-automatically added.}
-
-\item{session}{shiny session object.}
+\item{dock}{Dock proxy created with \code{\link[=dock_view_proxy]{dock_view_proxy()}}.}
 
 \item{data}{Data representing a serialised dock object.}
 }
@@ -56,6 +59,10 @@ value of \code{\link[=get_dock]{get_dock()}}.
 from \code{\link[=get_panels]{get_panels()}}.
 \code{\link[=get_active_group]{get_active_group()}} extracts the \code{activeGroup} component of
 \code{\link[=get_dock]{get_dock()}} as a string.
+\code{\link[=get_active_views]{get_active_views()}} is a convenience function that returns the active view
+in each group.
+\code{\link[=get_active_panel]{get_active_panel()}} is a convenience function that returns the active panel
+in the active group.
 \code{\link[=get_grid]{get_grid()}} returns the \code{grid} element of \code{\link[=get_dock]{get_dock()}} which is a list.
 \code{\link[=get_groups]{get_groups()}} returns a list of panel groups from \code{\link[=get_grid]{get_grid()}}.
 \code{\link[=get_groups_ids]{get_groups_ids()}} returns a character vector of groups ids
@@ -81,6 +88,10 @@ get dock groups
 get dock groups ids
 
 get dock groups panels
+
+get active views
+
+get active panel
 
 save a dock
 

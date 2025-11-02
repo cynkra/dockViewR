@@ -1,0 +1,57 @@
+{
+  "input": {
+
+  },
+  "export": {
+    "active_group": "2",
+    "active_panel": "3",
+    "active_views": {
+      "1": "2",
+      "2": "3"
+    },
+    "grid": {
+      "root": {
+        "type": "branch",
+        "data": [
+          {
+            "type": "leaf",
+            "data": {
+              "views": [
+                "test",
+                "2"
+              ],
+              "activeView": "2",
+              "id": "1"
+            },
+            "size": 576
+          },
+          {
+            "type": "leaf",
+            "data": {
+              "views": [
+                "3"
+              ],
+              "activeView": "3",
+              "id": "2"
+            },
+            "size": 575
+          }
+        ],
+        "size": 380
+      },
+      "width": 1161,
+      "height": 380,
+      "orientation": "HORIZONTAL"
+    },
+    "group_ids": [
+      "1",
+      "2"
+    ],
+    "n_states": 2,
+    "panel_ids": [
+      "2",
+      "3",
+      "test"
+    ]
+  }
+}

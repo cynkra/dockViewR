@@ -1,6 +1,6 @@
 Package: dockViewR
 Title: Layout Manager Widget for R and 'shiny' Apps
-Version: 0.2.1
+Version: 0.3.0
 Authors@R: 
     c(
     person("David", "Granjon", , "dgranjon@ymail.com", role = c("aut", "cre")),
@@ -30,7 +30,10 @@ Suggests:
     testthat (>= 3.0.0),
     visNetwork,
     quarto,
-    thematic
+    thematic,
+    listviewer,
+    jsonlite,
+    withr
 URL: https://github.com/cynkra/dockViewR, https://cynkra.github.io/dockViewR/
 BugReports: https://github.com/cynkra/dockViewR/issues
 Config/testthat/edition: 3

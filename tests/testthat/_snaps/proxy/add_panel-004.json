@@ -1,0 +1,67 @@
+{
+  "input": {
+    "dist": "unif",
+    "obs": 500,
+    "variable": "cyl"
+  },
+  "export": {
+    "active_group": "1",
+    "grid": {
+      "root": {
+        "type": "branch",
+        "data": [
+          {
+            "type": "leaf",
+            "data": {
+              "views": [
+                "1",
+                "new_1"
+              ],
+              "activeView": "new_1",
+              "id": "1"
+            },
+            "size": 638
+          },
+          {
+            "type": "branch",
+            "data": [
+              {
+                "type": "leaf",
+                "data": {
+                  "views": [
+                    "2"
+                  ],
+                  "activeView": "2",
+                  "id": "2"
+                },
+                "size": 302
+              },
+              {
+                "type": "leaf",
+                "data": {
+                  "views": [
+                    "3"
+                  ],
+                  "activeView": "3",
+                  "id": "3"
+                },
+                "size": 301
+              }
+            ],
+            "size": 495
+          }
+        ],
+        "size": 613
+      },
+      "width": 1143,
+      "height": 613,
+      "orientation": "HORIZONTAL"
+    },
+    "panel_ids": [
+      "1",
+      "2",
+      "3",
+      "new_1"
+    ]
+  }
+}

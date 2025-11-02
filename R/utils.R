@@ -34,11 +34,12 @@ extract_panel_deps <- function(panels) {
 check_panel_ids <- function(panels) {
   ids <- unlist(lapply(panels, function(x) x$id))
   dupes <- unique(ids[duplicated(ids)])
-  if (length(dupes))
+  if (length(dupes)) {
     stop(sprintf(
       "<Panels>: duplicated ids found: %s",
       paste(dupes, collapse = ", ")
     ))
+  }
   invisible(ids)
 }
 
@@ -48,11 +49,15 @@ check_panel_refs <- function(panels, ids) {
     panels,
     function(x) {
       res <- c(x[["position"]][["referencePanel"]])
-      if (!is.null(res)) names(res) <- x[["id"]]
+      if (!is.null(res)) {
+        names(res) <- x[["id"]]
+      }
       res
     }
   ))
-  if (is.null(refs)) return(NULL)
+  if (is.null(refs)) {
+    return(NULL)
+  }
   if (any(!(refs %in% ids))) {
     wrong_id <- which(!(refs %in% ids))
     stop(
@@ -84,15 +89,16 @@ valid_position_names <- c(
 #' @keywords internal
 process_panel_position <- function(
   id,
-  position,
-  dock_id = NULL,
-  session = NULL
+  position
 ) {
   # Check names
   validate_position_names(id, position)
-  position[["referencePanel"]] <- as.character(position[["referencePanel"]])
-  # Check ref panel id when dynamically injected
-  validate_position_ref(id, position, dock_id, session)
+  if (!is.null(position[["referencePanel"]])) {
+    position[["referencePanel"]] <- as.character(position[["referencePanel"]])
+  }
+  if (!is.null(position[["referenceGroup"]])) {
+    position[["referenceGroup"]] <- as.character(position[["referenceGroup"]])
+  }
   # Check position
   validate_position_direction(id, position)
   invisible(position)
@@ -100,6 +106,12 @@ process_panel_position <- function(
 
 #' @keywords internal
 validate_position_names <- function(id, position) {
+  if (length(position) == 0) {
+    stop(sprintf(
+      "<Panel (ID: %s)>: `position` must be a non-empty list.",
+      id
+    ))
+  }
   if (any(!(names(position) %in% valid_position_names))) {
     invalid_names <- which(!(names(position) %in% valid_position_names))
     stop(
@@ -111,22 +123,6 @@ validate_position_names <- function(id, position) {
         paste(names(position)[invalid_names], collapse = ", ")
       )
     )
-  }
-}
-
-#' @keywords internal
-validate_position_ref <- function(id, position, dock_id, session) {
-  if (!is.null(dock_id)) {
-    panel_ids <- get_panels_ids(dock_id, session)
-    if (!(position[["referencePanel"]] %in% panel_ids))
-      stop(
-        sprintf(
-          "<Panel (ID: %s)>: invalid value (%s) for `referencePanel`. Valid ids are: %s.",
-          id,
-          position[["referencePanel"]],
-          paste(panel_ids, collapse = ", ")
-        )
-      )
   }
 }
 

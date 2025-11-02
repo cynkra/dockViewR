@@ -6,7 +6,7 @@
 #' JavaScript library, providing a powerful interface for
 #' creating IDE-like layouts in Shiny applications or R Markdown documents.
 #'
-#' @param panels Widget configuration. Slot for \link{panel}.
+#' @param panels An unnamed list of [panel()].
 #' @param ... Other options. See
 #' \url{https://dockview.dev/docs/api/dockview/options/}.
 #' @param theme Theme. One of
@@ -14,6 +14,9 @@
 #' @param add_tab Globally controls the add tab behavior. List with enable and callback.
 #' Enable is a boolean, default to FALSE and callback is a
 #' JavaScript function passed with \link[htmlwidgets]{JS}.
+#' See [default_add_tab_callback()]. By default, the callback
+#' sets a Shiny input `input[["<dock_ID>_panel-to-add"]]`
+#' so you can create observers with custom logic.
 #' @param width Widget width.
 #' @param height Widget height.
 #' @param elementId When used outside Shiny.
@@ -87,7 +90,7 @@
 
 #' shinyApp(ui, server)
 dock_view <- function(
-  panels,
+  panels = list(),
   ...,
   theme = c(
     "light-spaced",
@@ -99,7 +102,7 @@ dock_view <- function(
     "dracula",
     "replit"
   ),
-  add_tab = list(enable = FALSE, callback = NULL),
+  add_tab = new_add_tab_plugin(),
   width = NULL,
   height = NULL,
   elementId = NULL
@@ -113,76 +116,31 @@ dock_view <- function(
   # check reference panels ids
   check_panel_refs(panels, ids)
 
-  if (add_tab$enable) {
-    if (is.null(add_tab$callback)) {
-      add_tab$callback <- JS(
-        "(config) => {
-          const addPanel = (panel, api) => {
-            let internals = {
-              component: 'default',
-              params: {
-                content: panel.content,
-                addTab: panel.addTab
-              }
-            }
+  if (!is_add_tab_plugin(add_tab)) {
+    stop(
+      "`add_tab` must be created with `new_add_tab_plugin()`."
+    )
+  }
 
-            // Disable tab removal.
-            //internals.tabComponent = 'custom';
-            // You can use manual removal.
-            //internals.tabComponent = 'manual';
-            let props = { ...panel, ...internals }
-            return (api.addPanel(props))
-          }
-          const defaultPanel = (pnId) => {
-            return (`
-              <p>Exchange me by running:</p>
-              <p>removeUI(<br>
-                &nbsp;&nbsp;selector = \"#${pnId} > *\",<br>
-                &nbsp;&nbsp;multiple = TRUE<br>
-              )</p>
-              <p>shiny::insertUI(<br>
-                    &nbsp;&nbsp;selector = \"#${pnId}\",<br>
-                    &nbsp;&nbsp;where = \"beforeEnd\",<br>
-                    &nbsp;&nbsp;ui = \"your ui code here\"<br>
-              )</p>
-            `)
-          }
-          const dockId = config.containerApi.component
-            .gridview.element.closest('.dockview')
-            .attributes.id.textContent;
-          const pnId = `panel-${Date.now()}`
-          addPanel({
-            id: pnId,
-            title: 'Panel new',
-            inactive: false,
-            content: {
-              head: '',
-              singletons: [],
-              dependencies: [],
-              html: defaultPanel(dockId + '-' + pnId)
-            },
-            position: { referenceGroup: config.group.id, direction: 'within' }
-          }, config.containerApi);
-        }"
-      )
-    } else {
-      if (!is_js(add_tab$callback)) {
-        stop("`callback` must be a JavaScript function.")
-      }
-    }
+  if (length(names(panels))) {
+    warning(
+      "Panels should be an unnamed list.",
+      "The names will be ignored."
+    )
   }
 
   # forward options using x
   x <- list(
     theme = theme,
-    panels = panels,
+    panels = unname(panels),
     # camelCase for JS ...
     addTab = add_tab,
+    mode = get_dock_view_mode(),
     ...
   )
 
   # create widget
-  htmlwidgets::createWidget(
+  w <- htmlwidgets::createWidget(
     name = "dockview",
     x,
     dependencies = c(
@@ -206,6 +164,35 @@ dock_view <- function(
       padding = 5
     )
   )
+
+  session <- getDefaultReactiveDomain()
+  if (!is.null(session)) {
+    # Initialized callback as dockview does not provide any ...
+    w <- onRender(
+      w,
+      "function(el, x) {
+        Shiny.setInputValue(`${el.id}_initialized`, true);
+      }"
+    )
+  }
+  w
+}
+
+#' @keywords internal
+validate_dock_view_mode <- function(mode) {
+  if (!(mode %in% c("dev", "prod"))) {
+    stop(sprintf(
+      "`dockViewR.mode` option must be one of 'dev' or 'prod'. Current value: '%s'",
+      mode
+    ))
+  }
+  invisible(mode)
+}
+
+#' @keywords internal
+get_dock_view_mode <- function() {
+  mode <- getOption("dockViewR.mode", "prod")
+  validate_dock_view_mode(mode)
 }
 
 #' Dock panel
@@ -248,7 +235,7 @@ panel <- function(
   title,
   content,
   active = TRUE,
-  remove = list(enable = FALSE, mode = "auto"),
+  remove = new_remove_tab_plugin(),
   style = list(
     padding = "10px",
     overflow = "auto",
@@ -257,6 +244,12 @@ panel <- function(
   ),
   ...
 ) {
+  if (!is_remove_tab_plugin(remove)) {
+    stop(
+      "`remove` must be created with `new_remove_tab_plugin()`."
+    )
+  }
+
   # We can't check id uniqueness here because panel has no
   # idea of other existing panel ids at that point.
   id <- as.character(id)
@@ -342,28 +335,3 @@ renderDockView <- function(expr, env = parent.frame(), quoted = FALSE) {
 #' @export
 #' @rdname dock_view-shiny
 render_dock_view <- renderDockView
-
-#' Update options for dockview instance
-#'
-#' This does not rerender the widget, just update options like global theme.
-#'
-#' @param dock_id The id of the dock view widget to update.
-#' @param options List of options for the \link{dock_view} instance.
-#' @param session Shiny session object.
-#' @return This function is called for its side effect.
-#' It sends a message to JavaScript through the current websocket connection,
-#' leveraging the shiny session object.
-#' @export
-update_dock_view <- function(
-  dock_id,
-  options,
-  session = getDefaultReactiveDomain()
-) {
-  if (is.null(session)) {
-    stop("`session` must be a valid Shiny session object.")
-  }
-  session$sendCustomMessage(
-    type = sprintf("%s_update-options", session$ns(dock_id)),
-    message = options
-  )
-}

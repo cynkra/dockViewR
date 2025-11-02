@@ -9,7 +9,7 @@ panel(
   title,
   content,
   active = TRUE,
-  remove = list(enable = FALSE, mode = "auto"),
+  remove = new_remove_tab_plugin(),
   style = list(padding = "10px", overflow = "auto", height = "100\%", margin = "10px"),
   ...
 )

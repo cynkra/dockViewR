@@ -1,10 +1,37 @@
-# dockViewR 0.2.1
+# dockViewR 0.3.0
 
-- Add `set_panel_title()` to change the title of a panel from the server of a Shiny app.
-- Added `style` parameter to `panel()`. This allows to customized the style of
-the panel container. It expects a named list with CSS properties and values. We kept
-old default values for backward compatibility, but you can now overwrite them.
-- Upgrade dockview JS to 4.7.0. Fix Windows shaking issue: <https://github.com/mathuo/dockview/issues/988>.
+## Breaking changes
+
+In the previous API, we relied on `input$<dock_id>_state` to perform checks on panel ids but this was no reliable. For instance, calling `add_panel()` in an `observeEvent()`, the state was not up to date as you had to wait for the next reactive flush to get an update of the input. This lead to unconvenient workarounds when manipulating the dock from the server. Now, checks are performed UI side an raise JS warnings in the console and optionally Shiny notification when `options(dockViewR.mode = "dev")`.
+
+- Added `dock_view_proxy()` to create a reactive proxy to a dock instance.
+- `add_panel()` `dock_id` parameter is changed to `dock`. It now expects a dock proxy created with `dock_view_proxy()`. This is to be more consistent with other htmlwidgets. Same applies for `remove_panel()`, `select_panel()` and `move_panel()`.
+- `dock_state()` and all related functions also expect a dock proxy created with `dock_view_proxy()`.
+- `update_dock_view()` also relies on `dock_view_proxy()`.
+- All proxy method return the dock invisibly so you can chain calls.
+
+We reworked the infrastructure around adding and removing tabs using `new_add_tab_plugin()` and `new_remove_tab_plugin()`. See the updated documentation for more details. This also impacts the way `add_tab` and `remove` parameters are used in `dock_view()` and `panel()` respectively, which weren't very safe in the previous API.
+
+## New features
+
+- Add new `input[["<dock_ID>_n-panels"]]`, `input[["<dock_ID>_n-groups"]]`,`input[["<dock_ID>_active-panel"]]`, `input[["<dock_ID>_active-group"]]` as subset of `input[["<dock_ID>_state"]]`. Priority is normal so any observer listening to those input won't trigger when there is no change in the layout.
+- Add new `input[["<dock_ID>_restored"]]` as a callback when the dock get restored after calling `restore_dock()`.
+- Fix [#53](https://github.com/cynkra/dockViewR/issues/53): Added `get_active_views()]`, a convenience function that returns the active view in each group and `get_active_panel()]`, another convenience function that returns the active panel in the active group.
+- Allow initialising a dock with no panels (default to `list()`).
+- Added `input[["<dock_ID>_initialized"]]` within an `onRender` callback. Allows to track when the dock is ready
+to perform actions server side.
+- In `add_panel()`: if no `referencePanel` or `referenceGroup` is provided, the panel is added relative to the [container](https://dockview.dev/docs/core/panels/add#relative-to-the-container).
+- Fix: `get_groups_ids()` now correctly returns all group ids (nested groups were not returned).
+- Fix [#52](https://github.com/cynkra/dockViewR/issues/52): Reworked `add_tab` parameter in `dock_view()`. By default, there is a `default_add_tab_callback()` that sets `input[["<dock_ID>_panel-to-add"]]`, so you can create observers with custom logic, including removing the panel with `add_panel()`. An example of usage is available at <https://github.com/cynkra/dockViewR/blob/main/inst/examples/add_panel/app.R>.
+- Fix: typo in `abyss-spaced` theme caused the theme not to be applied.
+- Fix: typo in `abyss-spaced` theme caused the theme not to be applied.
+- Fix: options in `...` were not passed to the dockview JS constructor. (:clown:)
+- Fix [#48](https://github.com/cynkra/dockViewR/issues/48): dock state is saved before panels are added.
+- Remove unecessary content in saved JSON state (dependencies, head, singletons). They should
+already be present in the app when initialising the graph.
+- Fix: update input layout state when layout is restored.
+- Added `style` parameter to `panel()`. This allows to customize the style of the panel container. It expects a named list with CSS properties and values. We kept old default values for backward compatibility, but you can now overwrite them.
+- Upgrade dockview JS to 4.10.0. Fix Windows shaking issue: <https://github.com/mathuo/dockview/issues/988>.
 
 # dockViewR 0.2.0
 
