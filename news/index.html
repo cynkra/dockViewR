@@ -50,7 +50,8 @@
 </div>
 <div class="section level3">
 <h3 id="new-features-0-3-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-3-0"></a></h3>
-<ul><li>Add new <code>input[["&lt;dock_ID&gt;_n-panels"]]</code>, <code>input[["&lt;dock_ID&gt;_n-groups"]]</code>,<code>input[["&lt;dock_ID&gt;_active-panel"]]</code>, <code>input[["&lt;dock_ID&gt;_active-group"]]</code> as subset of <code>input[["&lt;dock_ID&gt;_state"]]</code>. Priority is normal so any observer listening to those input won’t trigger when there is no change in the layout.</li>
+<ul><li>Add <code><a href="../reference/panel-operations.html">set_panel_title()</a></code> to change the title of a panel from the server of a Shiny app.</li>
+<li>Add new <code>input[["&lt;dock_ID&gt;_n-panels"]]</code>, <code>input[["&lt;dock_ID&gt;_n-groups"]]</code>,<code>input[["&lt;dock_ID&gt;_active-panel"]]</code>, <code>input[["&lt;dock_ID&gt;_active-group"]]</code> as subset of <code>input[["&lt;dock_ID&gt;_state"]]</code>. Priority is normal so any observer listening to those input won’t trigger when there is no change in the layout.</li>
 <li>Add new <code>input[["&lt;dock_ID&gt;_restored"]]</code> as a callback when the dock get restored after calling <code><a href="../reference/dock-state.html">restore_dock()</a></code>.</li>
 <li>Fix <a href="https://github.com/cynkra/dockViewR/issues/53" class="external-link">#53</a>: Added <code>get_active_views()]</code>, a convenience function that returns the active view in each group and <code>get_active_panel()]</code>, another convenience function that returns the active panel in the active group.</li>
 <li>Allow initialising a dock with no panels (default to <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code>).</li>

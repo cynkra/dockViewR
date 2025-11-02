@@ -44,6 +44,8 @@
 <span></span>
 <span><span class="fu">remove_panel</span><span class="op">(</span><span class="va">dock</span>, <span class="va">id</span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">set_panel_title</span><span class="op">(</span><span class="va">dock</span>, <span class="va">id</span>, <span class="va">title</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">select_panel</span><span class="op">(</span><span class="va">dock</span>, <span class="va">id</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">move_panel</span><span class="op">(</span><span class="va">dock</span>, <span class="va">id</span>, position <span class="op">=</span> <span class="cn">NULL</span>, group <span class="op">=</span> <span class="cn">NULL</span>, index <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
@@ -73,6 +75,10 @@
 <dd><p>Panel ID (character string).</p></dd>
 
 
+<dt id="arg-title">title<a class="anchor" aria-label="anchor" href="#arg-title"></a></dt>
+<dd><p>New panel title.</p></dd>
+
+
 <dt id="arg-position">position<a class="anchor" aria-label="anchor" href="#arg-position"></a></dt>
 <dd><p>Panel/group position: one of "left", "right", "top", "bottom", "center".</p></dd>
 
@@ -100,7 +106,8 @@
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
-<ul><li><p><code>add_panel()</code>: Adds a new panel to the dockview</p></li>
+<ul><li><p><code>set_panel_title()</code>: Sets the title of a panel dynamically.</p></li>
+<li><p><code>add_panel()</code>: Adds a new panel to the dockview</p></li>
 <li><p><code>remove_panel()</code>: Removes an existing panel</p></li>
 <li><p><code>select_panel()</code>: Selects/focuses a specific panel</p></li>
 <li><p><code>move_panel()</code>: Moves a panel to a new position</p></li>
