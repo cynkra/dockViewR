@@ -1,0 +1,178 @@
+{
+  "input": {
+
+  },
+  "output": {
+    "dock": {
+      "x": {
+        "theme": "replit",
+        "panels": [
+          {
+            "id": "1",
+            "title": "Panel 1",
+            "inactive": false,
+            "remove": {
+              "enable": true,
+              "callback": "(config) => {\n      Shiny.setInputValue(`${config.dockId}_panel-to-remove`, config.api.id, { priority: 'event' });\n    }\n    ",
+              "mode": "auto"
+            },
+            "content": {
+              "head": "",
+              "singletons": [
+
+              ],
+              "dependencies": [
+
+              ],
+              "html": "Panel 1"
+            },
+            "style": "padding:10px;overflow:auto;height:100%;margin:10px;"
+          },
+          {
+            "id": "2",
+            "title": "Panel 2",
+            "inactive": false,
+            "remove": {
+              "enable": false,
+              "callback": null,
+              "mode": "auto"
+            },
+            "content": {
+              "head": "",
+              "singletons": [
+
+              ],
+              "dependencies": [
+
+              ],
+              "html": "Panel 2"
+            },
+            "style": "padding:10px;overflow:auto;height:100%;margin:10px;",
+            "position": {
+              "referencePanel": "1",
+              "direction": "right"
+            },
+            "minimumWidth": 500
+          },
+          {
+            "id": "3",
+            "title": "Panel 3",
+            "inactive": false,
+            "remove": {
+              "enable": false,
+              "callback": null,
+              "mode": "auto"
+            },
+            "content": {
+              "head": "",
+              "singletons": [
+
+              ],
+              "dependencies": [
+
+              ],
+              "html": "Panel 3"
+            },
+            "style": "padding:10px;overflow:auto;height:100%;margin:10px;",
+            "position": {
+              "referencePanel": "2",
+              "direction": "below"
+            }
+          }
+        ],
+        "addTab": {
+          "enable": false,
+          "callback": null
+        },
+        "mode": "prod"
+      },
+      "evals": [
+        "panels.0.remove.callback"
+      ],
+      "jsHooks": {
+        "render": [
+          {
+            "code": "function(el, x) {\n        Shiny.setInputValue(`${el.id}_initialized`, true);\n      }",
+            "data": null
+          }
+        ]
+      },
+      "deps": [
+        {
+          "name": "font-awesome",
+          "version": "6.5.2",
+          "src": {
+            "href": "font-awesome-6.5.2"
+          },
+          "meta": null,
+          "script": null,
+          "stylesheet": [
+            "css/all.min.css",
+            "css/v4-shims.min.css"
+          ],
+          "head": null,
+          "attachment": null,
+          "all_files": true
+        }
+      ]
+    }
+  },
+  "export": {
+    "active_group": "3",
+    "grid": {
+      "root": {
+        "type": "branch",
+        "data": [
+          {
+            "type": "leaf",
+            "data": {
+              "views": [
+                "1"
+              ],
+              "activeView": "1",
+              "id": "1"
+            },
+            "size": 638
+          },
+          {
+            "type": "branch",
+            "data": [
+              {
+                "type": "leaf",
+                "data": {
+                  "views": [
+                    "2"
+                  ],
+                  "activeView": "2",
+                  "id": "2"
+                },
+                "size": 291
+              },
+              {
+                "type": "leaf",
+                "data": {
+                  "views": [
+                    "3"
+                  ],
+                  "activeView": "3",
+                  "id": "3"
+                },
+                "size": 290.5
+              }
+            ],
+            "size": 495
+          }
+        ],
+        "size": 591.5
+      },
+      "width": 1143,
+      "height": 591.5,
+      "orientation": "HORIZONTAL"
+    },
+    "panel_ids": [
+      "1",
+      "2",
+      "3"
+    ]
+  }
+}

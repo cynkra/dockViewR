@@ -103,11 +103,13 @@ update_dock_view <- function(
 #' @param index Panel index within a group (for `move_panel`).
 #' @param from Source group/panel ID (for move operations).
 #' @param to Destination group/panel ID (for move operations).
+#' @param title New panel title.
 #' @param ... Additional options (currently unused).
 #'
 #' @return All functions return the dock proxy object invisibly, allowing for method chaining.
 #'
 #' @details
+#' - `set_panel_title()`: Sets the title of a panel dynamically.
 #' - `add_panel()`: Adds a new panel to the dockview
 #' - `remove_panel()`: Removes an existing panel
 #' - `select_panel()`: Selects/focuses a specific panel
@@ -144,6 +146,17 @@ add_panel <- function(dock, panel, ...) {
 remove_panel <- function(dock, id) {
   panel_id <- as.character(id)
   send_dock_message(dock, "rm-panel", panel_id)
+}
+
+#' @export
+#' @rdname panel-operations
+set_panel_title <- function(dock, id, title) {
+  panel_id <- as.character(id)
+  send_dock_message(
+    dock,
+    "set-panel-title",
+    list(id = panel_id, title = title)
+  )
 }
 
 #' @export

@@ -77,6 +77,11 @@ const setShinyHandlers = (id, mode, api) => {
     }
     api.updateOptions(m);
   })
+
+  // Set title
+  Shiny.addCustomMessageHandler(id + '_set-panel-title', (m) => {
+    api.getPanel(m.id).api.setTitle(m.title);
+  })
 }
 
 export { setShinyHandlers };

@@ -3,6 +3,7 @@
 \name{add_panel}
 \alias{add_panel}
 \alias{remove_panel}
+\alias{set_panel_title}
 \alias{select_panel}
 \alias{move_panel}
 \alias{move_group}
@@ -12,6 +13,8 @@
 add_panel(dock, panel, ...)
 
 remove_panel(dock, id)
+
+set_panel_title(dock, id, title)
 
 select_panel(dock, id)
 
@@ -29,6 +32,8 @@ move_group2(dock, from, to, position = NULL)
 \item{...}{Additional options (currently unused).}
 
 \item{id}{Panel ID (character string).}
+
+\item{title}{New panel title.}
 
 \item{position}{Panel/group position: one of "left", "right", "top", "bottom", "center".}
 
@@ -48,6 +53,7 @@ Functions to dynamically manipulate panels in a dockview instance.
 }
 \details{
 \itemize{
+\item \code{set_panel_title()}: Sets the title of a panel dynamically.
 \item \code{add_panel()}: Adds a new panel to the dockview
 \item \code{remove_panel()}: Removes an existing panel
 \item \code{select_panel()}: Selects/focuses a specific panel

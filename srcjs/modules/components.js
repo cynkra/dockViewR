@@ -69,10 +69,14 @@ class CustomTab {
     let dockId = getDockId(config);
     this._element.id = dockId + '-tab-' + config.api.id;
     this.e1 = document.createElement('div');
-    this.e1.textContent = config.title;
+    this.e1.textContent = config.api.title;
     this.e2 = document.createElement('span');
 
     this._element.append(this.e1, this.e2);
+
+    config.api.onDidTitleChange((e) => {
+      this.e1.textContent = config.api.title;
+    });
   }
 }
 

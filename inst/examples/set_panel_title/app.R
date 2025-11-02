@@ -1,10 +1,6 @@
 library(dockViewR)
 library(shiny)
 library(bslib)
-library(visNetwork)
-
-nodes <- data.frame(id = 1:3)
-edges <- data.frame(from = c(1, 2), to = c(1, 3))
 
 ui <- page_fillable(
   textInput("panel_title", "Panel title"),
@@ -12,35 +8,27 @@ ui <- page_fillable(
 )
 
 server <- function(input, output, session) {
+  dock_proxy <- dock_view_proxy("dock")
+
   exportTestValues(
-    panel_ids = get_panels_ids("dock"),
-    active_group = get_active_group("dock"),
-    grid = get_grid("dock")
+    panel_ids = get_panels_ids(dock_proxy),
+    active_group = get_active_group(dock_proxy),
+    grid = get_grid(dock_proxy)
   )
 
   output$dock <- renderDockView({
     dock_view(
       panels = list(
         panel(
-          id = "1",
+          id = 1,
           title = "Panel 1",
-          content = tagList(
-            sliderInput(
-              "obs",
-              "Number of observations:",
-              min = 0,
-              max = 1000,
-              value = 500
-            ),
-            plotOutput("distPlot")
-          )
+          content = "Panel 1",
+          remove = new_remove_tab_plugin(TRUE)
         ),
         panel(
-          id = "2",
+          id = 2,
           title = "Panel 2",
-          content = tagList(
-            visNetworkOutput("network")
-          ),
+          content = "Panel 2",
           position = list(
             referencePanel = "1",
             direction = "right"
@@ -48,16 +36,9 @@ server <- function(input, output, session) {
           minimumWidth = 500
         ),
         panel(
-          id = "3",
+          id = 3,
           title = "Panel 3",
-          content = tagList(
-            selectInput(
-              "variable",
-              "Variable:",
-              c("Cylinders" = "cyl", "Transmission" = "am", "Gears" = "gear")
-            ),
-            tableOutput("data")
-          ),
+          content = "Panel 3",
           position = list(
             referencePanel = "2",
             direction = "below"
@@ -68,38 +49,14 @@ server <- function(input, output, session) {
     )
   })
 
-  output$distPlot <- renderPlot({
-    req(input$obs)
-    hist(rnorm(input$obs))
-  })
-
-  output$network <- renderVisNetwork({
-    visNetwork(nodes, edges, width = "100%")
-  })
-
-  output$data <- renderTable(
+  observeEvent(
+    input$panel_title,
     {
-      mtcars[, c("mpg", input$variable), drop = FALSE]
+      set_panel_title(dock_proxy, 1, input$panel_title)
+      set_panel_title(dock_proxy, 2, input$panel_title)
     },
-    rownames = TRUE
+    ignoreInit = TRUE
   )
-
-  output$plot <- renderPlot({
-    dist <- switch(
-      input$dist,
-      norm = rnorm,
-      unif = runif,
-      lnorm = rlnorm,
-      exp = rexp,
-      rnorm
-    )
-
-    hist(dist(500))
-  })
-
-  observeEvent(input$panel_title, {
-    set_panel_title("dock", 1, input$panel_title)
-  }, ignoreInit = TRUE)
 }
 
 shinyApp(ui, server)
