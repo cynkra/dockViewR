@@ -14,6 +14,7 @@ We reworked the infrastructure around adding and removing tabs using `new_add_ta
 
 ## New features
 
+- Add `set_panel_title()` to change the title of a panel from the server of a Shiny app.
 - Add new `input[["<dock_ID>_n-panels"]]`, `input[["<dock_ID>_n-groups"]]`,`input[["<dock_ID>_active-panel"]]`, `input[["<dock_ID>_active-group"]]` as subset of `input[["<dock_ID>_state"]]`. Priority is normal so any observer listening to those input won't trigger when there is no change in the layout.
 - Add new `input[["<dock_ID>_restored"]]` as a callback when the dock get restored after calling `restore_dock()`.
 - Fix [#53](https://github.com/cynkra/dockViewR/issues/53): Added `get_active_views()]`, a convenience function that returns the active view in each group and `get_active_panel()]`, another convenience function that returns the active panel in the active group.

@@ -362,3 +362,30 @@ test_that("update theme app works", {
   Sys.sleep(2)
   app$expect_values(input = FALSE, output = FALSE, export = TRUE)
 })
+
+test_that("set_panel_title works", {
+  session$input[["dock_state"]] <- test_dock
+  dock_proxy <- dock_view_proxy("dock", session = session)
+  set_panel_title(dock_proxy, id = "test", title = "New Title")
+  expect_identical(session$lastCustomMessage$type, "dock_set-panel-title")
+  expect_type(session$lastCustomMessage$message, "list")
+  expect_identical(session$lastCustomMessage$message$id, "test")
+  expect_identical(session$lastCustomMessage$message$title, "New Title")
+})
+
+test_that("set_panel_title app works", {
+  skip_on_cran()
+  appdir <- system.file(package = "dockViewR", "examples", "set_panel_title")
+  app <- AppDriver$new(
+    appdir,
+    name = "set_panel_title",
+    seed = 121,
+    height = 752,
+    width = 1211
+  )
+  app$wait_for_idle()
+  app$expect_values(input = FALSE, output = TRUE, export = TRUE)
+  app$set_inputs(panel_title = "My new title")
+  app$wait_for_idle()
+  app$expect_values(input = "title", output = TRUE, export = TRUE)
+})
