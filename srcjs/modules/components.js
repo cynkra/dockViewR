@@ -52,6 +52,10 @@ class DefaultTab {
       // Send callback to Shiny for control from the server side
       config.params.removeCallback(config)
     })
+
+    config.api.onDidTitleChange((e) => {
+      this._content.textContent = config.api.title;
+    });
   }
 }
 
