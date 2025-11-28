@@ -1,6 +1,14 @@
 import { saveDock } from '../modules/proxy';
 
 const setDockViewCallbacks = (id, api) => {
+
+  // Work around https://github.com/mathuo/dockview/issues/1031
+  // resize the panel to its actual size :)
+  api.onDidMovePanel((e) => {
+    setTimeout(() => {
+      e.panel.api.setSize(e.panel.api.height, e.panel.api.width)
+    }, 1);
+  })
   // Resize panel content on layout change
   // (useful so that plots or widgets resize correctly)
   // Also update the dock state.
