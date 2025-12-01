@@ -72,7 +72,7 @@ respectively, which weren’t very safe in the previous API.
   [`add_panel()`](https://cynkra.github.io/dockViewR/reference/panel-operations.md):
   if no `referencePanel` or `referenceGroup` is provided, the panel is
   added relative to the
-  [container](https://dockview.dev/docs/core/panels/add#relative-to-the-container).
+  [container](https://dockview.dev/docs/core/panels/add/#relative-to-the-container).
 - Fix:
   [`get_groups_ids()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
   now correctly returns all group ids (nested groups were not returned).
