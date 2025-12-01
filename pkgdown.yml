@@ -3,7 +3,7 @@ pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   dockViewR: dockViewR.html
-last_built: 2025-11-28T07:49Z
+last_built: 2025-12-01T07:47Z
 urls:
   reference: https://cynkra.github.io/dockViewR/reference
   article: https://cynkra.github.io/dockViewR/articles

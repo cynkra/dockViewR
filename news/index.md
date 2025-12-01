@@ -87,7 +87,6 @@ respectively, which weren’t very safe in the previous API.
   An example of usage is available at
   <https://github.com/cynkra/dockViewR/blob/main/inst/examples/add_panel/app.R>.
 - Fix: typo in `abyss-spaced` theme caused the theme not to be applied.
-- Fix: typo in `abyss-spaced` theme caused the theme not to be applied.
 - Fix: options in `...` were not passed to the dockview JS constructor.
   (:clown:)
 - Fix [\#48](https://github.com/cynkra/dockViewR/issues/48): dock state

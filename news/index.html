@@ -60,7 +60,6 @@
 <li>Fix: <code><a href="../reference/dock-state.html">get_groups_ids()</a></code> now correctly returns all group ids (nested groups were not returned).</li>
 <li>Fix <a href="https://github.com/cynkra/dockViewR/issues/52" class="external-link">#52</a>: Reworked <code>add_tab</code> parameter in <code><a href="../reference/dock_view.html">dock_view()</a></code>. By default, there is a <code><a href="../reference/default_add_tab_callback.html">default_add_tab_callback()</a></code> that sets <code>input[["&lt;dock_ID&gt;_panel-to-add"]]</code>, so you can create observers with custom logic, including removing the panel with <code><a href="../reference/panel-operations.html">add_panel()</a></code>. An example of usage is available at <a href="https://github.com/cynkra/dockViewR/blob/main/inst/examples/add_panel/app.R" class="external-link uri">https://github.com/cynkra/dockViewR/blob/main/inst/examples/add_panel/app.R</a>.</li>
 <li>Fix: typo in <code>abyss-spaced</code> theme caused the theme not to be applied.</li>
-<li>Fix: typo in <code>abyss-spaced</code> theme caused the theme not to be applied.</li>
 <li>Fix: options in <code>...</code> were not passed to the dockview JS constructor. (:clown:)</li>
 <li>Fix <a href="https://github.com/cynkra/dockViewR/issues/48" class="external-link">#48</a>: dock state is saved before panels are added.</li>
 <li>Remove unecessary content in saved JSON state (dependencies, head, singletons). They should already be present in the app when initialising the graph.</li>

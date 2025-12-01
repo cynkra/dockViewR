@@ -44,7 +44,8 @@ new_remove_tab_plugin(enable = FALSE, callback = NULL, mode = "auto", ...)
 
 ## Value
 
-A dock view plugin object.
+A dock view plugin object of class `add_tab` or `remove_tab`, depending
+on the choosen \`type“.
 
 ## Examples
 

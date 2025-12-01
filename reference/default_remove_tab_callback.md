@@ -8,3 +8,7 @@ removing a tab/panel.
 ``` r
 default_remove_tab_callback()
 ```
+
+## Value
+
+An object of class `JS_EVAL` representing the JavaScript callback.

@@ -8,3 +8,7 @@ adding a new tab/panel.
 ``` r
 default_add_tab_callback()
 ```
+
+## Value
+
+An object of class `JS_EVAL` representing the JavaScript callback.
