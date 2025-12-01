@@ -10,7 +10,8 @@
 #' @param mode For remove_tab plugins only. One of "auto" or "manual".
 #' @param ... Additional plugin configuration arguments.
 #'
-#' @return A dock view plugin object.
+#' @return A dock view plugin object of class `add_tab` or `remove_tab`, depending
+#' on the choosen `type``.
 #'
 #' @examples
 #' # Add tab plugin
@@ -24,6 +25,7 @@
 #' @name dock_view_plugins
 NULL
 
+#' @keywords internal
 valid_plugins <- c("add_tab", "remove_tab")
 
 #' @keywords internal
@@ -179,6 +181,8 @@ validate_js_callback <- function(callback) {
 #'
 #' An example of a JavaScript function that can be used as a default
 #' when adding a new tab/panel.
+#' 
+#' @return An object of class `JS_EVAL` representing the JavaScript callback.
 #'
 #' @export
 default_add_tab_callback <- function() {
@@ -193,6 +197,8 @@ default_add_tab_callback <- function() {
 #'
 #' An example of a JavaScript function that can be used as a default
 #' when removing a tab/panel.
+#' 
+#' @return An object of class `JS_EVAL` representing the JavaScript callback.
 #'
 #' @export
 default_remove_tab_callback <- function() {

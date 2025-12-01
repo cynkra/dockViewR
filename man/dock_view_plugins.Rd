@@ -32,7 +32,8 @@ a default callback is used.}
 \item{mode}{For remove_tab plugins only. One of "auto" or "manual".}
 }
 \value{
-A dock view plugin object.
+A dock view plugin object of class \code{add_tab} or \code{remove_tab}, depending
+on the choosen `type``.
 }
 \description{
 Create plugins to enable additional functionality in dock view interfaces.

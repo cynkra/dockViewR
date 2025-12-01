@@ -6,6 +6,9 @@
 \usage{
 default_remove_tab_callback()
 }
+\value{
+An object of class \code{JS_EVAL} representing the JavaScript callback.
+}
 \description{
 An example of a JavaScript function that can be used as a default
 when removing a tab/panel.

@@ -6,6 +6,9 @@
 \usage{
 default_add_tab_callback()
 }
+\value{
+An object of class \code{JS_EVAL} representing the JavaScript callback.
+}
 \description{
 An example of a JavaScript function that can be used as a default
 when adding a new tab/panel.
