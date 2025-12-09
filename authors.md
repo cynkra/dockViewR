@@ -15,7 +15,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/cynkra/dockViewR/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/cynkra/dockViewR/blob/v0.3.0/DESCRIPTION)
 
 Granjon D, Stevens N, Bennett N (2025). *dockViewR: Layout Manager
 Widget for R and 'shiny' Apps*. R package version 0.3.0,
