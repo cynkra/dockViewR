@@ -2,6 +2,8 @@
 
 ## dockViewR 0.3.0
 
+CRAN release: 2025-12-06
+
 ### Breaking changes
 
 In the previous API, we relied on `input$<dock_id>_state` to perform
