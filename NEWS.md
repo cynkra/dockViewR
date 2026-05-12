@@ -1,3 +1,18 @@
+# dockViewR 0.3.1.9000
+
+## Breaking changes
+
+- Bumped `dockview-core` to v6.0.7. The `"replit"` theme was removed upstream (see [dockview v6 migration guide](https://dockview.dev/docs/overview/whats-new-v6)); pass another theme (e.g. `"light-spaced"`) instead.
+
+## New features
+
+- Expose the new dockview v6 themes: `"nord"`, `"nord-spaced"`, `"catppuccin-mocha"`, `"catppuccin-mocha-spaced"`, `"monokai"`, `"solarized-light"`, `"solarized-light-spaced"`, `"github-dark"`, `"github-dark-spaced"`, `"github-light"`, `"github-light-spaced"`.
+
+## Bug fixes
+
+- Fix [#60](https://github.com/cynkra/dockViewR/issues/60). There was a bug in dockview triggered when dragging a panel to the top/bottom of the dock causing its content to be invisible. We used a workaround in JS to resize the panel after droping it so the content is correctly displayed. No need for this now.
+- Fix [#61](https://github.com/cynkra/dockViewR/issues/61). addPanel/removePanel does not break the active group update anymore in dockview. Additionally, `input[["<dock>_active-group"]]` is now updated synchronously on pointerdown when interacting with a panel's content (e.g. clicking an `actionButton()` inside a panel), so server observers consistently see the group where the click happened.
+
 # dockViewR 0.3.0
 
 ## Breaking changes

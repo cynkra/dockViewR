@@ -20,6 +20,21 @@ class Panel {
     this._element.innerHTML = config.params.content.html
     this._element.className = 'dockview-panel'
     this._element.style = config.params.style
+
+    // Pre-emptively tell Shiny which group a pointer interaction lands in.
+    // dockview's own `onDidActiveGroupChange` can fire AFTER Shiny processes
+    // the click, so observers using `input[["<dock>_active-group"]]` would
+    // otherwise see a stale value. We do not call `setActive()` here because
+    // that steals focus from the click target (e.g. an actionButton).
+    this._element.addEventListener('pointerdown', () => {
+      if (typeof HTMLWidgets !== 'undefined' && HTMLWidgets.shinyMode && !config.api.isActive) {
+        Shiny.setInputValue(
+          dockId + '_active-group',
+          config.api.group.id,
+          { priority: 'event' }
+        );
+      }
+    }, true);
   }
 }
 

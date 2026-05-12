@@ -1,45 +1,47 @@
 import {
     themeAbyss,
-    themeDark,
-    themeLight,
-    themeVisualStudio,
-    themeDracula,
-    themeReplit,
     themeAbyssSpaced,
-    themeLightSpaced
+    themeCatppuccinMocha,
+    themeCatppuccinMochaSpaced,
+    themeDark,
+    themeDracula,
+    themeGithubDark,
+    themeGithubDarkSpaced,
+    themeGithubLight,
+    themeGithubLightSpaced,
+    themeLight,
+    themeLightSpaced,
+    themeMonokai,
+    themeNord,
+    themeNordSpaced,
+    themeSolarizedLight,
+    themeSolarizedLightSpaced,
+    themeVisualStudio
 } from "dockview-core";
 
+const themes = {
+    'light': themeLight,
+    'light-spaced': themeLightSpaced,
+    'abyss': themeAbyss,
+    'abyss-spaced': themeAbyssSpaced,
+    'vs': themeVisualStudio,
+    'dark': themeDark,
+    'dracula': themeDracula,
+    'nord': themeNord,
+    'nord-spaced': themeNordSpaced,
+    'catppuccin-mocha': themeCatppuccinMocha,
+    'catppuccin-mocha-spaced': themeCatppuccinMochaSpaced,
+    'monokai': themeMonokai,
+    'solarized-light': themeSolarizedLight,
+    'solarized-light-spaced': themeSolarizedLightSpaced,
+    'github-dark': themeGithubDark,
+    'github-dark-spaced': themeGithubDarkSpaced,
+    'github-light': themeGithubLight,
+    'github-light-spaced': themeGithubLightSpaced
+};
+
 const matchTheme = (theme) => {
-    let res;
-    switch (theme) {
-        case 'light':
-            res = themeLight
-            break
-        case 'light-spaced':
-            res = themeLightSpaced
-            break
-        case 'abyss':
-            res = themeAbyss
-            break
-        case 'abyss-spaced':
-            res = themeAbyssSpaced
-            break
-        case 'vs':
-            res = themeVisualStudio
-            break
-        case 'dark':
-            res = themeDark
-            break
-        case 'dracula':
-            res = themeDracula
-            break
-        case 'replit':
-            res = themeReplit
-            break
-        default:
-            res = themeLightSpaced
-    }
-    return (res)
+    return themes[theme] ?? themeLightSpaced;
 }
 
 export { matchTheme }

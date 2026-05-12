@@ -1,4 +1,5 @@
 import { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2 } from '../modules/proxy';
+import { matchTheme } from '../modules/themes';
 
 const deserializeFunction = (obj) => {
   if (obj && typeof obj === 'object' && obj.__IS_FUNCTION__) {

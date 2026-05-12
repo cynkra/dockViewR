@@ -5,7 +5,7 @@
   "output": {
     "dock": {
       "x": {
-        "theme": "replit",
+        "theme": "light-spaced",
         "panels": [
           {
             "id": "1",
@@ -146,7 +146,7 @@
                   "activeView": "2",
                   "id": "2"
                 },
-                "size": 291
+                "size": 294
               },
               {
                 "type": "leaf",
@@ -157,16 +157,16 @@
                   "activeView": "3",
                   "id": "3"
                 },
-                "size": 290.5
+                "size": 294
               }
             ],
             "size": 495
           }
         ],
-        "size": 591.5
+        "size": 598
       },
       "width": 1143,
-      "height": 591.5,
+      "height": 598,
       "orientation": "HORIZONTAL"
     },
     "panel_ids": [

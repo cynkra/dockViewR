@@ -39,7 +39,7 @@ server <- function(input, output, session) {
         panel(
           id = "3",
           title = "Panel 3",
-          content = h1("Panel 3"),
+          content = "Panel 3",
           position = list(
             referencePanel = "1",
             direction = "right"
@@ -48,7 +48,7 @@ server <- function(input, output, session) {
         panel(
           id = "4",
           title = "Panel 4",
-          content = h1("Panel 4"),
+          content = "Panel 4",
           position = list(
             referencePanel = "3",
             direction = "within"
@@ -57,7 +57,7 @@ server <- function(input, output, session) {
         panel(
           id = "5",
           title = "Panel 5",
-          content = h1("Panel 5"),
+          content = "Panel 5",
           position = list(
             referencePanel = "4",
             direction = "right"
@@ -66,7 +66,7 @@ server <- function(input, output, session) {
         panel(
           id = "6",
           title = "Panel 6",
-          content = h1("Panel 6"),
+          content = "Panel 6",
           position = list(
             referencePanel = "5",
             direction = "within"

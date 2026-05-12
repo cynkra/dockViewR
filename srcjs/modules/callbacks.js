@@ -1,14 +1,6 @@
 import { saveDock } from '../modules/proxy';
 
 const setDockViewCallbacks = (id, api) => {
-
-  // Work around https://github.com/mathuo/dockview/issues/1031
-  // resize the panel to its actual size :)
-  api.onDidMovePanel((e) => {
-    setTimeout(() => {
-      e.panel.api.setSize(e.panel.api.height, e.panel.api.width)
-    }, 1);
-  })
   // Resize panel content on layout change
   // (useful so that plots or widgets resize correctly)
   // Also update the dock state.
@@ -69,7 +61,7 @@ const setDockViewCallbacks = (id, api) => {
   api.onDidActiveGroupChange((e) => {
     if (HTMLWidgets.shinyMode) {
       if (e === undefined) return null
-      Shiny.setInputValue(id + '_active-group', e.id);
+      Shiny.setInputValue(id + '_active-group', e.id, { priority: 'event' });
     }
   })
 }

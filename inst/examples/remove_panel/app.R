@@ -76,7 +76,7 @@ server <- function(input, output, session) {
           )
         )
       ),
-      theme = "replit"
+      theme = "light-spaced"
     )
   })
 

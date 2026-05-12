@@ -22,7 +22,7 @@
               "activeView": "2",
               "id": "1"
             },
-            "size": 568
+            "size": 576
           },
           {
             "type": "leaf",
@@ -33,12 +33,12 @@
               "activeView": "3",
               "id": "2"
             },
-            "size": 568
+            "size": 575
           }
         ],
         "size": 380
       },
-      "width": 1146,
+      "width": 1161,
       "height": 380,
       "orientation": "HORIZONTAL"
     },
