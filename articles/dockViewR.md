@@ -11,6 +11,7 @@ object.
 Toggle code
 
 ``` r
+
 library(dockViewR)
 library(shiny)
 library(bslib)
@@ -201,6 +202,7 @@ server side to manually call
 Make sure that the panel is passed like so:
 
 ``` r
+
 add_panel(
   dock_id,
   panel = panel(
@@ -226,6 +228,7 @@ which expects the `id` of the panel to remove, in addition to the dock
 Toggle code
 
 ``` r
+
 library(dockViewR)
 library(shiny)
 library(bslib)
@@ -369,6 +372,7 @@ which expects:
 Toggle code
 
 ``` r
+
 library(shiny)
 library(bslib)
 library(dockViewR)
@@ -514,6 +518,7 @@ group **target** id, `to`. Position is relative to the `to`.
 Toggle code
 
 ``` r
+
 library(shiny)
 library(dockViewR)
 
@@ -619,6 +624,7 @@ worry about group ids, which are implicit.
 Toggle code
 
 ``` r
+
 library(shiny)
 library(dockViewR)
 
@@ -720,6 +726,7 @@ You can access the **state** of the dock which can return something
 like:
 
 ``` r
+
 dockViewR:::test_dock
 #> $grid
 #> $grid$root
@@ -886,6 +893,7 @@ dockViewR:::test_dock
 The dock state is a deeply nested list:
 
 ``` r
+
 str(dockViewR:::test_dock)
 #> List of 3
 #>  $ grid       :List of 4
@@ -1003,6 +1011,7 @@ updated.
 Toggle code
 
 ``` r
+
 library(shiny)
 library(bslib)
 library(dockViewR)

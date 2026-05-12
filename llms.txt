@@ -10,6 +10,7 @@ The latest version of the dockViewR package can be obtained from
 [CRAN](https://CRAN.R-project.org/package=dockViewR):
 
 ``` r
+
 # install.packages("pak")
 pak::pak("dockViewR")
 ```
@@ -17,6 +18,7 @@ pak::pak("dockViewR")
 Or, you can install the development version of dockViewR like so:
 
 ``` r
+
 pak::pak("cynkra/dockViewR")
 ```
 
@@ -25,6 +27,7 @@ pak::pak("cynkra/dockViewR")
 To run the demo app:
 
 ``` r
+
 library(dockViewR)
 shinyAppDir(system.file("examples/update_theme", package = "dockViewR"))
 ```
@@ -32,6 +35,7 @@ shinyAppDir(system.file("examples/update_theme", package = "dockViewR"))
 Toggle code
 
 ``` r
+
 library(shiny)
 library(bslib)
 library(visNetwork)
@@ -150,12 +154,12 @@ starting kit:
 ### Software pre-requisite
 
 To contribute to this project, you’ll need `npm`, `node`, and the R
-package [packer](https://github.com/JohnCoene/packer) to compile the
-JavaScript code. Please follow the guide
-[here](https://packer.john-coene.com/#/guide/installation). When you are
-in the project, do the following:
+package `{packer}` to compile the JavaScript code. Please follow the
+guide [here](https://packer.john-coene.com/#/guide/installation). When
+you are in the project, do the following:
 
 ``` r
+
 pak::pak("packer")
 # Restore JavaScript dependencies in package-lock.json (a bit like the renv.lock)
 packer::npm_install()
@@ -183,6 +187,7 @@ Whenever you are done with changing the JS script, you have to rebuild
 it:
 
 ``` r
+
 # Change the code and then rebundle
 packer::bundle("development") # For developement mode
 packer::bundle() # For production. Defaut!
