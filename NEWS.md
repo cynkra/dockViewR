@@ -2,7 +2,7 @@
 
 ## Breaking changes
 
-- Bumped `dockview-core` to v6.0.7. The `"replit"` theme was removed upstream (see [dockview v6 migration guide](https://dockview.dev/docs/overview/whats-new-v6)); pass another theme (e.g. `"light-spaced"`) instead.
+- Bumped `dockview-core` to v6.1.1. The `"replit"` theme was removed upstream (see [dockview v6 migration guide](https://dockview.dev/docs/overview/whats-new-v6)); pass another theme (e.g. `"light-spaced"`) instead.
 
 ## New features
 

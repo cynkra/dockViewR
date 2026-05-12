@@ -15,7 +15,7 @@
   "license": "ISC",
   "devDependencies": {
     "css-loader": "^7.1.2",
-    "dockview-core": "^6.0.7",
+    "dockview-core": "^6.1.1",
     "sass-loader": "^16.0.5",
     "style-loader": "^4.0.0",
     "webpack": "^5.98.0",
