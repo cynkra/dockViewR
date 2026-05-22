@@ -17,7 +17,7 @@ server <- function(input, output, session) {
   exportTestValues(
     panel_ids = get_panels_ids(dock_proxy),
     active_group = get_active_group(dock_proxy),
-    grid = get_grid(dock_proxy)
+    grid = normalize_dock_dims(get_grid(dock_proxy))
   )
   output$dock <- renderDockView({
     dock_view(

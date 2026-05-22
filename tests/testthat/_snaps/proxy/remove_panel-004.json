@@ -17,13 +17,10 @@
               "activeView": "1",
               "id": "1"
             },
-            "size": 1143
+            "size": 1
           }
-        ],
-        "size": 527
+        ]
       },
-      "width": 1143,
-      "height": 527,
       "orientation": "HORIZONTAL"
     },
     "panel_ids": "1"

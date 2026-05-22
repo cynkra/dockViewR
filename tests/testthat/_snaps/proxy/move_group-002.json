@@ -15,7 +15,7 @@
               "activeView": "4",
               "id": "2"
             },
-            "size": 387
+            "size": 0.34
           },
           {
             "type": "branch",
@@ -30,7 +30,7 @@
                   "activeView": "6",
                   "id": "3"
                 },
-                "size": 95
+                "size": 0.26
               },
               {
                 "type": "leaf",
@@ -42,16 +42,12 @@
                   "activeView": "2",
                   "id": "1"
                 },
-                "size": 275
+                "size": 0.74
               }
-            ],
-            "size": 764
+            ]
           }
-        ],
-        "size": 380
+        ]
       },
-      "width": 1161,
-      "height": 380,
       "orientation": "HORIZONTAL"
     },
     "panel_ids": [
