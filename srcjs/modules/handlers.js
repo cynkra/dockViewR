@@ -1,4 +1,15 @@
-import { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2 } from '../modules/proxy';
+import {
+  addPanel,
+  removePanel,
+  selectPanel,
+  movePanel,
+  saveDock,
+  moveGroup,
+  moveGroup2,
+  addEdgeGroup,
+  removeEdgeGroup,
+  setEdgeGroupVisible
+} from '../modules/proxy';
 import { matchTheme } from '../modules/themes';
 
 const deserializeFunction = (obj) => {
@@ -82,6 +93,19 @@ const setShinyHandlers = (id, mode, api) => {
   // Set title
   Shiny.addCustomMessageHandler(id + '_set-panel-title', (m) => {
     api.getPanel(m.id).api.setTitle(m.title);
+  })
+
+  // Edge groups
+  Shiny.addCustomMessageHandler(id + '_add-edge-group', (m) => {
+    addEdgeGroup(m, mode, api);
+  })
+
+  Shiny.addCustomMessageHandler(id + '_rm-edge-group', (m) => {
+    removeEdgeGroup(m, mode, api);
+  })
+
+  Shiny.addCustomMessageHandler(id + '_set-edge-group-visible', (m) => {
+    setEdgeGroupVisible(m, mode, api);
   })
 }
 

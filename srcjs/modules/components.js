@@ -99,6 +99,14 @@ class CustomTab {
   }
 }
 
+// Edge groups cannot be maximised, floated or popped out. They also have
+// rotated headers that the default action layout does not handle, so we
+// skip rendering the standard header actions on them.
+const isEdgeGroup = (config) => {
+  const loc = config && config.api && config.api.location;
+  return !!loc && loc.type === 'edge';
+}
+
 class RightHeader {
   get element() {
     return this._element
@@ -109,6 +117,7 @@ class RightHeader {
   }
 
   init(config) {
+    if (isEdgeGroup(config)) return null;
     this._element.style = 'height: 100%; padding: 8px'
     this._element.innerHTML = '<i class="fas fa-expand" role="presentation" aria-label="expand icon"></i>'
     this._element.addEventListener('click', (e) => {
@@ -139,6 +148,7 @@ class LeftHeader {
   }
 
   init(config) {
+    if (isEdgeGroup(config)) return null;
     // If addTab is false, we do not need to render this component
     let params = config.group._params.params;
     let dockId = getDockId(config);

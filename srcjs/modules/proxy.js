@@ -145,6 +145,24 @@ const moveGroup2 = (m, mode, api) => {
   }, mode)
 }
 
+const addEdgeGroup = (m, mode, api) => {
+  evalDockView(() => {
+    api.addEdgeGroup(m.position, m.options);
+  }, mode);
+}
+
+const removeEdgeGroup = (m, mode, api) => {
+  evalDockView(() => {
+    api.removeEdgeGroup(m.position);
+  }, mode);
+}
+
+const setEdgeGroupVisible = (m, mode, api) => {
+  evalDockView(() => {
+    api.setEdgeGroupVisible(m.position, m.visible);
+  }, mode);
+}
+
 const serializeFunction = (func) => {
   if (typeof func === 'function') {
     return {
@@ -193,4 +211,15 @@ const saveDock = (id, api) => {
   Shiny.setInputValue(id + "_state", state);
 }
 
-export { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2 };
+export {
+  addPanel,
+  removePanel,
+  selectPanel,
+  movePanel,
+  saveDock,
+  moveGroup,
+  moveGroup2,
+  addEdgeGroup,
+  removeEdgeGroup,
+  setEdgeGroupVisible
+};

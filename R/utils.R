@@ -128,7 +128,13 @@ validate_position_names <- function(id, position) {
 
 #' @keywords internal
 validate_position_direction <- function(id, position) {
-  if (!(position[["direction"]] %in% valid_directions)) {
+  direction <- position[["direction"]]
+  # `direction` is optional when targeting a `referenceGroup` (e.g. an edge
+  # group): the panel is added inside that group with no further placement.
+  if (is.null(direction)) {
+    return(invisible(NULL))
+  }
+  if (!(direction %in% valid_directions)) {
     stop(sprintf(
       "<Panel (ID: %s)>: `direction` must be one of %s.",
       id,

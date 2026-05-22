@@ -7,6 +7,7 @@
 ## New features
 
 - Expose the new dockview v6 themes: `"nord"`, `"nord-spaced"`, `"catppuccin-mocha"`, `"catppuccin-mocha-spaced"`, `"monokai"`, `"solarized-light"`, `"solarized-light-spaced"`, `"github-dark"`, `"github-dark-spaced"`, `"github-light"`, `"github-light-spaced"`.
+- Add support for [edge groups](https://dockview.dev/docs/core/groups/edgeGroups): groups pinned to one of the four edges (left/right/top/bottom) of the dock. New `edge_group()` constructor, new `edge_groups` argument to `dock_view()`, and new proxy methods `add_edge_group()`, `remove_edge_group()`, `set_edge_group_visible()`. Panels can reference an edge group through `position = list(referenceGroup = "<edge-group-id>")`. See `inst/examples/edge_groups/app.R`.
 
 ## Bug fixes
 

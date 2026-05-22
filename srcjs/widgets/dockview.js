@@ -3,7 +3,7 @@ import 'dockview-core/dist/styles/dockview.css';
 import { setDockViewCallbacks } from '../modules/callbacks';
 import { saveDock } from '../modules/proxy';
 import { setShinyHandlers } from '../modules/handlers';
-import { instantiateDock, initDockPanels } from '../modules/dock';
+import { instantiateDock, initDockPanels, initEdgeGroups } from '../modules/dock';
 
 HTMLWidgets.widget({
 
@@ -21,6 +21,10 @@ HTMLWidgets.widget({
 
         // Instantiate dockView
         api = instantiateDock(id, x);
+
+        // Init edge groups before panels so that panels can reference
+        // edge group ids via position.referenceGroup
+        initEdgeGroups(x, api);
 
         // Init state
         saveDock(id, api)
