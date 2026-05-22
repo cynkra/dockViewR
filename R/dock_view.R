@@ -21,6 +21,11 @@
 #' See [default_add_tab_callback()]. By default, the callback
 #' sets a Shiny input `input[["<dock_ID>_panel-to-add"]]`
 #' so you can create observers with custom logic.
+#' @param edge_groups Optional unnamed list of [edge_group()] objects to
+#' pin to the edges (left/right/top/bottom) of the dock at initialisation.
+#' Panels may reference an edge group via
+#' `position = list(referenceGroup = "<edge-group-id>")`. See
+#' \url{https://dockview.dev/docs/core/groups/edgeGroups}.
 #' @param width Widget width.
 #' @param height Widget height.
 #' @param elementId When used outside Shiny.
@@ -117,6 +122,7 @@ dock_view <- function(
     "github-light-spaced"
   ),
   add_tab = new_add_tab_plugin(),
+  edge_groups = list(),
   width = NULL,
   height = NULL,
   elementId = NULL
@@ -129,6 +135,8 @@ dock_view <- function(
   ids <- check_panel_ids(panels)
   # check reference panels ids
   check_panel_refs(panels, ids)
+  # check edge groups
+  check_edge_groups(edge_groups)
 
   if (!is_add_tab_plugin(add_tab)) {
     stop(
@@ -149,6 +157,7 @@ dock_view <- function(
     panels = unname(panels),
     # camelCase for JS ...
     addTab = add_tab,
+    edgeGroups = unname(edge_groups),
     mode = get_dock_view_mode(),
     ...
   )

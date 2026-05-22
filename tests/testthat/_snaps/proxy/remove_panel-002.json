@@ -18,7 +18,7 @@
               "activeView": "1",
               "id": "1"
             },
-            "size": 638
+            "size": 0.5600000000000001
           },
           {
             "type": "leaf",
@@ -29,13 +29,10 @@
               "activeView": "3",
               "id": "3"
             },
-            "size": 495
+            "size": 0.44
           }
-        ],
-        "size": 527
+        ]
       },
-      "width": 1143,
-      "height": 527,
       "orientation": "HORIZONTAL"
     },
     "panel_ids": [

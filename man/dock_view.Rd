@@ -12,6 +12,7 @@ dock_view(
     "solarized-light", "solarized-light-spaced", "github-dark", "github-dark-spaced",
     "github-light", "github-light-spaced"),
   add_tab = new_add_tab_plugin(),
+  edge_groups = list(),
   width = NULL,
   height = NULL,
   elementId = NULL
@@ -36,6 +37,12 @@ JavaScript function passed with \link[htmlwidgets]{JS}.
 See \code{\link[=default_add_tab_callback]{default_add_tab_callback()}}. By default, the callback
 sets a Shiny input \code{input[["<dock_ID>_panel-to-add"]]}
 so you can create observers with custom logic.}
+
+\item{edge_groups}{Optional unnamed list of \code{\link[=edge_group]{edge_group()}} objects to
+pin to the edges (left/right/top/bottom) of the dock at initialisation.
+Panels may reference an edge group via
+\code{position = list(referenceGroup = "<edge-group-id>")}. See
+\url{https://dockview.dev/docs/core/groups/edgeGroups}.}
 
 \item{width}{Widget width.}
 

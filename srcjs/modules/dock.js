@@ -1,7 +1,7 @@
 import { createDockview } from "dockview-core";
 import { matchTheme } from './themes.js';
 import { Panel, RightHeader, LeftHeader, CustomTab, DefaultTab } from './components.js';
-import { addPanel } from './proxy.js';
+import { addPanel, addEdgeGroup } from './proxy.js';
 
 const instantiateDock = (id, x) => {
   return (createDockview(document.getElementById(id), {
@@ -29,7 +29,7 @@ const instantiateDock = (id, x) => {
     },
     // Spread operator to include all other options from x
     ...Object.keys(x).reduce((acc, key) => {
-      if (!['theme', 'addTab'].includes(key)) {
+      if (!['theme', 'addTab', 'edgeGroups'].includes(key)) {
         acc[key] = x[key];
       }
       return acc;
@@ -43,4 +43,11 @@ const initDockPanels = (x, api) => {
   });
 }
 
-export { instantiateDock, initDockPanels };
+const initEdgeGroups = (x, api) => {
+  if (!Array.isArray(x.edgeGroups) || x.edgeGroups.length === 0) return;
+  x.edgeGroups.forEach((eg) => {
+    addEdgeGroup(eg, x.mode, api);
+  });
+}
+
+export { instantiateDock, initDockPanels, initEdgeGroups };

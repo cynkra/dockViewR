@@ -254,3 +254,67 @@ validate_move_targets <- function(from, to, context) {
     ))
   }
 }
+
+#' Dockview Edge Group Operations
+#'
+#' Functions to dynamically manipulate edge groups in a dockview instance.
+#' Edge groups are pinned to one of the four edges (left/right/top/bottom)
+#' of the dock. See \url{https://dockview.dev/docs/core/groups/edgeGroups}.
+#'
+#' @param dock Dock proxy object created with [dock_view_proxy()].
+#' @param edge_group An edge group object created with [edge_group()] (for
+#'   `add_edge_group()`).
+#' @param position Edge position. One of `"left"`, `"right"`, `"top"`,
+#'   `"bottom"`.
+#' @param visible Logical. Whether the edge group should be visible.
+#'
+#' @return All functions return the dock proxy object invisibly, allowing
+#'   for method chaining.
+#'
+#' @details
+#' - `add_edge_group()`: Pins a new edge group to the requested edge.
+#' - `remove_edge_group()`: Removes the edge group pinned to `position`.
+#' - `set_edge_group_visible()`: Shows or hides the edge group at
+#'   `position` without removing it.
+#'
+#' @seealso [edge_group()]
+#' @export
+#' @rdname edge-group
+add_edge_group <- function(dock, edge_group) {
+  if (!is_edge_group(edge_group)) {
+    stop("`edge_group` must be created with `edge_group()`.")
+  }
+
+  send_dock_message(
+    dock,
+    "add-edge-group",
+    list(
+      position = edge_group[["position"]],
+      options = edge_group[["options"]]
+    )
+  )
+}
+
+#' @export
+#' @rdname edge-group
+remove_edge_group <- function(dock, position) {
+  validate_edge_position(position)
+  send_dock_message(dock, "rm-edge-group", list(position = position))
+}
+
+#' @export
+#' @rdname edge-group
+set_edge_group_visible <- function(dock, position, visible) {
+  validate_edge_position(position)
+  if (!is.logical(visible) || length(visible) != 1 || is.na(visible)) {
+    stop(sprintf(
+      "<EdgeGroup (position: %s)>: `visible` must be a single boolean value.",
+      position
+    ))
+  }
+  send_dock_message(
+    dock,
+    "set-edge-group-visible",
+    list(position = position, visible = visible)
+  )
+}
