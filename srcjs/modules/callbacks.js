@@ -35,7 +35,37 @@ const setDockViewCallbacks = (id, api) => {
   // thread on boards with many resize-sensitive widgets (e.g. ECharts). The
   // debounce runs the expensive work once, after the layout has settled,
   // instead of on every intermediate frame.
+  // The debounce alone only PACES the loop, it does not BREAK it: the work
+  // below dispatches a global `resize` that nudges widgets, which nudge the
+  // layout, which re-fires this handler. On a fast client the widget sizes
+  // converge in a cycle or two and dockview stops emitting; on a slow client
+  // (Safari, CPU contention) they never converge -> it churns forever,
+  // continuously re-rendering Shiny outputs (R pegged at 100%, laggy view
+  // switches). Two guards actually break the feedback:
+  //   (1) coarse signature: skip when the layout STRUCTURE + integer-rounded
+  //       sizes are unchanged since we last acted -- the sub-pixel size drift
+  //       the loop feeds on is then a no-op, so a pure echo terminates;
+  //   (2) re-entrancy window: ignore the onDidLayoutChange echo our own resize
+  //       provokes for a short period right after we act.
+  // Genuine changes (real resize, add/remove, restore) still pass both.
+  let lastSig = null;
+  let suppressUntil = 0;
+  const layoutSig = () => {
+    try {
+      return JSON.stringify(api.toJSON(), (k, v) =>
+        ((k === 'width' || k === 'height' || k === 'size') && typeof v === 'number')
+          ? Math.round(v) : v);
+    } catch (e) {
+      return null;
+    }
+  };
   const onLayoutSettled = debounce(() => {
+    const now = Date.now();
+    if (now < suppressUntil) return;          // our own resize echo -- ignore
+    const sig = layoutSig();
+    if (sig !== null && sig === lastSig) return; // no real change -- break loop
+    lastSig = sig;
+    suppressUntil = now + 600;                 // absorb the echo from our resize
     window.dispatchEvent(new Event('resize'));
     if (HTMLWidgets.shinyMode) {
       saveDock(id, api)
