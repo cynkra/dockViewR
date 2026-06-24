@@ -14,8 +14,9 @@ test_that("_state-source tags programmatic vs user layout changes", {
   )
   app$wait_for_idle()
 
-  # The initial render is not server-driven.
-  expect_identical(app$get_value(input = "dock_state-source"), "client")
+  # The initial layout is produced by the server (the panels passed to
+  # dock_view()), not a user gesture.
+  expect_identical(app$get_value(input = "dock_state-source"), "server")
 
   # Stash the {a, b} layout to restore later.
   app$click("save")
