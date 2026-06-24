@@ -23,7 +23,7 @@ const debounce = (fn, wait) => {
 // echo terminates -- independent of client speed, unlike a fixed time window,
 // and without dropping any genuine change (a real resize / add / remove moves
 // sizes well beyond RESIZE_EPS and still passes).
-const RESIZE_EPS = 2;       // px; below this a size delta is drift, not a change
+const RESIZE_EPS = 1;       // px; <= this is sub-pixel drift (absorbed), > this is real
 const SIZE_KEYS = new Set(['width', 'height', 'size']);
 
 // Deep-equal two `toJSON()` layouts, treating panel sizes as equal within `eps`
