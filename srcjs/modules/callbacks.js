@@ -1,18 +1,5 @@
 import { saveDock } from '../modules/proxy';
 
-// Trailing-edge debounce: collapse a burst of calls into a single call that
-// runs `wait` ms after the last one.
-const debounce = (fn, wait) => {
-  let timer = null;
-  return function (...args) {
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(() => {
-      timer = null;
-      fn.apply(this, args);
-    }, wait);
-  };
-};
-
 // `onDidLayoutChange` carries no cause: dockview (since the 4.10.0
 // `renderer: 'always'` fix) re-fires it while a layout is still settling, and
 // the global `resize` we dispatch to re-fit widgets nudges them by a fraction
@@ -55,12 +42,10 @@ const setDockViewCallbacks = (id, api) => {
     }, 1);
   })
   // Resize panel content on layout change (so plots / widgets re-fit) and sync
-  // the dock state to Shiny. Debounced so a burst of intermediate frames while
-  // the layout settles collapses to one run; `sameLayout` then breaks the
-  // resize feedback loop by skipping when nothing changed beyond sub-pixel
-  // drift (see the note on RESIZE_EPS above).
+  // the dock state to Shiny. `sameLayout` breaks the resize feedback loop by
+  // skipping when nothing changed beyond sub-pixel drift (see RESIZE_EPS above).
   let lastLayout = null;
-  const onLayoutSettled = debounce(() => {
+  const onLayoutChange = () => {
     let layout = null;
     try {
       layout = api.toJSON();
@@ -81,8 +66,8 @@ const setDockViewCallbacks = (id, api) => {
         Shiny.bindAll($(pane));
       })
     }
-  }, 250);
-  api.onDidLayoutChange(onLayoutSettled)
+  };
+  api.onDidLayoutChange(onLayoutChange)
 
   // When restored, we need to sync the new state for Shiny
   api.onDidLayoutFromJSON(() => {
