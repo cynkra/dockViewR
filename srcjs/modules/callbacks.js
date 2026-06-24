@@ -13,6 +13,38 @@ const debounce = (fn, wait) => {
   };
 };
 
+// `onDidLayoutChange` carries no cause: dockview (since the 4.10.0
+// `renderer: 'always'` fix) re-fires it while a layout is still settling, and
+// the global `resize` we dispatch to re-fit widgets nudges them by a fraction
+// of a pixel, which re-fires it again -- a feedback loop that pegs the main
+// thread on boards with many resize-sensitive widgets (e.g. ECharts). We break
+// it by acting only on a real change: same structure with every panel size
+// within RESIZE_EPS of the layout we last acted on is a no-op, so the sub-pixel
+// echo terminates -- independent of client speed, unlike a fixed time window,
+// and without dropping any genuine change (a real resize / add / remove moves
+// sizes well beyond RESIZE_EPS and still passes).
+const RESIZE_EPS = 2;       // px; below this a size delta is drift, not a change
+const SIZE_KEYS = new Set(['width', 'height', 'size']);
+
+// Deep-equal two `toJSON()` layouts, treating panel sizes as equal within `eps`
+// px; structure (ids, grid, orientation, focus) must match exactly.
+const sameLayout = (a, b, eps) => {
+  if (typeof a !== typeof b) return false;
+  if (a === null || b === null || typeof a !== 'object') return a === b;
+  if (Array.isArray(a) !== Array.isArray(b)) return false;
+  const keys = Object.keys(a);
+  if (keys.length !== Object.keys(b).length) return false;
+  for (const k of keys) {
+    if (!(k in b)) return false;
+    if (SIZE_KEYS.has(k) && typeof a[k] === 'number' && typeof b[k] === 'number') {
+      if (Math.abs(a[k] - b[k]) > eps) return false;
+    } else if (!sameLayout(a[k], b[k], eps)) {
+      return false;
+    }
+  }
+  return true;
+};
+
 const setDockViewCallbacks = (id, api) => {
 
   // Work around https://github.com/mathuo/dockview/issues/1031
@@ -22,50 +54,24 @@ const setDockViewCallbacks = (id, api) => {
       e.panel.api.setSize(e.panel.api.height, e.panel.api.width)
     }, 1);
   })
-  // Resize panel content on layout change
-  // (useful so that plots or widgets resize correctly)
-  // Also update the dock state.
-  //
-  // This handler is debounced because dockview (since the 4.10.0
-  // `renderer: 'always'` oscillation fix) emits `onDidLayoutChange` many times
-  // while a layout is still settling. Each run dispatches a global `resize`
-  // (which makes every htmlwidget on the page redraw) and re-binds every panel
-  // via `Shiny.bindAll`. Dispatching `resize` nudges widgets, which nudges the
-  // layout, which re-fires this handler -- a feedback loop that pegs the main
-  // thread on boards with many resize-sensitive widgets (e.g. ECharts). The
-  // debounce runs the expensive work once, after the layout has settled,
-  // instead of on every intermediate frame.
-  // The debounce alone only PACES the loop, it does not BREAK it: the work
-  // below dispatches a global `resize` that nudges widgets, which nudge the
-  // layout, which re-fires this handler. On a fast client the widget sizes
-  // converge in a cycle or two and dockview stops emitting; on a slow client
-  // (Safari, CPU contention) they never converge -> it churns forever,
-  // continuously re-rendering Shiny outputs (R pegged at 100%, laggy view
-  // switches). Two guards actually break the feedback:
-  //   (1) coarse signature: skip when the layout STRUCTURE + integer-rounded
-  //       sizes are unchanged since we last acted -- the sub-pixel size drift
-  //       the loop feeds on is then a no-op, so a pure echo terminates;
-  //   (2) re-entrancy window: ignore the onDidLayoutChange echo our own resize
-  //       provokes for a short period right after we act.
-  // Genuine changes (real resize, add/remove, restore) still pass both.
-  let lastSig = null;
-  let suppressUntil = 0;
-  const layoutSig = () => {
-    try {
-      return JSON.stringify(api.toJSON(), (k, v) =>
-        ((k === 'width' || k === 'height' || k === 'size') && typeof v === 'number')
-          ? Math.round(v) : v);
-    } catch (e) {
-      return null;
-    }
-  };
+  // Resize panel content on layout change (so plots / widgets re-fit) and sync
+  // the dock state to Shiny. Debounced so a burst of intermediate frames while
+  // the layout settles collapses to one run; `sameLayout` then breaks the
+  // resize feedback loop by skipping when nothing changed beyond sub-pixel
+  // drift (see the note on RESIZE_EPS above).
+  let lastLayout = null;
   const onLayoutSettled = debounce(() => {
-    const now = Date.now();
-    if (now < suppressUntil) return;          // our own resize echo -- ignore
-    const sig = layoutSig();
-    if (sig !== null && sig === lastSig) return; // no real change -- break loop
-    lastSig = sig;
-    suppressUntil = now + 600;                 // absorb the echo from our resize
+    let layout = null;
+    try {
+      layout = api.toJSON();
+    } catch (e) {
+      layout = null;                           // unreadable -- fall through and act
+    }
+    if (layout !== null && lastLayout !== null &&
+        sameLayout(lastLayout, layout, RESIZE_EPS)) {
+      return;                                  // only drift since we last acted
+    }
+    lastLayout = layout;
     window.dispatchEvent(new Event('resize'));
     if (HTMLWidgets.shinyMode) {
       saveDock(id, api)
