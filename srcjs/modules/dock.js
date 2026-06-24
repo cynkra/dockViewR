@@ -1,4 +1,4 @@
-import { createDockview } from "dockview-core";
+import { createDockview } from "dockview";
 import { matchTheme } from './themes.js';
 import { Panel, RightHeader, LeftHeader, CustomTab, DefaultTab } from './components.js';
 import { addPanel } from './proxy.js';

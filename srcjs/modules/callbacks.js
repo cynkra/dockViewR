@@ -51,10 +51,11 @@ const setDockViewCallbacks = (id, api) => {
     }
   })
 
+  // v7: onDidActivePanelChange emits { panel, origin } instead of the panel
   api.onDidActivePanelChange((e) => {
     if (HTMLWidgets.shinyMode) {
-      if (e === undefined) return null
-      Shiny.setInputValue(id + '_active-panel', e.id);
+      if (e.panel === undefined) return null
+      Shiny.setInputValue(id + '_active-panel', e.panel.id);
     }
   })
 

@@ -2,6 +2,7 @@
 
 ## Breaking changes
 
+- Bumped the bundled dockview engine to v7.0.2. Upstream renamed the npm package: the full-featured vanilla entry point moved from `dockview-core` to `dockview` (see [dockview v7 migration guide](https://dockview.dev/docs/overview/migrating-to-v7)). This is internal to the widget build; the R API is unchanged. All themes and the `input[["<dock>_active-panel"]]` sync continue to work.
 - Bumped `dockview-core` to v6.6.1. The `"replit"` theme was removed upstream in v6 (see [dockview v6 migration guide](https://dockview.dev/docs/overview/whats-new-v6)); pass another theme (e.g. `"light-spaced"`) instead.
 
 ## New features

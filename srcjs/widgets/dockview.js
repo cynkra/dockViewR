@@ -1,5 +1,5 @@
 import 'widgets';
-import 'dockview-core/dist/styles/dockview.css';
+import 'dockview/dist/styles/dockview.css';
 import { setDockViewCallbacks } from '../modules/callbacks';
 import { saveDock } from '../modules/proxy';
 import { setShinyHandlers } from '../modules/handlers';

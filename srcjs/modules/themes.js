@@ -17,7 +17,7 @@ import {
     themeSolarizedLight,
     themeSolarizedLightSpaced,
     themeVisualStudio
-} from "dockview-core";
+} from "dockview";
 
 const themes = {
     'light': themeLight,
