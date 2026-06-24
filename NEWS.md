@@ -1,3 +1,9 @@
+# dockViewR 0.3.0.9000
+
+## Bug fixes
+
+- Debounced the `onDidLayoutChange` handler (resize dispatch + Shiny re-bind) so it runs once after the layout settles instead of on every intermediate frame. This stops a main-thread-pegging feedback loop on boards with many resize-sensitive widgets (e.g. ECharts), where each layout change dispatched a global `resize` that redrew every widget, which nudged the layout and re-fired the handler.
+
 # dockViewR 0.3.0
 
 ## Breaking changes

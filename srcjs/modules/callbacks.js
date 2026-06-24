@@ -1,5 +1,18 @@
 import { saveDock } from '../modules/proxy';
 
+// Trailing-edge debounce: collapse a burst of calls into a single call that
+// runs `wait` ms after the last one.
+const debounce = (fn, wait) => {
+  let timer = null;
+  return function (...args) {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+      timer = null;
+      fn.apply(this, args);
+    }, wait);
+  };
+};
+
 const setDockViewCallbacks = (id, api) => {
 
   // Work around https://github.com/mathuo/dockview/issues/1031
@@ -12,7 +25,17 @@ const setDockViewCallbacks = (id, api) => {
   // Resize panel content on layout change
   // (useful so that plots or widgets resize correctly)
   // Also update the dock state.
-  api.onDidLayoutChange(() => {
+  //
+  // This handler is debounced because dockview (since the 4.10.0
+  // `renderer: 'always'` oscillation fix) emits `onDidLayoutChange` many times
+  // while a layout is still settling. Each run dispatches a global `resize`
+  // (which makes every htmlwidget on the page redraw) and re-binds every panel
+  // via `Shiny.bindAll`. Dispatching `resize` nudges widgets, which nudges the
+  // layout, which re-fires this handler -- a feedback loop that pegs the main
+  // thread on boards with many resize-sensitive widgets (e.g. ECharts). The
+  // debounce runs the expensive work once, after the layout has settled,
+  // instead of on every intermediate frame.
+  const onLayoutSettled = debounce(() => {
     window.dispatchEvent(new Event('resize'));
     if (HTMLWidgets.shinyMode) {
       saveDock(id, api)
@@ -22,7 +45,8 @@ const setDockViewCallbacks = (id, api) => {
         Shiny.bindAll($(pane));
       })
     }
-  })
+  }, 250);
+  api.onDidLayoutChange(onLayoutSettled)
 
   // When restored, we need to sync the new state for Shiny
   api.onDidLayoutFromJSON(() => {
