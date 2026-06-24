@@ -1,4 +1,4 @@
-# dockViewR 0.3.0.9000
+# dockViewR (development version)
 
 ## Bug fixes
 
