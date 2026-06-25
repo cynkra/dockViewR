@@ -1,3 +1,9 @@
+# dockViewR (development version)
+
+## Bug fixes
+
+- Broke the `onDidLayoutChange → resize → onDidLayoutChange` feedback loop that pegged the main thread on boards with many resize-sensitive widgets (e.g. ECharts), where each layout change dispatched a global `resize` that redrew every widget, which nudged the layout and re-fired the handler. The handler now acts only on a real change: a layout with the same structure and every panel size within a small tolerance of the one it last acted on is a no-op, so the sub-pixel drift the loop fed on terminates regardless of client speed.
+
 # dockViewR 0.3.0
 
 ## Breaking changes
