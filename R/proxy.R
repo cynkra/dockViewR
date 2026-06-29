@@ -104,6 +104,11 @@ update_dock_view <- function(
 #' @param from Source group/panel ID (for move operations).
 #' @param to Destination group/panel ID (for move operations).
 #' @param title New panel title.
+#' @param size Target size for a group along its splitview axis, as a fraction
+#'   between 0 and 1 of that splitview (for `set_size`). The other groups in the
+#'   split keep their relative sizes and share the remaining space. Sizing is
+#'   best-effort: dockview's minimum group size can clamp a group, in which case
+#'   the requested fraction is approximate.
 #' @param ... Additional options (currently unused).
 #'
 #' @return All functions return the dock proxy object invisibly, allowing for method chaining.
@@ -116,6 +121,8 @@ update_dock_view <- function(
 #' - `move_panel()`: Moves a panel to a new position
 #' - `move_group()`: Moves a group using group IDs
 #' - `move_group2()`: Moves a group using panel IDs
+#' - `set_size()`: Resizes the group a panel belongs to, as a fraction of its
+#'   splitview; the other groups in the split keep their relative sizes
 #'
 #' @seealso [panel()]
 #' @export
@@ -242,6 +249,32 @@ move_group2 <- function(
       id = from,
       options = dropNulls(options)
     )
+  )
+}
+
+#' @export
+#' @rdname panel-operations
+set_size <- function(dock, id, size) {
+
+  panel_id <- as.character(id)
+
+  valid <- is.numeric(size) &&
+    length(size) == 1L &&
+    !is.na(size) &&
+    size > 0 &&
+    size < 1
+
+  if (!valid) {
+    stop(sprintf(
+      "<Panel (ID: %s)>: `size` must be a single fraction between 0 and 1.",
+      panel_id
+    ))
+  }
+
+  send_dock_message(
+    dock,
+    "set-size",
+    list(id = panel_id, size = size)
   )
 }
 

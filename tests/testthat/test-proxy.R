@@ -389,3 +389,66 @@ test_that("set_panel_title app works", {
   app$wait_for_idle()
   app$expect_values(input = "title", output = TRUE, export = TRUE)
 })
+
+test_that("set_size works", {
+  session$input[["dock_state"]] <- test_dock
+  dock_proxy <- dock_view_proxy("dock", session = session)
+
+  expect_snapshot(error = TRUE, {
+    set_size(dock_proxy, id = "test", size = 1.5)
+    set_size(dock_proxy, id = "test", size = 0)
+    set_size(dock_proxy, id = "test", size = "wide")
+  })
+
+  set_size(dock_proxy, id = "test", size = 0.6)
+  expect_identical(session$lastCustomMessage$type, "dock_set-size")
+  expect_type(session$lastCustomMessage$message, "list")
+  expect_identical(session$lastCustomMessage$message$id, "test")
+  expect_identical(session$lastCustomMessage$message$size, 0.6)
+})
+
+test_that("set_size app works", {
+  skip_on_cran()
+
+  appdir <- system.file(package = "dockViewR", "examples", "set_size")
+
+  app <- AppDriver$new(
+    appdir,
+    name = "set_size",
+    seed = 121,
+    height = 752,
+    width = 1211
+  )
+  app$wait_for_idle()
+
+  fractions <- function() {
+    leaves <- app$get_value(export = "grid")$root$data
+    sizes <- vapply(leaves, `[[`, numeric(1), "size")
+    views <- vapply(leaves, function(leaf) unlist(leaf$data$views)[1], character(1))
+    setNames(sizes / sum(sizes), views)
+  }
+
+  app$click("skew")
+  app$wait_for_idle()
+  expect_equal(fractions()[["A"]], 0.5, tolerance = 0.05)
+  expect_identical(app$get_value(export = "state_source"), "server")
+
+  # Sizing C to 0.6 keeps A and B's relative sizes: they were 2:1 (0.5 vs 0.25)
+  # and stay 2:1 while sharing the remaining 0.4.
+  app$click("resize")
+  app$wait_for_idle()
+  f <- fractions()
+  expect_equal(f[["C"]], 0.6, tolerance = 0.05)
+  expect_equal(f[["A"]] / f[["B"]], 2, tolerance = 0.1)
+  expect_identical(app$get_value(export = "state_source"), "server")
+
+  # Idempotent: repeating the identical resize must not creep the siblings.
+  # (Regression for the gap-coordinate drift where A grew and B shrank on every
+  # click because `setSize`'s cell allocation was computed in the wrong space.)
+  settled <- fractions()
+  for (i in 1:3) {
+    app$click("resize")
+    app$wait_for_idle()
+  }
+  expect_equal(fractions(), settled, tolerance = 0.01)
+})

@@ -1,5 +1,9 @@
 # dockViewR (development version)
 
+## New features
+
+- Added `set_size()` to resize the group a panel belongs to from the server. The caller gives a single target fraction of the group's splitview along its axis; the other groups in that split keep their relative sizes and share the remaining space.
+
 ## Bug fixes
 
 - `input$<dock_id>_state` is now emitted once per layout gesture rather than on every `onDidLayoutChange` frame. The per-frame stream was the source of the `onDidLayoutChange → resize → onDidLayoutChange` feedback loop that pegged the main thread on boards with many resize-sensitive widgets (e.g. ECharts); the layout-tolerance heuristic that previously absorbed its sub-pixel echo is gone. Each discrete gesture (panel add / remove / move, group add / remove, active panel / group change, maximize, restore, and the pointer-up that ends a sash drag) coalesces into a single update, so a compound gesture that fires several dockview events still emits one settled `_state` carrying the final layout — consumers no longer need to debounce the burst themselves. Widget re-fit is likewise driven off the gestures, not the layout stream. The initial layout is captured once; a container / window resize has no gesture boundary, so it is debounced and persisted once it settles, so `_state` always reflects the live dock. `input$<dock_id>_state-source` tags that resize update `"client"` (environmental, not server-initiated).
