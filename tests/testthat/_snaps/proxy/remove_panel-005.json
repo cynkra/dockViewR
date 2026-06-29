@@ -4,18 +4,6 @@
   },
   "export": {
     "active_group": null,
-    "grid": {
-      "root": {
-        "type": "branch",
-        "data": [
-
-        ],
-        "size": 526.5
-      },
-      "width": 1143,
-      "height": 526.5,
-      "orientation": "HORIZONTAL"
-    },
     "panel_ids": [
 
     ]

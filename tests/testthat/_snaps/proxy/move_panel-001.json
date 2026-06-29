@@ -4,30 +4,6 @@
   },
   "export": {
     "active_group": "1",
-    "grid": {
-      "root": {
-        "type": "branch",
-        "data": [
-          {
-            "type": "leaf",
-            "data": {
-              "views": [
-                "1",
-                "2",
-                "3"
-              ],
-              "activeView": "3",
-              "id": "1"
-            },
-            "size": 100
-          }
-        ],
-        "size": 0
-      },
-      "width": 0,
-      "height": 0,
-      "orientation": "HORIZONTAL"
-    },
     "panel_ids": [
       "1",
       "2",

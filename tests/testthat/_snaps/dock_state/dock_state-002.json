@@ -9,39 +9,6 @@
       "1": "2",
       "2": "3"
     },
-    "grid": {
-      "root": {
-        "type": "branch",
-        "data": [
-          {
-            "type": "leaf",
-            "data": {
-              "views": [
-                "2"
-              ],
-              "activeView": "2",
-              "id": "1"
-            },
-            "size": 568
-          },
-          {
-            "type": "leaf",
-            "data": {
-              "views": [
-                "3"
-              ],
-              "activeView": "3",
-              "id": "2"
-            },
-            "size": 568
-          }
-        ],
-        "size": 380
-      },
-      "width": 1146,
-      "height": 380,
-      "orientation": "HORIZONTAL"
-    },
     "group_ids": [
       "1",
       "2"
