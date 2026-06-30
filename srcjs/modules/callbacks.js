@@ -22,11 +22,13 @@ const setDockViewCallbacks = (id, api) => {
   };
 
   // While a group is maximized, `api.toJSON()` (read by saveDock) re-fires
-  // onDidMaximizedGroupChange -- it momentarily toggles the maximized state to
-  // serialise -- and our resize re-fit does too. Acting on those re-entrant
-  // events would loop the persist with itself. `persisting` marks the window in
-  // which a flush is running; events that fire inside it are byproducts of the
-  // persist, not gestures, so they are ignored. (Real gestures fire outside it.)
+  // onDidMaximizedGroupChange -- it momentarily exits and re-enters the maximized
+  // state to serialise correct dimensions. Driving the flush off that event then
+  // loops the persist with itself (saveDock -> toJSON -> event -> saveDock).
+  // `persisting` marks the window in which a flush runs; events that fire inside
+  // it are byproducts of the persist, not gestures, so they are ignored. (Real
+  // gestures fire outside it.) This is a dockview bug, fixed in dockview-core
+  // 6.1.1; once the bundled dockview is >= 6.1.1 this guard can be removed.
   let flushScheduled = false;
   let persisting = false;
 
