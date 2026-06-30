@@ -27,8 +27,8 @@ test_that("_state-source tags programmatic vs user layout changes", {
   expect_identical(app$get_value(input = "dock_state-source"), "server")
   expect_true("c" %in% app$get_value(export = "panel_ids"))
 
-  # A programmatic move stays server through its async resize tail (the
-  # onDidMovePanel setTimeout that fires a trailing onDidLayoutChange).
+  # A programmatic move stays server -- its dockview events coalesce into one
+  # flush that runs inside the op's provenance window.
   app$click("move")
   app$wait_for_idle()
   expect_identical(app$get_value(input = "dock_state-source"), "server")
@@ -47,4 +47,41 @@ test_that("_state-source tags programmatic vs user layout changes", {
   )
   app$wait_for_idle()
   expect_identical(app$get_value(input = "dock_state-source"), "client")
+})
+
+test_that("_state tracks a settled container resize, tagged client", {
+  skip_on_cran()
+
+  appdir <- system.file(package = "dockViewR", "examples", "state_source")
+
+  app <- AppDriver$new(
+    appdir,
+    name = "state_source_resize",
+    seed = 121,
+    height = 752,
+    width = 1211
+  )
+  app$wait_for_idle()
+
+  grid_width <- function() {
+    unlist(app$get_js(
+      "(function(){var s=Shiny.shinyapp.$inputValues['dock_state'];return s && s.grid ? s.grid.width : 0;})()"
+    ))
+  }
+  before <- grid_width()
+
+  # A container / window resize changes the layout but has no gesture and no
+  # event-driven end, so it is debounced and persisted once it settles. `_state`
+  # must reflect it -- consumers read the input directly -- and it is tagged
+  # client: environmental, not server-initiated. The debounced emit produces no
+  # Shiny activity until it fires, so poll for it rather than wait_for_idle.
+  app$set_window_size(width = 820, height = 700)
+  for (i in 1:30) {
+    Sys.sleep(0.1)
+    if (identical(app$get_value(input = "dock_state-source"), "client")) break
+  }
+
+  expect_identical(app$get_value(input = "dock_state-source"), "client")
+  expect_gt(grid_width(), 0)
+  expect_false(identical(grid_width(), before))
 })

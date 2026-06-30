@@ -1,129 +1,151 @@
-import { saveDock, serverDrivenFor, runServerDriven } from '../modules/proxy';
-
-// `onDidLayoutChange` carries no cause: dockview (since the 4.10.0
-// `renderer: 'always'` fix) re-fires it while a layout is still settling, and
-// the global `resize` we dispatch to re-fit widgets nudges them by a fraction
-// of a pixel, which re-fires it again -- a feedback loop that pegs the main
-// thread on boards with many resize-sensitive widgets (e.g. ECharts). We break
-// it by acting only on a real change: same structure with every panel size
-// within RESIZE_EPS of the layout we last acted on is a no-op, so the sub-pixel
-// echo terminates -- independent of client speed, unlike a fixed time window,
-// and without dropping any genuine change (a real resize / add / remove moves
-// sizes well beyond RESIZE_EPS and still passes).
-const RESIZE_EPS = 1;       // px; <= this is sub-pixel drift (absorbed), > this is real
-const SIZE_KEYS = new Set(['width', 'height', 'size']);
-
-// Deep-equal two `toJSON()` layouts, treating panel sizes as equal within `eps`
-// px; structure (ids, grid, orientation, focus) must match exactly.
-const sameLayout = (a, b, eps) => {
-  if (typeof a !== typeof b) return false;
-  if (a === null || b === null || typeof a !== 'object') return a === b;
-  if (Array.isArray(a) !== Array.isArray(b)) return false;
-  const keys = Object.keys(a);
-  if (keys.length !== Object.keys(b).length) return false;
-  for (const k of keys) {
-    if (!(k in b)) return false;
-    if (SIZE_KEYS.has(k) && typeof a[k] === 'number' && typeof b[k] === 'number') {
-      if (Math.abs(a[k] - b[k]) > eps) return false;
-    } else if (!sameLayout(a[k], b[k], eps)) {
-      return false;
-    }
-  }
-  return true;
-};
+import { saveDock } from '../modules/proxy';
 
 const setDockViewCallbacks = (id, api) => {
 
-  // Work around https://github.com/mathuo/dockview/issues/1031
-  // resize the panel to its actual size :)
-  api.onDidMovePanel((e) => {
-    // This setTimeout runs after the move's server-driven flag has been
-    // cleared, and setSize fires its own onDidLayoutChange. Carry the move's
-    // provenance across so that change is attributed to the side that moved the
-    // panel instead of defaulting to "client".
-    const wasServerDriven = serverDrivenFor(id);
-    setTimeout(() => {
-      runServerDriven(id, wasServerDriven, () => {
-        e.panel.api.setSize(e.panel.api.height, e.panel.api.width)
-      });
-    }, 1);
-  })
-  // Resize panel content on layout change (so plots / widgets re-fit) and sync
-  // the dock state to Shiny. `sameLayout` breaks the resize feedback loop by
-  // skipping when nothing changed beyond sub-pixel drift (see RESIZE_EPS above).
-  let lastLayout = null;
-  const onLayoutChange = () => {
-    let layout = null;
-    try {
-      layout = api.toJSON();
-    } catch (e) {
-      layout = null;                           // unreadable -- fall through and act
-    }
-    if (layout !== null && lastLayout !== null &&
-        sameLayout(lastLayout, layout, RESIZE_EPS)) {
-      return;                                  // only drift since we last acted
-    }
-    lastLayout = layout;
+  // Re-fit embedded widgets (plots, ECharts, DT, ...) into their new panel
+  // size. A render concern, kept off the per-frame layout stream.
+  const refitWidgets = () => {
     window.dispatchEvent(new Event('resize'));
-    if (HTMLWidgets.shinyMode) {
-      saveDock(id, api)
-      api.panels.map((panel) => {
-        let pane = `#${id}-${panel.id}`;
-        Shiny.initializeInputs($(pane));
-        Shiny.bindAll($(pane));
-      })
-    }
   };
-  api.onDidLayoutChange(onLayoutChange)
 
-  // When restored, we need to sync the new state for Shiny
-  api.onDidLayoutFromJSON(() => {
-    saveDock(id, api)
-  })
+  // Push the current layout to Shiny and rebind each panel's DOM, so inputs /
+  // outputs inside moved or restored panels keep working. A state concern.
+  const persistState = () => {
+    if (!HTMLWidgets.shinyMode) return;
 
-  api.onDidMaximizedGroupChange((e) => {
-    window.dispatchEvent(new Event('resize'));
-  })
+    saveDock(id, api);
+    api.panels.map((panel) => {
+      let pane = `#${id}-${panel.id}`;
+      Shiny.initializeInputs($(pane));
+      Shiny.bindAll($(pane));
+    });
+  };
+
+  // One settled `_state` per gesture. A single gesture fires several dockview
+  // events (a tab move that splits a group fires onDidMovePanel, onDidAddGroup
+  // and onDidActivePanelChange); persisting in each would emit several times
+  // and push the coalescing onto every consumer. Instead each event flags a
+  // pending flush, coalesced onto one microtask. The microtask drains within
+  // the same task as the events that scheduled it -- inside the server op's
+  // provenance window, ahead of its clear -- so `saveDock` reads the correct
+  // `_state-source`; a separate gesture runs in a later task and gets its own
+  // flush, so two gestures never merge into one (mis)tagged emit.
+  let flushScheduled = false;
+
+  const requestSync = () => {
+    if (flushScheduled) return;
+
+    flushScheduled = true;
+    queueMicrotask(() => {
+      flushScheduled = false;
+      persistState();
+      refitWidgets();
+    });
+  };
+
+  api.onDidMovePanel(requestSync);
+
+  api.onDidLayoutFromJSON(requestSync);
+
+  api.onDidMaximizedGroupChange(requestSync);
 
   api.onDidAddPanel((e) => {
+    requestSync();
     if (HTMLWidgets.shinyMode) {
       Shiny.setInputValue(id + '_added-panel', e.id);
       Shiny.setInputValue(id + '_n-panels', api.totalPanels);
     }
-  })
+  });
 
   api.onDidRemovePanel((e) => {
+    requestSync();
     if (HTMLWidgets.shinyMode) {
       Shiny.setInputValue(id + '_removed-panel', e.id);
       Shiny.setInputValue(id + '_n-panels', api.totalPanels);
     }
-  })
+  });
 
-  api.onDidAddGroup((e) => {
+  api.onDidAddGroup(() => {
+    requestSync();
     if (HTMLWidgets.shinyMode) {
       Shiny.setInputValue(id + '_n-groups', api.groups.length);
     }
-  })
+  });
 
-  api.onDidRemoveGroup((e) => {
+  api.onDidRemoveGroup(() => {
+    requestSync();
     if (HTMLWidgets.shinyMode) {
       Shiny.setInputValue(id + '_n-groups', api.groups.length);
     }
-  })
+  });
 
   api.onDidActivePanelChange((e) => {
-    if (HTMLWidgets.shinyMode) {
-      if (e === undefined) return null
+    requestSync();
+    if (HTMLWidgets.shinyMode && e !== undefined) {
       Shiny.setInputValue(id + '_active-panel', e.id);
     }
-  })
+  });
 
   api.onDidActiveGroupChange((e) => {
-    if (HTMLWidgets.shinyMode) {
-      if (e === undefined) return null
+    requestSync();
+    if (HTMLWidgets.shinyMode && e !== undefined) {
       Shiny.setInputValue(id + '_active-group', e.id);
     }
-  })
+  });
+
+  const container = document.getElementById(id);
+  if (container) {
+
+    // Resize is the only continuous gesture and dockview does not surface its
+    // pointer-up boundary (`onDidSashEnd`) on the public api, so close it on
+    // the sash `pointerup` directly. Delegated on the container to catch
+    // sashes created later as groups split.
+    container.addEventListener('pointerup', (e) => {
+      if (e.target && e.target.closest && e.target.closest('.dv-sash')) {
+        requestSync();
+      }
+    });
+
+    // A container / window resize changes the layout but has no gesture, and no
+    // event-driven end (the window-drag-end belongs to the OS). `_state` must
+    // still reflect it -- consumers read the input directly, to drive observers
+    // and to serialise -- so debounce the container's own resize and persist
+    // once it settles. It is environmental, not server-initiated, so it reads
+    // as "client". `saveDock` only: no re-fit (widgets already took the
+    // browser's native `resize` live), so the emit dispatches nothing and the
+    // feedback loop cannot reform. The first settled size is the initial layout
+    // the one-shot below already persisted, so it seeds the baseline without
+    // re-emitting; only later changes do.
+    let resizeBaseline = null;
+    let resizeTimer = null;
+    new ResizeObserver((entries) => {
+      const rect = entries[0].contentRect;
+      if (rect.width === 0 || rect.height === 0) return;
+
+      const size = Math.round(rect.width) + 'x' + Math.round(rect.height);
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (size === resizeBaseline) return;
+
+        const seeding = resizeBaseline === null;
+        resizeBaseline = size;
+        if (!seeding && HTMLWidgets.shinyMode) saveDock(id, api);
+      }, 150);
+    }).observe(container);
+  }
+
+  // The initial layout (0 -> real size) has no gesture, and the captures during
+  // the synchronous render all read a zero-sized dock. Subscribe to
+  // `onDidLayoutChange` only long enough to persist the first laid-out state,
+  // then dispose -- the per-frame stream is never consumed past that point, so
+  // the storm this issue is about cannot return. It routes through the same
+  // coalescer, so it folds into any gesture it lands inside.
+  const firstLayout = api.onDidLayoutChange(() => {
+    if (api.width > 0 && api.height > 0) {
+      firstLayout.dispose();
+      requestSync();
+    }
+  });
 }
 
 export { setDockViewCallbacks };
