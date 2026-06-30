@@ -85,3 +85,34 @@ test_that("_state tracks a settled container resize, tagged client", {
   expect_gt(grid_width(), 0)
   expect_false(identical(grid_width(), before))
 })
+
+test_that("maximizing a group emits a bounded number of `_state` updates", {
+  skip_on_cran()
+
+  appdir <- system.file(package = "dockViewR", "examples", "state_source")
+
+  app <- AppDriver$new(
+    appdir,
+    name = "state_source_maximize",
+    seed = 121,
+    height = 752,
+    width = 1211
+  )
+  app$wait_for_idle()
+
+  # While a group is maximized, `api.toJSON()` (read by saveDock on each flush)
+  # re-fires onDidMaximizedGroupChange. Without the re-entrancy guard the persist
+  # feeds itself thousands of times; count the emits and assert it stays a handful.
+  app$run_js(
+    "var o = Shiny.setInputValue;
+     Shiny.setInputValue = function (n, v, p) {
+       if (typeof n === 'string' && /_state$/.test(n)) window.__c = (window.__c || 0) + 1;
+       return o.apply(this, arguments);
+     };
+     window.__c = 0;
+     HTMLWidgets.find('#dock').getWidget().component.api.groups[0].api.maximize();"
+  )
+  app$wait_for_idle()
+
+  expect_lt(unlist(app$get_js("window.__c")), 10)
+})

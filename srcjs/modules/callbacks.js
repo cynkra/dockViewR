@@ -21,25 +21,46 @@ const setDockViewCallbacks = (id, api) => {
     });
   };
 
+  // While a group is maximized, `api.toJSON()` (read by saveDock) re-fires
+  // onDidMaximizedGroupChange -- it momentarily toggles the maximized state to
+  // serialise -- and our resize re-fit does too. Acting on those re-entrant
+  // events would loop the persist with itself. `persisting` marks the window in
+  // which a flush is running; events that fire inside it are byproducts of the
+  // persist, not gestures, so they are ignored. (Real gestures fire outside it.)
+  let flushScheduled = false;
+  let persisting = false;
+
+  const persist = () => {
+    persisting = true;
+    try {
+      persistState();
+    } finally {
+      persisting = false;
+    }
+  };
+
   // One settled `_state` per gesture. A single gesture fires several dockview
   // events (a tab move that splits a group fires onDidMovePanel, onDidAddGroup
-  // and onDidActivePanelChange); persisting in each would emit several times
-  // and push the coalescing onto every consumer. Instead each event flags a
-  // pending flush, coalesced onto one microtask. The microtask drains within
-  // the same task as the events that scheduled it -- inside the server op's
-  // provenance window, ahead of its clear -- so `saveDock` reads the correct
+  // and onDidActivePanelChange); persisting in each would emit several times and
+  // push the coalescing onto every consumer. Instead each event flags a pending
+  // flush, coalesced onto one microtask. The microtask drains within the same
+  // task as the events that scheduled it -- inside the server op's provenance
+  // window, ahead of its clear -- so `saveDock` reads the correct
   // `_state-source`; a separate gesture runs in a later task and gets its own
   // flush, so two gestures never merge into one (mis)tagged emit.
-  let flushScheduled = false;
-
   const requestSync = () => {
-    if (flushScheduled) return;
+    if (flushScheduled || persisting) return;
 
     flushScheduled = true;
     queueMicrotask(() => {
       flushScheduled = false;
-      persistState();
-      refitWidgets();
+      persisting = true;
+      try {
+        persistState();
+        refitWidgets();
+      } finally {
+        persisting = false;
+      }
     });
   };
 
@@ -111,11 +132,10 @@ const setDockViewCallbacks = (id, api) => {
     // still reflect it -- consumers read the input directly, to drive observers
     // and to serialise -- so debounce the container's own resize and persist
     // once it settles. It is environmental, not server-initiated, so it reads
-    // as "client". `saveDock` only: no re-fit (widgets already took the
-    // browser's native `resize` live), so the emit dispatches nothing and the
-    // feedback loop cannot reform. The first settled size is the initial layout
-    // the one-shot below already persisted, so it seeds the baseline without
-    // re-emitting; only later changes do.
+    // as "client". `persist` (saveDock only, no re-fit) -- guarded, since its
+    // `toJSON` re-fires events while maximized just like the gesture flush. The
+    // first settled size is the initial layout the one-shot below already
+    // persisted, so it seeds the baseline without re-emitting; only later do.
     let resizeBaseline = null;
     let resizeTimer = null;
     new ResizeObserver((entries) => {
@@ -129,7 +149,7 @@ const setDockViewCallbacks = (id, api) => {
 
         const seeding = resizeBaseline === null;
         resizeBaseline = size;
-        if (!seeding && HTMLWidgets.shinyMode) saveDock(id, api);
+        if (!seeding) persist();
       }, 150);
     }).observe(container);
   }
