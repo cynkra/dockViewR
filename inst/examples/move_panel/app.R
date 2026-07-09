@@ -5,10 +5,10 @@ library(dockViewR)
 options("dockViewR.mode" = "dev")
 
 ui <- fluidPage(
-  h1("Panels within the same group"),
+  h1("Reorder a panel within its group"),
   actionButton("move", "Move Panel 1"),
   dockViewOutput("dock"),
-  h1("Panels with different groups"),
+  h1("Move a panel next to another group"),
   actionButton("move2", "Move Panel 1"),
   dockViewOutput("dock2"),
 )
@@ -106,8 +106,8 @@ server <- function(input, output, session) {
   observeEvent(input$move, {
     move_panel(
       dock_proxy,
-      id = 1,
-      index = 3
+      id = "1",
+      position = list(referencePanel = "2", direction = "within", index = 2)
     )
   })
 
@@ -116,9 +116,8 @@ server <- function(input, output, session) {
   observeEvent(input$move2, {
     move_panel(
       dock_proxy2,
-      id = 1,
-      group = 3,
-      position = "bottom"
+      id = "1",
+      position = list(referencePanel = "3", direction = "below")
     )
   })
 }

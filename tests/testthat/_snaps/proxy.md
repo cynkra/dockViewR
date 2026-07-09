@@ -48,10 +48,39 @@
 # move_panel works
 
     Code
-      move_panel(dock_proxy, id = "test", index = 3, position = "testposition")
+      move_panel("dock", id = "test", position = list(referencePanel = "1",
+        direction = "right"))
     Condition
-      Error in `validate_position()`:
-      ! <Panel (ID: test)>: invalid value (testposition) for `position`. `position` must be one of left, right, top, bottom, center.
+      Error in `validate_dock_proxy()`:
+      ! inherits(dock, "dock_view_proxy") is not TRUE
+    Code
+      move_panel(dock_proxy, id = "test", position = "right")
+    Condition
+      Error in `validate_position_names()`:
+      ! <Panel (ID: test)>: `position` must be a list.
+    Code
+      move_panel(dock_proxy, id = "test", position = list(pouet = 3, plop = "test"))
+    Condition
+      Error in `validate_position_names()`:
+      ! <Panel (ID: test)>: `position` must be a list with a subset of names: referencePanel, direction, referenceGroup, index.
+              Found wrong values: pouet, plop.
+    Code
+      move_panel(dock_proxy, id = "test", position = list(referencePanel = "1"))
+    Condition
+      Error in `validate_position_direction()`:
+      ! <Panel (ID: test)>: `direction` must be one of above, below, left, right, within.
+    Code
+      move_panel(dock_proxy, id = "test", position = list(referencePanel = "1",
+        direction = "bottom"))
+    Condition
+      Error in `validate_position_direction()`:
+      ! <Panel (ID: test)>: `direction` must be one of above, below, left, right, within.
+    Code
+      move_panel(dock_proxy, id = "test", position = list(referencePanel = "1",
+        referenceGroup = "2", direction = "right"))
+    Condition
+      Error in `process_panel_position()`:
+      ! <Panel (ID: test)>: set only one of `referencePanel` and `referenceGroup`.
 
 # set_size works
 

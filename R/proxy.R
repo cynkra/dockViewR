@@ -98,9 +98,16 @@ update_dock_view <- function(
 #' @param dock Dock proxy object created with [dock_view_proxy()].
 #' @param panel A panel object (for `add_panel`). See \link{panel} for parameters.
 #' @param id Panel ID (character string).
-#' @param position Panel/group position: one of "left", "right", "top", "bottom", "center".
-#' @param group ID of a panel that belongs to the target group (for `move_panel`).
-#' @param index Panel index within a group (for `move_panel`).
+#' @param position For `move_group()` and `move_group2()`, placement relative to
+#'   the destination group: one of "left", "right", "top", "bottom", "center".
+#'   For `move_panel()`, a placement list sharing the vocabulary of [panel()]'s
+#'   `position`: a `referencePanel` *or* `referenceGroup` (not both) to move next
+#'   to, a `direction` (one of "above", "below", "left", "right", "within"), and
+#'   an `index` used only with `direction = "within"` to set the tab position in
+#'   the target group. "above" / "below" / "left" / "right" put the panel in a
+#'   new group on that side of the reference; "within" drops it into the
+#'   reference's group. With no reference, the panel moves to a new group at the
+#'   dock edge in `direction`.
 #' @param from Source group/panel ID (for move operations).
 #' @param to Destination group/panel ID (for move operations).
 #' @param title New panel title.
@@ -118,7 +125,8 @@ update_dock_view <- function(
 #' - `add_panel()`: Adds a new panel to the dockview
 #' - `remove_panel()`: Removes an existing panel
 #' - `select_panel()`: Selects/focuses a specific panel
-#' - `move_panel()`: Moves a panel to a new position
+#' - `move_panel()`: Moves an existing panel next to a reference panel or group,
+#'   using the same `position` vocabulary as [panel()]
 #' - `move_group()`: Moves a group using group IDs
 #' - `move_group2()`: Moves a group using panel IDs
 #' - `set_size()`: Resizes the group a panel belongs to, as a fraction of its
@@ -175,31 +183,15 @@ select_panel <- function(dock, id) {
 
 #' @export
 #' @rdname panel-operations
-move_panel <- function(
-  dock,
-  id,
-  position = NULL,
-  group = NULL,
-  index = NULL
-) {
+move_panel <- function(dock, id, position) {
   panel_id <- as.character(id)
-  if (!is.null(group)) {
-    group <- as.character(group)
-  }
-  validate_position(position, panel_id)
-
-  options <- list(
-    position = position,
-    group = group,
-    index = index
-  )
 
   send_dock_message(
     dock,
     "move-panel",
     list(
       id = panel_id,
-      options = dropNulls(options)
+      position = process_panel_position(panel_id, position)
     )
   )
 }

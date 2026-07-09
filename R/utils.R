@@ -91,21 +91,41 @@ process_panel_position <- function(
   id,
   position
 ) {
-  # Check names
   validate_position_names(id, position)
+
   if (!is.null(position[["referencePanel"]])) {
     position[["referencePanel"]] <- as.character(position[["referencePanel"]])
   }
   if (!is.null(position[["referenceGroup"]])) {
     position[["referenceGroup"]] <- as.character(position[["referenceGroup"]])
   }
-  # Check position
+  if (!is.null(position[["referencePanel"]]) && !is.null(position[["referenceGroup"]])) {
+    stop(sprintf(
+      "<Panel (ID: %s)>: set only one of `referencePanel` and `referenceGroup`.",
+      id
+    ))
+  }
+
   validate_position_direction(id, position)
+
+  if (!is.null(position[["index"]]) && !identical(position[["direction"]], "within")) {
+    warning(sprintf(
+      "<Panel (ID: %s)>: `index` is ignored unless `direction` is \"within\".",
+      id
+    ))
+  }
+
   invisible(position)
 }
 
 #' @keywords internal
 validate_position_names <- function(id, position) {
+  if (!is.list(position)) {
+    stop(sprintf(
+      "<Panel (ID: %s)>: `position` must be a list.",
+      id
+    ))
+  }
   if (length(position) == 0) {
     stop(sprintf(
       "<Panel (ID: %s)>: `position` must be a non-empty list.",
@@ -128,7 +148,8 @@ validate_position_names <- function(id, position) {
 
 #' @keywords internal
 validate_position_direction <- function(id, position) {
-  if (!(position[["direction"]] %in% valid_directions)) {
+  direction <- position[["direction"]]
+  if (is.null(direction) || !(direction %in% valid_directions)) {
     stop(sprintf(
       "<Panel (ID: %s)>: `direction` must be one of %s.",
       id,

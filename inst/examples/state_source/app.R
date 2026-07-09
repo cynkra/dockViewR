@@ -54,7 +54,11 @@ server <- function(input, output, session) {
   })
 
   observeEvent(input$move, {
-    move_panel(dock_proxy, id = "b", group = "a", position = "center")
+    move_panel(
+      dock_proxy,
+      id = "b",
+      position = list(referencePanel = "a", direction = "within")
+    )
   })
 
   observeEvent(input$save, {

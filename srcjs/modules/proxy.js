@@ -45,6 +45,7 @@ const validatedDockElement = (api, id, type, context = '') => {
       break;
     case 'group':
       fun = (id) => api.getGroup(id);
+      break;
     default:
       break;
   }
@@ -94,25 +95,38 @@ const selectPanel = (id, mode, api) => {
   }, mode);
 }
 
+// add_panel places panels by referencePanel/referenceGroup + direction; moveTo
+// only understands a target group + Position, so translate: the reference
+// resolves to the group to move next to, and direction maps onto Position.
+const directionToPosition = {
+  above: 'top',
+  below: 'bottom',
+  left: 'left',
+  right: 'right',
+  within: 'center'
+};
+
 const movePanel = (m, mode, api) => {
   evalDockView(() => {
     let panel = validatedDockElement(api, m.id, 'panel');
-    // Move relative to another group
-    if (m.options.group !== undefined) {
-      let groupTarget = validatedDockElement(
-        api,
-        m.options.group,
-        'panel',
-        'Target group '
+    let position = m.position;
+
+    let group;
+    if (position.referenceGroup !== undefined) {
+      group = validatedDockElement(
+        api, position.referenceGroup, 'group', 'Reference '
       );
-      panel.api.moveTo({
-        group: groupTarget.api.group,
-        position: m.options.position,
-      })
-      return null;
+    } else if (position.referencePanel !== undefined) {
+      group = validatedDockElement(
+        api, position.referencePanel, 'panel', 'Reference '
+      ).api.group;
     }
-    // Move panel inside the same group using 'index' only
-    panel.api.moveTo(m.options);
+
+    panel.api.moveTo({
+      group: group,
+      position: directionToPosition[position.direction],
+      index: position.index
+    });
   }, mode);
 }
 
