@@ -18,7 +18,8 @@ server <- function(input, output, session) {
 
   exportTestValues(
     panel_ids = get_panels_ids(dock_proxy),
-    active_group = get_active_group(dock_proxy)
+    active_group = get_active_group(dock_proxy),
+    grid = grid_shape(dock_proxy)
   )
 
   output$dock <- renderDockView({

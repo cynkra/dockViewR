@@ -4,6 +4,26 @@
   },
   "export": {
     "active_group": "1",
+    "grid": {
+      "orientation": "HORIZONTAL",
+      "root": {
+        "type": "branch",
+        "fraction": 1,
+        "data": [
+          {
+            "type": "leaf",
+            "id": "1",
+            "views": [
+              "2",
+              "3",
+              "1"
+            ],
+            "activeView": "1",
+            "fraction": 1
+          }
+        ]
+      }
+    },
     "panel_ids": [
       "1",
       "2",

@@ -21,6 +21,12 @@
 #' [get_active_panel()] is a convenience function that returns the active panel
 #' in the active group.
 #' [get_grid()] returns the `grid` element of [get_dock()] which is a list.
+#' [grid_shape()] returns [get_grid()] with each node's absolute pixel `size`
+#' replaced by its sibling-relative fraction (rounded to 2 decimals) and the
+#' absolute `width` / `height` dropped. The tree structure (nesting,
+#' orientation, group ids, panel membership, order) is preserved, so it
+#' captures real layout changes while staying stable against the render-stack
+#' pixel noise that makes raw `get_grid()` snapshots flaky.
 #' [get_groups()] returns a list of panel groups from [get_grid()].
 #' [get_groups_ids()] returns a character vector of groups ids
 #' from [get_groups()].
@@ -61,6 +67,44 @@ get_active_group <- function(dock) {
 #' @export
 get_grid <- function(dock) {
   get_dock(dock)[["grid"]]
+}
+
+#' get dock grid shape
+#' @rdname dock-state
+#' @export
+grid_shape <- function(dock) {
+  grid <- get_grid(dock)
+  list(
+    orientation = grid[["orientation"]],
+    root = shape_node(grid[["root"]], 1)
+  )
+}
+
+#' @keywords internal
+shape_node <- function(node, fraction) {
+  if (node[["type"]] == "leaf") {
+    list(
+      type = "leaf",
+      id = node[["data"]][["id"]],
+      views = node[["data"]][["views"]],
+      activeView = node[["data"]][["activeView"]],
+      fraction = fraction
+    )
+  } else {
+    list(
+      type = "branch",
+      fraction = fraction,
+      data = shape_children(node[["data"]])
+    )
+  }
+}
+
+#' @keywords internal
+shape_children <- function(children) {
+  sizes <- vapply(children, `[[`, numeric(1), "size")
+  total <- sum(sizes)
+  fractions <- if (total == 0) rep(0, length(sizes)) else round(sizes / total, 2)
+  mapply(shape_node, children, fractions, SIMPLIFY = FALSE, USE.NAMES = FALSE)
 }
 
 #' get dock groups

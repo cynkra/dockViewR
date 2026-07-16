@@ -36,7 +36,8 @@ server <- function(input, output, session) {
     group_ids = get_groups_ids(dock_proxy),
     active_group = get_active_group(dock_proxy),
     active_views = get_active_views(dock_proxy),
-    active_panel = get_active_panel(dock_proxy)
+    active_panel = get_active_panel(dock_proxy),
+    grid = grid_shape(dock_proxy)
   )
 
   observeEvent(dock_states(), {

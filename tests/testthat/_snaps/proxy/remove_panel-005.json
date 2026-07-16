@@ -4,6 +4,16 @@
   },
   "export": {
     "active_group": null,
+    "grid": {
+      "orientation": "HORIZONTAL",
+      "root": {
+        "type": "branch",
+        "fraction": 1,
+        "data": [
+
+        ]
+      }
+    },
     "panel_ids": [
 
     ]

@@ -5,6 +5,48 @@
   },
   "export": {
     "active_group": "3",
+    "grid": {
+      "orientation": "HORIZONTAL",
+      "root": {
+        "type": "branch",
+        "fraction": 1,
+        "data": [
+          {
+            "type": "leaf",
+            "id": "1",
+            "views": [
+              "1"
+            ],
+            "activeView": "1",
+            "fraction": 1.06
+          },
+          {
+            "type": "branch",
+            "fraction": -0.06,
+            "data": [
+              {
+                "type": "leaf",
+                "id": "2",
+                "views": [
+                  "2"
+                ],
+                "activeView": "2",
+                "fraction": 0.5
+              },
+              {
+                "type": "leaf",
+                "id": "3",
+                "views": [
+                  "3"
+                ],
+                "activeView": "3",
+                "fraction": 0.5
+              }
+            ]
+          }
+        ]
+      }
+    },
     "panel_ids": [
       "1",
       "2",

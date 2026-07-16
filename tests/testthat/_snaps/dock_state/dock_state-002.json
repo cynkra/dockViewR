@@ -9,6 +9,33 @@
       "1": "2",
       "2": "3"
     },
+    "grid": {
+      "orientation": "HORIZONTAL",
+      "root": {
+        "type": "branch",
+        "fraction": 1,
+        "data": [
+          {
+            "type": "leaf",
+            "id": "1",
+            "views": [
+              "2"
+            ],
+            "activeView": "2",
+            "fraction": 0.5
+          },
+          {
+            "type": "leaf",
+            "id": "2",
+            "views": [
+              "3"
+            ],
+            "activeView": "3",
+            "fraction": 0.5
+          }
+        ]
+      }
+    },
     "group_ids": [
       "1",
       "2"

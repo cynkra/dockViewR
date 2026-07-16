@@ -62,6 +62,49 @@ test_that("dock state", {
   expect_identical(session$lastCustomMessage$type, "dock_restore-state")
 })
 
+test_that("grid_shape normalizes sizes to sibling fractions", {
+  session$input[["dock_state"]] <- test_dock
+  dock_proxy <- dock_view_proxy("dock", session = session)
+
+  shape <- grid_shape(dock_proxy)
+
+  expect_named(shape, c("orientation", "root"))
+  expect_identical(shape$orientation, get_grid(dock_proxy)$orientation)
+  expect_identical(shape$root$type, "branch")
+  expect_identical(shape$root$fraction, 1)
+
+  # Absolute pixels are dropped: no size / width / height survives anywhere.
+  keys <- names(unlist(shape))
+  expect_false(any(grepl("(^|\\.)(size|width|height)$", keys)))
+
+  # Tree structure is preserved: group ids and panel membership are unchanged.
+  leaves <- shape$root$data
+  expect_identical(
+    vapply(leaves, `[[`, character(1), "id"),
+    get_groups_ids(dock_proxy)
+  )
+  expect_identical(
+    lapply(leaves, `[[`, "views"),
+    unname(get_groups_panels(dock_proxy))
+  )
+
+  # The two size-95 siblings become fractions that round to 2 dp and sum to 1.
+  fractions <- vapply(leaves, `[[`, numeric(1), "fraction")
+  expect_identical(fractions, round(fractions, 2))
+  expect_identical(fractions, c(0.5, 0.5))
+})
+
+test_that("grid_shape keeps real proportion changes visible", {
+  uneven <- test_dock
+  uneven$grid$root$data[[1]]$size <- 100
+  uneven$grid$root$data[[2]]$size <- 200
+  session$input[["dock_state"]] <- uneven
+  dock_proxy <- dock_view_proxy("dock", session = session)
+
+  fractions <- vapply(grid_shape(dock_proxy)$root$data, `[[`, numeric(1), "fraction")
+  expect_identical(fractions, c(0.33, 0.67))
+})
+
 test_that("dock state app works", {
   skip_on_cran()
 

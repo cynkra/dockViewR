@@ -5,6 +5,33 @@
   },
   "export": {
     "active_group": "3",
+    "grid": {
+      "orientation": "HORIZONTAL",
+      "root": {
+        "type": "branch",
+        "fraction": 1,
+        "data": [
+          {
+            "type": "leaf",
+            "id": "1",
+            "views": [
+              "1"
+            ],
+            "activeView": "1",
+            "fraction": 0.5600000000000001
+          },
+          {
+            "type": "leaf",
+            "id": "3",
+            "views": [
+              "3"
+            ],
+            "activeView": "3",
+            "fraction": 0.44
+          }
+        ]
+      }
+    },
     "panel_ids": [
       "1",
       "3"

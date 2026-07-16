@@ -6,6 +6,7 @@
 \alias{get_panels_ids}
 \alias{get_active_group}
 \alias{get_grid}
+\alias{grid_shape}
 \alias{get_groups}
 \alias{get_groups_ids}
 \alias{get_groups_panels}
@@ -24,6 +25,8 @@ get_panels_ids(dock)
 get_active_group(dock)
 
 get_grid(dock)
+
+grid_shape(dock)
 
 get_groups(dock)
 
@@ -64,6 +67,12 @@ in each group.
 \code{\link[=get_active_panel]{get_active_panel()}} is a convenience function that returns the active panel
 in the active group.
 \code{\link[=get_grid]{get_grid()}} returns the \code{grid} element of \code{\link[=get_dock]{get_dock()}} which is a list.
+\code{\link[=grid_shape]{grid_shape()}} returns \code{\link[=get_grid]{get_grid()}} with each node's absolute pixel \code{size}
+replaced by its sibling-relative fraction (rounded to 2 decimals) and the
+absolute \code{width} / \code{height} dropped. The tree structure (nesting,
+orientation, group ids, panel membership, order) is preserved, so it
+captures real layout changes while staying stable against the render-stack
+pixel noise that makes raw \code{get_grid()} snapshots flaky.
 \code{\link[=get_groups]{get_groups()}} returns a list of panel groups from \code{\link[=get_grid]{get_grid()}}.
 \code{\link[=get_groups_ids]{get_groups_ids()}} returns a character vector of groups ids
 from \code{\link[=get_groups]{get_groups()}}.
@@ -82,6 +91,8 @@ get dock panels ids
 get dock active group
 
 get dock grid
+
+get dock grid shape
 
 get dock groups
 
