@@ -178,6 +178,48 @@ test_that("initial layout is captured with real pixels, tagged server", {
   )
 })
 
+test_that("a container-only resize re-fits widgets without looping", {
+  skip_on_cran()
+
+  appdir <- system.file(package = "dockViewR", "examples", "state_source")
+
+  app <- AppDriver$new(
+    appdir,
+    name = "state_source_container_resize",
+    seed = 121,
+    height = 752,
+    width = 1211
+  )
+  app$wait_for_idle()
+
+  app$run_js(
+    "window.__rd = 0;
+     var od = window.dispatchEvent.bind(window);
+     window.dispatchEvent = function (e) {
+       if (e && e.type === 'resize') window.__rd++;
+       return od(e);
+     };
+     var o = Shiny.setInputValue;
+     Shiny.setInputValue = function (n, v, p) {
+       if (typeof n === 'string' && /_state$/.test(n)) window.__c = (window.__c || 0) + 1;
+       return o.apply(this, arguments);
+     };"
+  )
+
+  # A container-only resize (no window resize) must still re-fit embedded
+  # widgets -- they get no native resize event otherwise -- and must not reform
+  # the onDidLayoutChange -> resize -> onDidLayoutChange loop.
+  app$run_js(
+    "window.__rd = 0; window.__c = 0;
+     document.getElementById('dock').style.width = '620px';"
+  )
+  Sys.sleep(0.5)
+  app$wait_for_idle()
+
+  expect_gte(unlist(app$get_js("window.__rd")), 1)
+  expect_lt(unlist(app$get_js("window.__c")), 3)
+})
+
 test_that("container listeners are torn down on re-render", {
   skip_on_cran()
 

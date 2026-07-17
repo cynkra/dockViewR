@@ -32,15 +32,6 @@ const setDockViewCallbacks = (id, api) => {
   let flushScheduled = false;
   let persisting = false;
 
-  const persist = () => {
-    persisting = true;
-    try {
-      persistState();
-    } finally {
-      persisting = false;
-    }
-  };
-
   // One settled `_state` per gesture. A single gesture fires several dockview
   // events (a tab move that splits a group fires onDidMovePanel, onDidAddGroup
   // and onDidActivePanelChange); persisting in each would emit several times and
@@ -141,10 +132,11 @@ const setDockViewCallbacks = (id, api) => {
     // still reflect it -- consumers read the input directly, to drive observers
     // and to serialise -- so debounce the container's own resize and persist
     // once it settles. It is environmental, not server-initiated, so it reads
-    // as "client". `persist` (saveDock only, no re-fit) -- guarded, since its
-    // `toJSON` re-fires events while maximized just like the gesture flush. The
-    // first observation is the initial layout landing (the seeding branch below,
-    // server-tagged); later ones are user resizes.
+    // as "client". A container-only resize (a bslib sidebar toggle, a flex
+    // change) fires no window `resize`, so re-fit embedded widgets here too --
+    // guarded like the gesture flush, since the re-fit and `toJSON` re-fire
+    // events while a group is maximized. The first observation is the initial
+    // layout landing (server-tagged); later ones are user resizes.
     let resizeBaseline = null;
     let resizeTimer = null;
     const resizeObserver = new ResizeObserver((entries) => {
@@ -158,15 +150,22 @@ const setDockViewCallbacks = (id, api) => {
 
         const seeding = resizeBaseline === null;
         resizeBaseline = size;
-        if (seeding) {
-          // First real size. The synchronous render captures the layout while
-          // the grid is still zero-sized, and a size-only settle never re-fires
-          // onDidLayoutChange, so this observation is the only reliable signal
-          // that the initial layout landed. Persist it server-tagged -- the
-          // initial render is server-initiated -- completing the zero-sized grid.
-          withServerDriven(id, () => saveDock(id, api));
-        } else {
-          persist();
+
+        persisting = true;
+        try {
+          if (seeding) {
+            // First real size. The synchronous render captures the layout while
+            // the grid is still zero-sized, and a size-only settle never re-fires
+            // onDidLayoutChange, so this is the only reliable signal that the
+            // initial layout landed. Server-tagged -- the render is
+            // server-initiated -- completing the zero-sized grid.
+            withServerDriven(id, () => saveDock(id, api));
+          } else {
+            persistState();
+          }
+          refitWidgets();
+        } finally {
+          persisting = false;
         }
       }, 150);
     });
