@@ -1,4 +1,4 @@
-import { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2 } from '../modules/proxy';
+import { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, withServerDriven } from '../modules/proxy';
 
 const deserializeFunction = (obj) => {
   if (obj && typeof obj === 'object' && obj.__IS_FUNCTION__) {
@@ -38,19 +38,19 @@ const setShinyHandlers = (id, mode, api) => {
   Shiny.addCustomMessageHandler(id + '_add-panel', (m) => {
     // Transform the removeCallback string into a function
     HTMLWidgets.evaluateStringMember(m.panel, m.evals)
-    addPanel(m.panel, mode, api);
+    withServerDriven(id, () => addPanel(m.panel, mode, api));
   });
 
   Shiny.addCustomMessageHandler(id + '_rm-panel', (m) => {
-    removePanel(m, mode, api);
+    withServerDriven(id, () => removePanel(m, mode, api));
   })
 
   Shiny.addCustomMessageHandler(id + '_move-panel', (m) => {
-    movePanel(m, mode, api)
+    withServerDriven(id, () => movePanel(m, mode, api));
   })
 
   Shiny.addCustomMessageHandler(id + '_select-panel', (m) => {
-    selectPanel(m, mode, api);
+    withServerDriven(id, () => selectPanel(m, mode, api));
   })
 
   // Force save dock
@@ -60,15 +60,15 @@ const setShinyHandlers = (id, mode, api) => {
 
   // Restore layout
   Shiny.addCustomMessageHandler(id + '_restore-state', (m) => {
-    restoreDock(id, m, api);
+    withServerDriven(id, () => restoreDock(id, m, api));
   })
 
   Shiny.addCustomMessageHandler(id + '_move-group2', (m) => {
-    moveGroup2(m, mode, api)
+    withServerDriven(id, () => moveGroup2(m, mode, api));
   })
 
   Shiny.addCustomMessageHandler(id + '_move-group', (m) => {
-    moveGroup(m, mode, api)
+    withServerDriven(id, () => moveGroup(m, mode, api));
   })
 
   Shiny.addCustomMessageHandler(id + '_update-options', (m) => {
@@ -80,7 +80,7 @@ const setShinyHandlers = (id, mode, api) => {
 
   // Set title
   Shiny.addCustomMessageHandler(id + '_set-panel-title', (m) => {
-    api.getPanel(m.id).api.setTitle(m.title);
+    withServerDriven(id, () => api.getPanel(m.id).api.setTitle(m.title));
   })
 }
 

@@ -1,4 +1,4 @@
-import { saveDock } from '../modules/proxy';
+import { saveDock, serverDrivenFor, runServerDriven } from '../modules/proxy';
 
 // `onDidLayoutChange` carries no cause: dockview (since the 4.10.0
 // `renderer: 'always'` fix) re-fires it while a layout is still settling, and
@@ -37,8 +37,15 @@ const setDockViewCallbacks = (id, api) => {
   // Work around https://github.com/mathuo/dockview/issues/1031
   // resize the panel to its actual size :)
   api.onDidMovePanel((e) => {
+    // This setTimeout runs after the move's server-driven flag has been
+    // cleared, and setSize fires its own onDidLayoutChange. Carry the move's
+    // provenance across so that change is attributed to the side that moved the
+    // panel instead of defaulting to "client".
+    const wasServerDriven = serverDrivenFor(id);
     setTimeout(() => {
-      e.panel.api.setSize(e.panel.api.height, e.panel.api.width)
+      runServerDriven(id, wasServerDriven, () => {
+        e.panel.api.setSize(e.panel.api.height, e.panel.api.width)
+      });
     }, 1);
   })
   // Resize panel content on layout change (so plots / widgets re-fit) and sync

@@ -1,7 +1,7 @@
 import 'widgets';
 import 'dockview-core/dist/styles/dockview.css';
 import { setDockViewCallbacks } from '../modules/callbacks';
-import { saveDock } from '../modules/proxy';
+import { saveDock, withServerDriven } from '../modules/proxy';
 import { setShinyHandlers } from '../modules/handlers';
 import { instantiateDock, initDockPanels } from '../modules/dock';
 
@@ -22,14 +22,19 @@ HTMLWidgets.widget({
         // Instantiate dockView
         api = instantiateDock(id, x);
 
-        // Init state
-        saveDock(id, api)
+        // The initial layout (and the empty grid before its panels land) is
+        // produced by the server, not a user gesture, so its `_state` is
+        // reported as server-initiated -- same as a later proxy push.
+        withServerDriven(id, () => {
+          // Init state
+          saveDock(id, api)
 
-        // Set API callbacks: onAddPanel, ...
-        setDockViewCallbacks(id, api);
+          // Set API callbacks: onAddPanel, ...
+          setDockViewCallbacks(id, api);
 
-        // Init panels
-        initDockPanels(x, api);
+          // Init panels
+          initDockPanels(x, api);
+        });
 
         // Set any Shiny handlers for proxy operations
         if (HTMLWidgets.shinyMode) {
