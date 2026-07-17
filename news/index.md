@@ -2,6 +2,15 @@
 
 ## dockViewR (development version)
 
+### New features
+
+- Added
+  [`set_size()`](https://cynkra.github.io/dockViewR/reference/panel-operations.md)
+  to resize the group a panel belongs to from the server. The caller
+  gives a single target fraction of the group’s splitview along its
+  axis; the other groups in that split keep their relative sizes and
+  share the remaining space.
+
 ### Bug fixes
 
 - `input$<dock_id>_state` is now emitted once per layout gesture rather

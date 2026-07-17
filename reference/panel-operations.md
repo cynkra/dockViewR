@@ -18,6 +18,8 @@ move_panel(dock, id, position = NULL, group = NULL, index = NULL)
 move_group(dock, from, to, position = NULL)
 
 move_group2(dock, from, to, position = NULL)
+
+set_size(dock, id, size)
 ```
 
 ## Arguments
@@ -66,6 +68,14 @@ move_group2(dock, from, to, position = NULL)
 
   Destination group/panel ID (for move operations).
 
+- size:
+
+  Target size for a group along its splitview axis, as a fraction
+  between 0 and 1 of that splitview (for `set_size`). The other groups
+  in the split keep their relative sizes and share the remaining space.
+  Sizing is best-effort: dockview's minimum group size can clamp a
+  group, in which case the requested fraction is approximate.
+
 ## Value
 
 All functions return the dock proxy object invisibly, allowing for
@@ -86,6 +96,9 @@ method chaining.
 - `move_group()`: Moves a group using group IDs
 
 - `move_group2()`: Moves a group using panel IDs
+
+- `set_size()`: Resizes the group a panel belongs to, as a fraction of
+  its splitview; the other groups in the split keep their relative sizes
 
 ## See also
 

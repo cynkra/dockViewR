@@ -46,6 +46,7 @@
   [`move_panel()`](https://cynkra.github.io/dockViewR/reference/panel-operations.md)
   [`move_group()`](https://cynkra.github.io/dockViewR/reference/panel-operations.md)
   [`move_group2()`](https://cynkra.github.io/dockViewR/reference/panel-operations.md)
+  [`set_size()`](https://cynkra.github.io/dockViewR/reference/panel-operations.md)
   : Dockview Panel Operations
 - [`panel()`](https://cynkra.github.io/dockViewR/reference/panel.md) :
   Dock panel

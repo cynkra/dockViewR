@@ -52,7 +52,9 @@
 <span></span>
 <span><span class="fu">move_group</span><span class="op">(</span><span class="va">dock</span>, <span class="va">from</span>, <span class="va">to</span>, position <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">move_group2</span><span class="op">(</span><span class="va">dock</span>, <span class="va">from</span>, <span class="va">to</span>, position <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">move_group2</span><span class="op">(</span><span class="va">dock</span>, <span class="va">from</span>, <span class="va">to</span>, position <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">set_size</span><span class="op">(</span><span class="va">dock</span>, <span class="va">id</span>, <span class="va">size</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -98,6 +100,14 @@
 <dt id="arg-to">to<a class="anchor" aria-label="anchor" href="#arg-to"></a></dt>
 <dd><p>Destination group/panel ID (for move operations).</p></dd>
 
+
+<dt id="arg-size">size<a class="anchor" aria-label="anchor" href="#arg-size"></a></dt>
+<dd><p>Target size for a group along its splitview axis, as a fraction
+between 0 and 1 of that splitview (for <code>set_size</code>). The other groups in the
+split keep their relative sizes and share the remaining space. Sizing is
+best-effort: dockview's minimum group size can clamp a group, in which case
+the requested fraction is approximate.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -113,6 +123,8 @@
 <li><p><code>move_panel()</code>: Moves a panel to a new position</p></li>
 <li><p><code>move_group()</code>: Moves a group using group IDs</p></li>
 <li><p><code>move_group2()</code>: Moves a group using panel IDs</p></li>
+<li><p><code>set_size()</code>: Resizes the group a panel belongs to, as a fraction of its
+splitview; the other groups in the split keep their relative sizes</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
