@@ -78,9 +78,14 @@ const setShinyHandlers = (id, mode, api) => {
     api.updateOptions(m);
   })
 
-  // Set title
+  // Set title. setTitle fires only onDidTitleChange, which no gesture hooks, so
+  // persist explicitly -- inside withServerDriven, so `_state` reflects the new
+  // title tagged "server".
   Shiny.addCustomMessageHandler(id + '_set-panel-title', (m) => {
-    withServerDriven(id, () => api.getPanel(m.id).api.setTitle(m.title));
+    withServerDriven(id, () => {
+      api.getPanel(m.id).api.setTitle(m.title);
+      saveDock(id, api);
+    });
   })
 }
 

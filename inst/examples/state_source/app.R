@@ -6,6 +6,8 @@ ui <- fluidPage(
   actionButton("move", "Move panel"),
   actionButton("save", "Save layout"),
   actionButton("restore", "Restore layout"),
+  actionButton("settitle", "Set title"),
+  actionButton("rerender", "Re-render"),
   verbatimTextOutput("source"),
   dockViewOutput("dock")
 )
@@ -13,6 +15,7 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   dock_proxy <- dock_view_proxy("dock")
   saved_layout <- reactiveVal(NULL)
+  rerender_count <- reactiveVal(0)
 
   exportTestValues(
     panel_ids = get_panels_ids(dock_proxy)
@@ -24,6 +27,7 @@ server <- function(input, output, session) {
   })
 
   output$dock <- renderDockView({
+    rerender_count()
     dock_view(
       panels = list(
         panel(id = "a", title = "A", content = "Panel A"),
@@ -60,6 +64,14 @@ server <- function(input, output, session) {
   observeEvent(input$restore, {
     req(saved_layout())
     restore_dock(dock_proxy, saved_layout())
+  })
+
+  observeEvent(input$settitle, {
+    set_panel_title(dock_proxy, id = "a", title = "Renamed")
+  })
+
+  observeEvent(input$rerender, {
+    rerender_count(rerender_count() + 1)
   })
 }
 

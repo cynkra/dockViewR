@@ -14,10 +14,17 @@ HTMLWidgets.widget({
   factory: function (el, width, height) {
 
     let api;
+    let teardown;
 
     return {
 
       renderValue: function (x, id = el.id) {
+
+        // A reactive renderDockView re-renders in place; tear down the previous
+        // dock and its container listeners before rebuilding, or they accumulate
+        // and re-emit superseded state.
+        if (teardown) teardown();
+        if (api) api.dispose();
 
         // Instantiate dockView
         api = instantiateDock(id, x);
@@ -30,7 +37,7 @@ HTMLWidgets.widget({
           saveDock(id, api)
 
           // Set API callbacks: onAddPanel, ...
-          setDockViewCallbacks(id, api);
+          teardown = setDockViewCallbacks(id, api);
 
           // Init panels
           initDockPanels(x, api);
