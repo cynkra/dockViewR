@@ -1,4 +1,4 @@
-import { saveDock } from '../modules/proxy';
+import { saveDock, withServerDriven } from '../modules/proxy';
 
 const setDockViewCallbacks = (id, api) => {
 
@@ -143,8 +143,8 @@ const setDockViewCallbacks = (id, api) => {
     // once it settles. It is environmental, not server-initiated, so it reads
     // as "client". `persist` (saveDock only, no re-fit) -- guarded, since its
     // `toJSON` re-fires events while maximized just like the gesture flush. The
-    // first settled size is the initial layout the one-shot below already
-    // persisted, so it seeds the baseline without re-emitting; only later do.
+    // first observation is the initial layout landing (the seeding branch below,
+    // server-tagged); later ones are user resizes.
     let resizeBaseline = null;
     let resizeTimer = null;
     const resizeObserver = new ResizeObserver((entries) => {
@@ -158,7 +158,16 @@ const setDockViewCallbacks = (id, api) => {
 
         const seeding = resizeBaseline === null;
         resizeBaseline = size;
-        if (!seeding) persist();
+        if (seeding) {
+          // First real size. The synchronous render captures the layout while
+          // the grid is still zero-sized, and a size-only settle never re-fires
+          // onDidLayoutChange, so this observation is the only reliable signal
+          // that the initial layout landed. Persist it server-tagged -- the
+          // initial render is server-initiated -- completing the zero-sized grid.
+          withServerDriven(id, () => saveDock(id, api));
+        } else {
+          persist();
+        }
       }, 150);
     });
     resizeObserver.observe(container);
@@ -170,23 +179,7 @@ const setDockViewCallbacks = (id, api) => {
     };
   }
 
-  // The initial layout (0 -> real size) has no gesture, and the captures during
-  // the synchronous render all read a zero-sized dock. Subscribe to
-  // `onDidLayoutChange` only long enough to persist the first laid-out state,
-  // then dispose -- the per-frame stream is never consumed past that point, so
-  // the storm this issue is about cannot return. It routes through the same
-  // coalescer, so it folds into any gesture it lands inside.
-  const firstLayout = api.onDidLayoutChange(() => {
-    if (api.width > 0 && api.height > 0) {
-      firstLayout.dispose();
-      requestSync();
-    }
-  });
-
-  return () => {
-    disposeContainer();
-    firstLayout.dispose();
-  };
+  return disposeContainer;
 }
 
 export { setDockViewCallbacks };

@@ -145,10 +145,37 @@ test_that("set_panel_title persists the new title, tagged server", {
   app$click("settitle")
   app$wait_for_idle()
 
-  expect_true(unlist(app$get_js("window.__src.indexOf('server') >= 0")))
+  # exactly one emit, tagged server -- the explicit persist. No stray client from
+  # a lingering initial one-shot (which this PR replaced with the seeding branch).
+  expect_equal(unlist(app$get_js("window.__src.length")), 1)
+  expect_identical(unlist(app$get_js("window.__src[0]")), "server")
   expect_true(unlist(app$get_js(
     "(JSON.stringify(Shiny.shinyapp.$inputValues['dock_state'] || {})).indexOf('Renamed') >= 0"
   )))
+})
+
+test_that("initial layout is captured with real pixels, tagged server", {
+  skip_on_cran()
+
+  appdir <- system.file(package = "dockViewR", "examples", "state_source")
+
+  app <- AppDriver$new(
+    appdir,
+    name = "state_source_initial",
+    seed = 121,
+    height = 752,
+    width = 1211
+  )
+  app$wait_for_idle()
+
+  # The synchronous render captures a zero-sized grid; the ResizeObserver's first
+  # real-size observation completes it, server-tagged. Without that, `_state`
+  # carries a zero grid until the first gesture (which then mis-tags it client).
+  expect_identical(app$get_value(input = "dock_state-source"), "server")
+  expect_gt(
+    unlist(app$get_js("Shiny.shinyapp.$inputValues['dock_state'].grid.width")),
+    0
+  )
 })
 
 test_that("container listeners are torn down on re-render", {
