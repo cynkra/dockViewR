@@ -90,7 +90,7 @@ Toggle code
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/exportTestValues.html" class="external-link">exportTestValues</a></span><span class="op">(</span></span>
 <span>    panel_ids <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
 <span>    active_group <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_active_group</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
-<span>    grid <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_grid</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span></span>
+<span>    grid <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">grid_shape</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">output</span><span class="op">$</span><span class="va">dock</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dock_view-shiny.html">renderDockView</a></span><span class="op">(</span><span class="op">{</span></span>
@@ -292,7 +292,7 @@ Toggle code
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/exportTestValues.html" class="external-link">exportTestValues</a></span><span class="op">(</span></span>
 <span>    panel_ids <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
 <span>    active_group <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_active_group</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
-<span>    grid <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_grid</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span></span>
+<span>    grid <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">grid_shape</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>, <span class="op">{</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/updateSelectInput.html" class="external-link">updateSelectInput</a></span><span class="op">(</span></span>
@@ -429,7 +429,7 @@ Toggle code
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/exportTestValues.html" class="external-link">exportTestValues</a></span><span class="op">(</span></span>
 <span>    panel_ids <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
 <span>    active_group <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_active_group</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
-<span>    grid <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_grid</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span></span>
+<span>    grid <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">grid_shape</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">output</span><span class="op">$</span><span class="va">dock</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dock_view-shiny.html">renderDockView</a></span><span class="op">(</span><span class="op">{</span></span>
@@ -568,7 +568,7 @@ Toggle code
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/exportTestValues.html" class="external-link">exportTestValues</a></span><span class="op">(</span></span>
 <span>    panel_ids <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
 <span>    active_group <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_active_group</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
-<span>    grid <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_grid</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span></span>
+<span>    grid <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">grid_shape</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span>  <span class="va">output</span><span class="op">$</span><span class="va">dock</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dock_view-shiny.html">renderDockView</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>    <span class="fu"><a href="../reference/dock_view.html">dock_view</a></span><span class="op">(</span></span>
@@ -671,7 +671,7 @@ Toggle code
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/exportTestValues.html" class="external-link">exportTestValues</a></span><span class="op">(</span></span>
 <span>    panel_ids <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_panels_ids</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
 <span>    active_group <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_active_group</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
-<span>    grid <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_grid</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span></span>
+<span>    grid <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">grid_shape</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span>  <span class="va">output</span><span class="op">$</span><span class="va">dock</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dock_view-shiny.html">renderDockView</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>    <span class="fu"><a href="../reference/dock_view.html">dock_view</a></span><span class="op">(</span></span>
@@ -1056,7 +1056,7 @@ Toggle code
 <span>    active_group <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_active_group</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
 <span>    active_views <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_active_views</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
 <span>    active_panel <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_active_panel</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span>,</span>
-<span>    grid <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">get_grid</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span></span>
+<span>    grid <span class="op">=</span> <span class="fu"><a href="../reference/dock-state.html">grid_shape</a></span><span class="op">(</span><span class="va">dock_proxy</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="fu">dock_states</span><span class="op">(</span><span class="op">)</span>, <span class="op">{</span></span>
@@ -1217,7 +1217,7 @@ Toggle code
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

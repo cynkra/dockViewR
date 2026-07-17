@@ -4,6 +4,7 @@ get dock panels
 get dock panels ids
 get dock active group
 get dock grid
+get dock grid shape
 get dock groups
 get dock groups ids
 get dock groups panels
@@ -15,6 +16,7 @@ get dock panels
 get dock panels ids
 get dock active group
 get dock grid
+get dock grid shape
 get dock groups
 get dock groups ids
 get dock groups panels
@@ -62,6 +64,7 @@ restore a dock"></head><body>
 <p>get dock panels ids</p>
 <p>get dock active group</p>
 <p>get dock grid</p>
+<p>get dock grid shape</p>
 <p>get dock groups</p>
 <p>get dock groups ids</p>
 <p>get dock groups panels</p>
@@ -82,6 +85,8 @@ restore a dock"></head><body>
 <span><span class="fu">get_active_group</span><span class="op">(</span><span class="va">dock</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">get_grid</span><span class="op">(</span><span class="va">dock</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">grid_shape</span><span class="op">(</span><span class="va">dock</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">get_groups</span><span class="op">(</span><span class="va">dock</span><span class="op">)</span></span>
 <span></span>
@@ -127,6 +132,12 @@ in each group.
 <code>get_active_panel()</code> is a convenience function that returns the active panel
 in the active group.
 <code>get_grid()</code> returns the <code>grid</code> element of <code>get_dock()</code> which is a list.
+<code>grid_shape()</code> returns the structural shape of <code>get_grid()</code>: the
+branch / leaf nesting, orientation, group ids, panel membership and order,
+with all absolute geometry (<code>size</code>, <code>width</code>, <code>height</code>) dropped. Pixel
+geometry is volatile – and in a headless render not even a valid partition –
+so snapshotting structure alone keeps the layout coverage that matters
+without the flake.
 <code>get_groups()</code> returns a list of panel groups from <code>get_grid()</code>.
 <code>get_groups_ids()</code> returns a character vector of groups ids
 from <code>get_groups()</code>.
@@ -150,7 +161,7 @@ Don't call it from the UI.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

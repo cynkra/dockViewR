@@ -11,6 +11,7 @@
   [`get_panels_ids()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
   [`get_active_group()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
   [`get_grid()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
+  [`grid_shape()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
   [`get_groups()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
   [`get_groups_ids()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
   [`get_groups_panels()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)

@@ -33,7 +33,7 @@ server <- function(input, output, session) {
   exportTestValues(
     panel_ids = get_panels_ids(dock_proxy),
     active_group = get_active_group(dock_proxy),
-    grid = get_grid(dock_proxy)
+    grid = grid_shape(dock_proxy)
   )
 
   output$dock <- renderDockView({
@@ -251,7 +251,7 @@ server <- function(input, output, session) {
   exportTestValues(
     panel_ids = get_panels_ids(dock_proxy),
     active_group = get_active_group(dock_proxy),
-    grid = get_grid(dock_proxy)
+    grid = grid_shape(dock_proxy)
   )
   observeEvent(get_panels_ids(dock_proxy), {
     updateSelectInput(
@@ -394,7 +394,7 @@ server <- function(input, output, session) {
   exportTestValues(
     panel_ids = get_panels_ids(dock_proxy),
     active_group = get_active_group(dock_proxy),
-    grid = get_grid(dock_proxy)
+    grid = grid_shape(dock_proxy)
   )
 
   output$dock <- renderDockView({
@@ -538,7 +538,7 @@ server <- function(input, output, session) {
   exportTestValues(
     panel_ids = get_panels_ids(dock_proxy),
     active_group = get_active_group(dock_proxy),
-    grid = get_grid(dock_proxy)
+    grid = grid_shape(dock_proxy)
   )
   output$dock <- renderDockView({
     dock_view(
@@ -645,7 +645,7 @@ server <- function(input, output, session) {
   exportTestValues(
     panel_ids = get_panels_ids(dock_proxy),
     active_group = get_active_group(dock_proxy),
-    grid = get_grid(dock_proxy)
+    grid = grid_shape(dock_proxy)
   )
   output$dock <- renderDockView({
     dock_view(
@@ -1051,7 +1051,7 @@ server <- function(input, output, session) {
     active_group = get_active_group(dock_proxy),
     active_views = get_active_views(dock_proxy),
     active_panel = get_active_panel(dock_proxy),
-    grid = get_grid(dock_proxy)
+    grid = grid_shape(dock_proxy)
   )
 
   observeEvent(dock_states(), {
