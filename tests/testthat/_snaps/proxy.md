@@ -53,3 +53,21 @@
       Error in `validate_position()`:
       ! <Panel (ID: test)>: invalid value (testposition) for `position`. `position` must be one of left, right, top, bottom, center.
 
+# set_size works
+
+    Code
+      set_size(dock_proxy, id = "test", size = 1.5)
+    Condition
+      Error in `set_size()`:
+      ! <Panel (ID: test)>: `size` must be a single fraction between 0 and 1.
+    Code
+      set_size(dock_proxy, id = "test", size = 0)
+    Condition
+      Error in `set_size()`:
+      ! <Panel (ID: test)>: `size` must be a single fraction between 0 and 1.
+    Code
+      set_size(dock_proxy, id = "test", size = "wide")
+    Condition
+      Error in `set_size()`:
+      ! <Panel (ID: test)>: `size` must be a single fraction between 0 and 1.
+

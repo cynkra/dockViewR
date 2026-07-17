@@ -8,6 +8,7 @@
 \alias{move_panel}
 \alias{move_group}
 \alias{move_group2}
+\alias{set_size}
 \title{Dockview Panel Operations}
 \usage{
 add_panel(dock, panel, ...)
@@ -23,6 +24,8 @@ move_panel(dock, id, position = NULL, group = NULL, index = NULL)
 move_group(dock, from, to, position = NULL)
 
 move_group2(dock, from, to, position = NULL)
+
+set_size(dock, id, size)
 }
 \arguments{
 \item{dock}{Dock proxy object created with \code{\link[=dock_view_proxy]{dock_view_proxy()}}.}
@@ -44,6 +47,12 @@ move_group2(dock, from, to, position = NULL)
 \item{from}{Source group/panel ID (for move operations).}
 
 \item{to}{Destination group/panel ID (for move operations).}
+
+\item{size}{Target size for a group along its splitview axis, as a fraction
+between 0 and 1 of that splitview (for \code{set_size}). The other groups in the
+split keep their relative sizes and share the remaining space. Sizing is
+best-effort: dockview's minimum group size can clamp a group, in which case
+the requested fraction is approximate.}
 }
 \value{
 All functions return the dock proxy object invisibly, allowing for method chaining.
@@ -60,6 +69,8 @@ Functions to dynamically manipulate panels in a dockview instance.
 \item \code{move_panel()}: Moves a panel to a new position
 \item \code{move_group()}: Moves a group using group IDs
 \item \code{move_group2()}: Moves a group using panel IDs
+\item \code{set_size()}: Resizes the group a panel belongs to, as a fraction of its
+splitview; the other groups in the split keep their relative sizes
 }
 }
 \seealso{

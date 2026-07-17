@@ -1,4 +1,4 @@
-import { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, withServerDriven } from '../modules/proxy';
+import { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, withServerDriven } from '../modules/proxy';
 
 const deserializeFunction = (obj) => {
   if (obj && typeof obj === 'object' && obj.__IS_FUNCTION__) {
@@ -69,6 +69,17 @@ const setShinyHandlers = (id, mode, api) => {
 
   Shiny.addCustomMessageHandler(id + '_move-group', (m) => {
     withServerDriven(id, () => moveGroup(m, mode, api));
+  })
+
+  // A programmatic group resize fires only onDidLayoutChange, which no gesture
+  // hooks, so persist explicitly -- inside withServerDriven, so `_state` reflects
+  // the resize tagged "server" -- then re-fit widgets, as a gesture flush would.
+  Shiny.addCustomMessageHandler(id + '_set-size', (m) => {
+    withServerDriven(id, () => {
+      setSize(m, mode, api);
+      saveDock(id, api);
+    });
+    window.dispatchEvent(new Event('resize'));
   })
 
   Shiny.addCustomMessageHandler(id + '_update-options', (m) => {

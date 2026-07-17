@@ -33,7 +33,11 @@ const instantiateDock = (id, x) => {
         acc[key] = x[key];
       }
       return acc;
-    }, {})
+    }, {}),
+    // A drag-and-drop gesture on a floating group does not yet signal a
+    // `_state` update, so the layout could change without the server learning
+    // of it. Keep floating groups off until that gesture is handled.
+    disableFloatingGroups: true
   }))
 }
 
