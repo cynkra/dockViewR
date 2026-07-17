@@ -37,7 +37,8 @@
 <h2 class="pkg-version" data-toc-text="development version" id="dockviewr-development-version">dockViewR (development version)<a class="anchor" aria-label="anchor" href="#dockviewr-development-version"></a></h2>
 <div class="section level3">
 <h3 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h3>
-<ul><li>Broke the <code>onDidLayoutChange → resize → onDidLayoutChange</code> feedback loop that pegged the main thread on boards with many resize-sensitive widgets (e.g. ECharts), where each layout change dispatched a global <code>resize</code> that redrew every widget, which nudged the layout and re-fired the handler. The handler now acts only on a real change: a layout with the same structure and every panel size within a small tolerance of the one it last acted on is a no-op, so the sub-pixel drift the loop fed on terminates regardless of client speed.</li>
+<ul><li><p>Broke the <code>onDidLayoutChange → resize → onDidLayoutChange</code> feedback loop that pegged the main thread on boards with many resize-sensitive widgets (e.g. ECharts), where each layout change dispatched a global <code>resize</code> that redrew every widget, which nudged the layout and re-fired the handler. The handler now acts only on a real change: a layout with the same structure and every panel size within a small tolerance of the one it last acted on is a no-op, so the sub-pixel drift the loop fed on terminates regardless of client speed.</p></li>
+<li><p>Upgrade the bundled <code>dockview-core</code> to 4.13.1, which carries the upstream fix for panel content not rendering when a panel is dragged to an extreme drop target: <a href="https://github.com/mathuo/dockview/issues/1031" class="external-link uri">https://github.com/mathuo/dockview/issues/1031</a>.</p></li>
 </ul></div>
 </div>
     <div class="section level2">

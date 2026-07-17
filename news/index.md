@@ -13,6 +13,11 @@
   tolerance of the one it last acted on is a no-op, so the sub-pixel
   drift the loop fed on terminates regardless of client speed.
 
+- Upgrade the bundled `dockview-core` to 4.13.1, which carries the
+  upstream fix for panel content not rendering when a panel is dragged
+  to an extreme drop target:
+  <https://github.com/mathuo/dockview/issues/1031>.
+
 ## dockViewR 0.3.0
 
 CRAN release: 2025-12-06
