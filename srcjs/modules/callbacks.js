@@ -117,17 +117,24 @@ const setDockViewCallbacks = (id, api) => {
   });
 
   const container = document.getElementById(id);
+
+  // The pointerup listener and ResizeObserver live on the container element,
+  // which outlives the dock api across a reactive re-render -- unlike the api's
+  // onDid* subscriptions, which die with `api.dispose()`. Return them for
+  // explicit teardown so they don't accumulate and re-emit superseded state.
+  let disposeContainer = () => {};
   if (container) {
 
     // Resize is the only continuous gesture and dockview does not surface its
     // pointer-up boundary (`onDidSashEnd`) on the public api, so close it on
     // the sash `pointerup` directly. Delegated on the container to catch
     // sashes created later as groups split.
-    container.addEventListener('pointerup', (e) => {
+    const onSashPointerup = (e) => {
       if (e.target && e.target.closest && e.target.closest('.dv-sash')) {
         requestSync();
       }
-    });
+    };
+    container.addEventListener('pointerup', onSashPointerup);
 
     // A container / window resize changes the layout but has no gesture, and no
     // event-driven end (the window-drag-end belongs to the OS). `_state` must
@@ -140,7 +147,7 @@ const setDockViewCallbacks = (id, api) => {
     // persisted, so it seeds the baseline without re-emitting; only later do.
     let resizeBaseline = null;
     let resizeTimer = null;
-    new ResizeObserver((entries) => {
+    const resizeObserver = new ResizeObserver((entries) => {
       const rect = entries[0].contentRect;
       if (rect.width === 0 || rect.height === 0) return;
 
@@ -153,7 +160,14 @@ const setDockViewCallbacks = (id, api) => {
         resizeBaseline = size;
         if (!seeding) persist();
       }, 150);
-    }).observe(container);
+    });
+    resizeObserver.observe(container);
+
+    disposeContainer = () => {
+      container.removeEventListener('pointerup', onSashPointerup);
+      clearTimeout(resizeTimer);
+      resizeObserver.disconnect();
+    };
   }
 
   // The initial layout (0 -> real size) has no gesture, and the captures during
@@ -168,6 +182,11 @@ const setDockViewCallbacks = (id, api) => {
       requestSync();
     }
   });
+
+  return () => {
+    disposeContainer();
+    firstLayout.dispose();
+  };
 }
 
 export { setDockViewCallbacks };

@@ -116,3 +116,77 @@ test_that("maximizing a group emits a bounded number of `_state` updates", {
 
   expect_lt(unlist(app$get_js("window.__c")), 10)
 })
+
+test_that("set_panel_title persists the new title, tagged server", {
+  skip_on_cran()
+
+  appdir <- system.file(package = "dockViewR", "examples", "state_source")
+
+  app <- AppDriver$new(
+    appdir,
+    name = "state_source_settitle",
+    seed = 121,
+    height = 752,
+    width = 1211
+  )
+  app$wait_for_idle()
+
+  # setTitle fires no allowlisted gesture, so without an explicit persist the new
+  # title never reaches `_state` with server provenance. Capture the source tags:
+  # the server-driven title save must be among them.
+  app$run_js(
+    "window.__src = [];
+     var o = Shiny.setInputValue;
+     Shiny.setInputValue = function (n, v, p) {
+       if (typeof n === 'string' && /_state-source$/.test(n)) window.__src.push(v);
+       return o.apply(this, arguments);
+     };"
+  )
+  app$click("settitle")
+  app$wait_for_idle()
+
+  expect_true(unlist(app$get_js("window.__src.indexOf('server') >= 0")))
+  expect_true(unlist(app$get_js(
+    "(JSON.stringify(Shiny.shinyapp.$inputValues['dock_state'] || {})).indexOf('Renamed') >= 0"
+  )))
+})
+
+test_that("container listeners are torn down on re-render", {
+  skip_on_cran()
+
+  appdir <- system.file(package = "dockViewR", "examples", "state_source")
+
+  app <- AppDriver$new(
+    appdir,
+    name = "state_source_teardown",
+    seed = 121,
+    height = 752,
+    width = 1211
+  )
+  app$wait_for_idle()
+
+  app$run_js(
+    "var o = Shiny.setInputValue;
+     Shiny.setInputValue = function (n, v, p) {
+       if (typeof n === 'string' && /_state$/.test(n)) window.__c = (window.__c || 0) + 1;
+       return o.apply(this, arguments);
+     };"
+  )
+
+  # A reactive re-render adds a fresh sash-pointerup listener each time. Without
+  # teardown they accumulate, so one sash release fans out to one emit per render;
+  # with teardown exactly one listener is live.
+  for (i in 1:3) {
+    app$click("rerender")
+    app$wait_for_idle()
+  }
+  app$run_js(
+    "window.__c = 0;
+     var s = document.querySelector('.dv-sash');
+     if (s) s.dispatchEvent(new PointerEvent('pointerup', { bubbles: true }));"
+  )
+  Sys.sleep(0.2)
+  app$wait_for_idle()
+
+  expect_equal(unlist(app$get_js("window.__c")), 1)
+})
