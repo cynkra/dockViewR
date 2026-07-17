@@ -2,51 +2,39 @@
   "export": {
     "active_group": "3",
     "grid": {
+      "orientation": "HORIZONTAL",
       "root": {
         "type": "branch",
         "data": [
           {
             "type": "leaf",
-            "data": {
-              "views": [
-                "1",
-                "2"
-              ],
-              "activeView": "2",
-              "id": "1"
-            },
-            "size": 93.33333333333333
+            "id": "1",
+            "views": [
+              "1",
+              "2"
+            ],
+            "activeView": "2"
           },
           {
             "type": "leaf",
-            "data": {
-              "views": [
-                "3",
-                "4"
-              ],
-              "activeView": "4",
-              "id": "2"
-            },
-            "size": 93.33333333333333
+            "id": "2",
+            "views": [
+              "3",
+              "4"
+            ],
+            "activeView": "4"
           },
           {
             "type": "leaf",
-            "data": {
-              "views": [
-                "5",
-                "6"
-              ],
-              "activeView": "6",
-              "id": "3"
-            },
-            "size": 93.33333333333333
+            "id": "3",
+            "views": [
+              "5",
+              "6"
+            ],
+            "activeView": "6"
           }
-        ],
-        "size": 0
-      },
-      "width": 0,
-      "height": 0,
-      "orientation": "HORIZONTAL"
+        ]
+      }
     },
     "panel_ids": [
       "1",

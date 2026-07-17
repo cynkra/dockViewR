@@ -62,6 +62,32 @@ test_that("dock state", {
   expect_identical(session$lastCustomMessage$type, "dock_restore-state")
 })
 
+test_that("grid_shape captures structure without pixel geometry", {
+  session$input[["dock_state"]] <- test_dock
+  dock_proxy <- dock_view_proxy("dock", session = session)
+
+  shape <- grid_shape(dock_proxy)
+
+  expect_named(shape, c("orientation", "root"))
+  expect_identical(shape$orientation, get_grid(dock_proxy)$orientation)
+  expect_identical(shape$root$type, "branch")
+
+  # No absolute geometry survives: no size / width / height / fraction anywhere.
+  keys <- names(unlist(shape))
+  expect_false(any(grepl("(^|\\.)(size|width|height|fraction)$", keys)))
+
+  # Tree structure is preserved: group ids and panel membership are unchanged.
+  leaves <- shape$root$data
+  expect_identical(
+    vapply(leaves, `[[`, character(1), "id"),
+    get_groups_ids(dock_proxy)
+  )
+  expect_identical(
+    lapply(leaves, `[[`, "views"),
+    unname(get_groups_panels(dock_proxy))
+  )
+})
+
 test_that("dock state app works", {
   skip_on_cran()
 
@@ -85,5 +111,6 @@ test_that("dock state app works", {
   app$click("save")
   app$expect_values(input = "obs", output = FALSE, export = TRUE)
   app$click("restore")
+  app$wait_for_idle()
   app$expect_values(input = "obs", output = FALSE, export = TRUE)
 })

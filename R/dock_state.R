@@ -21,6 +21,12 @@
 #' [get_active_panel()] is a convenience function that returns the active panel
 #' in the active group.
 #' [get_grid()] returns the `grid` element of [get_dock()] which is a list.
+#' [grid_shape()] returns the structural shape of [get_grid()]: the
+#' branch / leaf nesting, orientation, group ids, panel membership and order,
+#' with all absolute geometry (`size`, `width`, `height`) dropped. Pixel
+#' geometry is volatile -- and in a headless render not even a valid partition --
+#' so snapshotting structure alone keeps the layout coverage that matters
+#' without the flake.
 #' [get_groups()] returns a list of panel groups from [get_grid()].
 #' [get_groups_ids()] returns a character vector of groups ids
 #' from [get_groups()].
@@ -61,6 +67,34 @@ get_active_group <- function(dock) {
 #' @export
 get_grid <- function(dock) {
   get_dock(dock)[["grid"]]
+}
+
+#' get dock grid shape
+#' @rdname dock-state
+#' @export
+grid_shape <- function(dock) {
+  grid <- get_grid(dock)
+  list(
+    orientation = grid[["orientation"]],
+    root = shape_node(grid[["root"]])
+  )
+}
+
+#' @keywords internal
+shape_node <- function(node) {
+  if (node[["type"]] == "leaf") {
+    list(
+      type = "leaf",
+      id = node[["data"]][["id"]],
+      views = node[["data"]][["views"]],
+      activeView = node[["data"]][["activeView"]]
+    )
+  } else {
+    list(
+      type = "branch",
+      data = lapply(node[["data"]], shape_node)
+    )
+  }
 }
 
 #' get dock groups

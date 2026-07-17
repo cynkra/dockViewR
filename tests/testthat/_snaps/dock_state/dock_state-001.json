@@ -10,38 +10,29 @@
       "2": "3"
     },
     "grid": {
+      "orientation": "HORIZONTAL",
       "root": {
         "type": "branch",
         "data": [
           {
             "type": "leaf",
-            "data": {
-              "views": [
-                "test",
-                "2"
-              ],
-              "activeView": "2",
-              "id": "1"
-            },
-            "size": 95
+            "id": "1",
+            "views": [
+              "test",
+              "2"
+            ],
+            "activeView": "2"
           },
           {
             "type": "leaf",
-            "data": {
-              "views": [
-                "3"
-              ],
-              "activeView": "3",
-              "id": "2"
-            },
-            "size": 95
+            "id": "2",
+            "views": [
+              "3"
+            ],
+            "activeView": "3"
           }
-        ],
-        "size": 0
-      },
-      "width": 0,
-      "height": 0,
-      "orientation": "HORIZONTAL"
+        ]
+      }
     },
     "group_ids": [
       "1",
