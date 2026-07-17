@@ -79,6 +79,27 @@ respectively, which weren’t very safe in the previous API.
 - Add new `input[["<dock_ID>_restored"]]` as a callback when the dock
   get restored after calling
   [`restore_dock()`](https://cynkra.github.io/dockViewR/reference/dock-state.md).
+- Add new `input[["<dock_ID>_state-source"]]`, emitted alongside every
+  `input[["<dock_ID>_state"]]` update to report **what produced the
+  change**: `"server"` when R drove the dock — the initial render, or a
+  proxy call
+  ([`restore_dock()`](https://cynkra.github.io/dockViewR/reference/dock-state.md),
+  [`add_panel()`](https://cynkra.github.io/dockViewR/reference/panel-operations.md),
+  [`remove_panel()`](https://cynkra.github.io/dockViewR/reference/panel-operations.md),
+  [`move_panel()`](https://cynkra.github.io/dockViewR/reference/panel-operations.md),
+  [`move_group()`](https://cynkra.github.io/dockViewR/reference/panel-operations.md),
+  [`move_group2()`](https://cynkra.github.io/dockViewR/reference/panel-operations.md),
+  [`select_panel()`](https://cynkra.github.io/dockViewR/reference/panel-operations.md),
+  [`set_panel_title()`](https://cynkra.github.io/dockViewR/reference/panel-operations.md)),
+  including the proxy call your server makes in response to the built-in
+  add (`+`) and close (`x`) tab buttons, which round-trip through Shiny
+  — and `"client"` when the widget changed its own layout directly, such
+  as a user drag, sash resize, or tab activation. An app that mirrors
+  `_state` back into server-side layout state can use this to ignore its
+  own echoes instead of feeding a restore/reconcile loop
+  ([\#70](https://github.com/cynkra/dockViewR/issues/70)). Attribution
+  is causal (a flag carried across dockview’s microtask-batched
+  `onDidLayoutChange`), not time-based.
 - Fix [\#53](https://github.com/cynkra/dockViewR/issues/53): Added
   `get_active_views()]`, a convenience function that returns the active
   view in each group and `get_active_panel()]`, another convenience
