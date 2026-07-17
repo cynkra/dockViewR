@@ -67,12 +67,12 @@ in each group.
 \code{\link[=get_active_panel]{get_active_panel()}} is a convenience function that returns the active panel
 in the active group.
 \code{\link[=get_grid]{get_grid()}} returns the \code{grid} element of \code{\link[=get_dock]{get_dock()}} which is a list.
-\code{\link[=grid_shape]{grid_shape()}} returns \code{\link[=get_grid]{get_grid()}} with each node's absolute pixel \code{size}
-replaced by its sibling-relative fraction (rounded to 2 decimals) and the
-absolute \code{width} / \code{height} dropped. The tree structure (nesting,
-orientation, group ids, panel membership, order) is preserved, so it
-captures real layout changes while staying stable against the render-stack
-pixel noise that makes raw \code{get_grid()} snapshots flaky.
+\code{\link[=grid_shape]{grid_shape()}} returns the structural shape of \code{\link[=get_grid]{get_grid()}}: the
+branch / leaf nesting, orientation, group ids, panel membership and order,
+with all absolute geometry (\code{size}, \code{width}, \code{height}) dropped. Pixel
+geometry is volatile -- and in a headless render not even a valid partition --
+so snapshotting structure alone keeps the layout coverage that matters
+without the flake.
 \code{\link[=get_groups]{get_groups()}} returns a list of panel groups from \code{\link[=get_grid]{get_grid()}}.
 \code{\link[=get_groups_ids]{get_groups_ids()}} returns a character vector of groups ids
 from \code{\link[=get_groups]{get_groups()}}.

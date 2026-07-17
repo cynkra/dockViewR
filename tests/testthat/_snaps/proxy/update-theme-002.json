@@ -5,7 +5,6 @@
       "orientation": "HORIZONTAL",
       "root": {
         "type": "branch",
-        "fraction": 1,
         "data": [
           {
             "type": "leaf",
@@ -13,12 +12,10 @@
             "views": [
               "1"
             ],
-            "activeView": "1",
-            "fraction": 1
+            "activeView": "1"
           },
           {
             "type": "branch",
-            "fraction": 0,
             "data": [
               {
                 "type": "leaf",
@@ -26,8 +23,7 @@
                 "views": [
                   "2"
                 ],
-                "activeView": "2",
-                "fraction": 0.5
+                "activeView": "2"
               },
               {
                 "type": "leaf",
@@ -35,8 +31,7 @@
                 "views": [
                   "3"
                 ],
-                "activeView": "3",
-                "fraction": 0.5
+                "activeView": "3"
               }
             ]
           }

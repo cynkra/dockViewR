@@ -9,7 +9,6 @@
       "orientation": "HORIZONTAL",
       "root": {
         "type": "branch",
-        "fraction": 1,
         "data": [
           {
             "type": "leaf",
@@ -19,8 +18,7 @@
               "2",
               "3"
             ],
-            "activeView": "3",
-            "fraction": 1
+            "activeView": "3"
           }
         ]
       }

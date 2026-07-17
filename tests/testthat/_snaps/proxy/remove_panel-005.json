@@ -8,7 +8,6 @@
       "orientation": "HORIZONTAL",
       "root": {
         "type": "branch",
-        "fraction": 1,
         "data": [
 
         ]
