@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">dockViewR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,6 +35,11 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="dockviewr-development-version">dockViewR (development version)<a class="anchor" aria-label="anchor" href="#dockviewr-development-version"></a></h2>
+<div class="section level3">
+<h3 id="breaking-changes-development-version">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h3>
+<ul><li>
+<code><a href="../reference/panel-operations.html">move_panel()</a></code> now places the moved panel with the same <code>position</code> vocabulary as <code><a href="../reference/panel-operations.html">add_panel()</a></code> and <code><a href="../reference/panel.html">panel()</a></code> — a list carrying a <code>referencePanel</code> or <code>referenceGroup</code> plus a <code>direction</code> (one of “above”, “below”, “left”, “right”, “within”) and an optional <code>index</code> — replacing the previous scalar <code>position</code> / <code>group</code> / <code>index</code> arguments. Server-side callers can now express “move panel X next to panel Y” with the same placement grammar they use to add panels.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
 <ul><li>Added <code><a href="../reference/panel-operations.html">set_size()</a></code> to resize the group a panel belongs to from the server. The caller gives a single target fraction of the group’s splitview along its axis; the other groups in that split keep their relative sizes and share the remaining space.</li>

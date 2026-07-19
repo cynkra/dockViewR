@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">dockViewR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,7 @@
 <span></span>
 <span><span class="fu">select_panel</span><span class="op">(</span><span class="va">dock</span>, <span class="va">id</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">move_panel</span><span class="op">(</span><span class="va">dock</span>, <span class="va">id</span>, position <span class="op">=</span> <span class="cn">NULL</span>, group <span class="op">=</span> <span class="cn">NULL</span>, index <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu">move_panel</span><span class="op">(</span><span class="va">dock</span>, <span class="va">id</span>, <span class="va">position</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">move_group</span><span class="op">(</span><span class="va">dock</span>, <span class="va">from</span>, <span class="va">to</span>, position <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
@@ -82,15 +82,16 @@
 
 
 <dt id="arg-position">position<a class="anchor" aria-label="anchor" href="#arg-position"></a></dt>
-<dd><p>Panel/group position: one of "left", "right", "top", "bottom", "center".</p></dd>
-
-
-<dt id="arg-group">group<a class="anchor" aria-label="anchor" href="#arg-group"></a></dt>
-<dd><p>ID of a panel that belongs to the target group (for <code>move_panel</code>).</p></dd>
-
-
-<dt id="arg-index">index<a class="anchor" aria-label="anchor" href="#arg-index"></a></dt>
-<dd><p>Panel index within a group (for <code>move_panel</code>).</p></dd>
+<dd><p>For <code>move_group()</code> and <code>move_group2()</code>, placement relative to
+the destination group: one of "left", "right", "top", "bottom", "center".
+For <code>move_panel()</code>, a placement list sharing the vocabulary of <code><a href="panel.html">panel()</a></code>'s
+<code>position</code>: a <code>referencePanel</code> <em>or</em> <code>referenceGroup</code> (not both) to move next
+to, a <code>direction</code> (one of "above", "below", "left", "right", "within"), and
+an <code>index</code> used only with <code>direction = "within"</code> to set the tab position in
+the target group. "above" / "below" / "left" / "right" put the panel in a
+new group on that side of the reference; "within" drops it into the
+reference's group. With no reference, the panel moves to a new group at the
+dock edge in <code>direction</code>.</p></dd>
 
 
 <dt id="arg-from">from<a class="anchor" aria-label="anchor" href="#arg-from"></a></dt>
@@ -120,7 +121,8 @@ the requested fraction is approximate.</p></dd>
 <li><p><code>add_panel()</code>: Adds a new panel to the dockview</p></li>
 <li><p><code>remove_panel()</code>: Removes an existing panel</p></li>
 <li><p><code>select_panel()</code>: Selects/focuses a specific panel</p></li>
-<li><p><code>move_panel()</code>: Moves a panel to a new position</p></li>
+<li><p><code>move_panel()</code>: Moves an existing panel next to a reference panel or group,
+using the same <code>position</code> vocabulary as <code><a href="panel.html">panel()</a></code></p></li>
 <li><p><code>move_group()</code>: Moves a group using group IDs</p></li>
 <li><p><code>move_group2()</code>: Moves a group using panel IDs</p></li>
 <li><p><code>set_size()</code>: Resizes the group a panel belongs to, as a fraction of its

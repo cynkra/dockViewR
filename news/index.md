@@ -2,6 +2,19 @@
 
 ## dockViewR (development version)
 
+### Breaking changes
+
+- [`move_panel()`](https://cynkra.github.io/dockViewR/reference/panel-operations.md)
+  now places the moved panel with the same `position` vocabulary as
+  [`add_panel()`](https://cynkra.github.io/dockViewR/reference/panel-operations.md)
+  and [`panel()`](https://cynkra.github.io/dockViewR/reference/panel.md)
+  — a list carrying a `referencePanel` or `referenceGroup` plus a
+  `direction` (one of “above”, “below”, “left”, “right”, “within”) and
+  an optional `index` — replacing the previous scalar `position` /
+  `group` / `index` arguments. Server-side callers can now express “move
+  panel X next to panel Y” with the same placement grammar they use to
+  add panels.
+
 ### New features
 
 - Added

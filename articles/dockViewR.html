@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">dockViewR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -396,14 +396,14 @@ Toggle code
 </div>
 </section><section class="level2"><h2 id="dynamically-move-panel">Dynamically move panel<a class="anchor" aria-label="anchor" href="#dynamically-move-panel"></a>
 </h2>
-<p>You can <strong>move</strong> individual panels in the dock with <code><a href="../reference/panel-operations.html">move_panel()</a></code> which expects:</p>
+<p>You can <strong>move</strong> individual panels in the dock with <code><a href="../reference/panel-operations.html">move_panel()</a></code>. It expects the dock proxy, the <code>id</code> of the panel to move, and a <code>position</code> list using the same vocabulary as <code><a href="../reference/panel.html">panel()</a></code>:</p>
 <ul>
-<li>The dock id.</li>
-<li>The panel id: can be a string or numeric value.</li>
-<li>The position. If left NULL, the panel is moved to the latest index. Otherwise choose one of <code>"left", "right", "top", "bottom", "center"</code>.</li>
 <li>
-<code>group</code>: id of the panel that belongs to another group. The panel will be moved relative to the second group, depending on the position parameter. If left NULL, it is added on the right side.</li>
-<li>index: If panels belong to the same group, you can use index to move the target panel at the desired position. When group is left NULL, index must be passed and cannot exceed the total number of panels or be negative.</li>
+<code>referencePanel</code> or <code>referenceGroup</code>: the panel or group to move next to.</li>
+<li>
+<code>direction</code>: one of <code>"above"</code>, <code>"below"</code>, <code>"left"</code>, <code>"right"</code> (put the moved panel in a new group on that side of the reference) or <code>"within"</code> (put it in the reference’s group).</li>
+<li>
+<code>index</code>: optional placement within the reference group, used with <code>direction = "within"</code>.</li>
 </ul>
 <details><summary>
 Toggle code
@@ -415,10 +415,10 @@ Toggle code
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"dockViewR.mode"</span> <span class="op">=</span> <span class="st">"dev"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h1</a></span><span class="op">(</span><span class="st">"Panels within the same group"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h1</a></span><span class="op">(</span><span class="st">"Reorder a panel within its group"</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html" class="external-link">actionButton</a></span><span class="op">(</span><span class="st">"move"</span>, <span class="st">"Move Panel 1"</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="../reference/dock_view-shiny.html">dockViewOutput</a></span><span class="op">(</span><span class="st">"dock"</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h1</a></span><span class="op">(</span><span class="st">"Panels with different groups"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h1</a></span><span class="op">(</span><span class="st">"Move a panel next to another group"</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html" class="external-link">actionButton</a></span><span class="op">(</span><span class="st">"move2"</span>, <span class="st">"Move Panel 1"</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="../reference/dock_view-shiny.html">dockViewOutput</a></span><span class="op">(</span><span class="st">"dock2"</span><span class="op">)</span>,</span>
 <span><span class="op">)</span></span>
@@ -516,8 +516,8 @@ Toggle code
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">move</span>, <span class="op">{</span></span>
 <span>    <span class="fu"><a href="../reference/panel-operations.html">move_panel</a></span><span class="op">(</span></span>
 <span>      <span class="va">dock_proxy</span>,</span>
-<span>      id <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>      index <span class="op">=</span> <span class="fl">3</span></span>
+<span>      id <span class="op">=</span> <span class="st">"1"</span>,</span>
+<span>      position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>referencePanel <span class="op">=</span> <span class="st">"2"</span>, direction <span class="op">=</span> <span class="st">"within"</span>, index <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span></span>
@@ -526,9 +526,8 @@ Toggle code
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">move2</span>, <span class="op">{</span></span>
 <span>    <span class="fu"><a href="../reference/panel-operations.html">move_panel</a></span><span class="op">(</span></span>
 <span>      <span class="va">dock_proxy2</span>,</span>
-<span>      id <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>      group <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>      position <span class="op">=</span> <span class="st">"bottom"</span></span>
+<span>      id <span class="op">=</span> <span class="st">"1"</span>,</span>
+<span>      position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>referencePanel <span class="op">=</span> <span class="st">"3"</span>, direction <span class="op">=</span> <span class="st">"below"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>

@@ -354,20 +354,18 @@ shinyApp(ui, server)
 ## Dynamically move panel
 
 You can **move** individual panels in the dock with
-[`move_panel()`](https://cynkra.github.io/dockViewR/reference/panel-operations.md)
-which expects:
+[`move_panel()`](https://cynkra.github.io/dockViewR/reference/panel-operations.md).
+It expects the dock proxy, the `id` of the panel to move, and a
+`position` list using the same vocabulary as
+[`panel()`](https://cynkra.github.io/dockViewR/reference/panel.md):
 
-- The dock id.
-- The panel id: can be a string or numeric value.
-- The position. If left NULL, the panel is moved to the latest index.
-  Otherwise choose one of `"left", "right", "top", "bottom", "center"`.
-- `group`: id of the panel that belongs to another group. The panel will
-  be moved relative to the second group, depending on the position
-  parameter. If left NULL, it is added on the right side.
-- index: If panels belong to the same group, you can use index to move
-  the target panel at the desired position. When group is left NULL,
-  index must be passed and cannot exceed the total number of panels or
-  be negative.
+- `referencePanel` or `referenceGroup`: the panel or group to move next
+  to.
+- `direction`: one of `"above"`, `"below"`, `"left"`, `"right"` (put the
+  moved panel in a new group on that side of the reference) or
+  `"within"` (put it in the reference’s group).
+- `index`: optional placement within the reference group, used with
+  `direction = "within"`.
 
 Toggle code
 
@@ -380,10 +378,10 @@ library(dockViewR)
 options("dockViewR.mode" = "dev")
 
 ui <- fluidPage(
-  h1("Panels within the same group"),
+  h1("Reorder a panel within its group"),
   actionButton("move", "Move Panel 1"),
   dockViewOutput("dock"),
-  h1("Panels with different groups"),
+  h1("Move a panel next to another group"),
   actionButton("move2", "Move Panel 1"),
   dockViewOutput("dock2"),
 )
@@ -481,8 +479,8 @@ server <- function(input, output, session) {
   observeEvent(input$move, {
     move_panel(
       dock_proxy,
-      id = 1,
-      index = 3
+      id = "1",
+      position = list(referencePanel = "2", direction = "within", index = 2)
     )
   })
 
@@ -491,9 +489,8 @@ server <- function(input, output, session) {
   observeEvent(input$move2, {
     move_panel(
       dock_proxy2,
-      id = 1,
-      group = 3,
-      position = "bottom"
+      id = "1",
+      position = list(referencePanel = "3", direction = "below")
     )
   })
 }

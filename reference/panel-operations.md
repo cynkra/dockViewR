@@ -13,7 +13,7 @@ set_panel_title(dock, id, title)
 
 select_panel(dock, id)
 
-move_panel(dock, id, position = NULL, group = NULL, index = NULL)
+move_panel(dock, id, position)
 
 move_group(dock, from, to, position = NULL)
 
@@ -49,16 +49,17 @@ set_size(dock, id, size)
 
 - position:
 
-  Panel/group position: one of "left", "right", "top", "bottom",
-  "center".
-
-- group:
-
-  ID of a panel that belongs to the target group (for `move_panel`).
-
-- index:
-
-  Panel index within a group (for `move_panel`).
+  For `move_group()` and `move_group2()`, placement relative to the
+  destination group: one of "left", "right", "top", "bottom", "center".
+  For `move_panel()`, a placement list sharing the vocabulary of
+  [`panel()`](https://cynkra.github.io/dockViewR/reference/panel.md)'s
+  `position`: a `referencePanel` *or* `referenceGroup` (not both) to
+  move next to, a `direction` (one of "above", "below", "left", "right",
+  "within"), and an `index` used only with `direction = "within"` to set
+  the tab position in the target group. "above" / "below" / "left" /
+  "right" put the panel in a new group on that side of the reference;
+  "within" drops it into the reference's group. With no reference, the
+  panel moves to a new group at the dock edge in `direction`.
 
 - from:
 
@@ -91,7 +92,9 @@ method chaining.
 
 - `select_panel()`: Selects/focuses a specific panel
 
-- `move_panel()`: Moves a panel to a new position
+- `move_panel()`: Moves an existing panel next to a reference panel or
+  group, using the same `position` vocabulary as
+  [`panel()`](https://cynkra.github.io/dockViewR/reference/panel.md)
 
 - `move_group()`: Moves a group using group IDs
 
