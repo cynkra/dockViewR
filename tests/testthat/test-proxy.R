@@ -191,36 +191,94 @@ test_that("move_panel works", {
   expect_snapshot(
     error = TRUE,
     {
-      # Wrong position
+      # No proxy
+      move_panel(
+        "dock",
+        id = "test",
+        position = list(referencePanel = "1", direction = "right")
+      )
+
+      # position is not a list
+      move_panel(dock_proxy, id = "test", position = "right")
+
+      # Wrong position names
       move_panel(
         dock_proxy,
         id = "test",
-        index = 3,
-        position = "testposition"
+        position = list(pouet = 3, plop = "test")
+      )
+
+      # Missing direction
+      move_panel(
+        dock_proxy,
+        id = "test",
+        position = list(referencePanel = "1")
+      )
+
+      # Wrong direction value
+      move_panel(
+        dock_proxy,
+        id = "test",
+        position = list(referencePanel = "1", direction = "bottom")
+      )
+
+      # referencePanel and referenceGroup are mutually exclusive
+      move_panel(
+        dock_proxy,
+        id = "test",
+        position = list(
+          referencePanel = "1",
+          referenceGroup = "2",
+          direction = "right"
+        )
       )
     }
   )
 
-  move_panel(dock_proxy, id = "test", index = 3)
-  expect_identical(session$lastCustomMessage$type, "dock_move-panel")
-  expect_type(session$lastCustomMessage$message, "list")
-  expect_length(session$lastCustomMessage$message, 2)
-  expect_identical(session$lastCustomMessage$message$id, "test")
-  expect_identical(session$lastCustomMessage$message$options$index, 3)
-
   move_panel(
     dock_proxy,
     id = "test",
-    group = 3,
-    position = "bottom"
+    position = list(referencePanel = "1", direction = "right")
   )
-
   expect_identical(session$lastCustomMessage$type, "dock_move-panel")
   expect_type(session$lastCustomMessage$message, "list")
   expect_length(session$lastCustomMessage$message, 2)
   expect_identical(session$lastCustomMessage$message$id, "test")
-  expect_identical(session$lastCustomMessage$message$options$group, "3")
-  expect_identical(session$lastCustomMessage$message$options$position, "bottom")
+  expect_type(session$lastCustomMessage$message$position, "list")
+  expect_identical(
+    session$lastCustomMessage$message$position$referencePanel,
+    "1"
+  )
+  expect_identical(
+    session$lastCustomMessage$message$position$direction,
+    "right"
+  )
+
+  # Same-group reorder: `within` + `index` into a referenced group
+  move_panel(
+    dock_proxy,
+    id = "test",
+    position = list(referenceGroup = "2", direction = "within", index = 1)
+  )
+  expect_identical(
+    session$lastCustomMessage$message$position$referenceGroup,
+    "2"
+  )
+  expect_identical(
+    session$lastCustomMessage$message$position$direction,
+    "within"
+  )
+  expect_identical(session$lastCustomMessage$message$position$index, 1)
+
+  # `index` is meaningless for a directional move and warns
+  expect_warning(
+    move_panel(
+      dock_proxy,
+      id = "test",
+      position = list(referencePanel = "1", direction = "right", index = 1)
+    ),
+    "index"
+  )
 })
 
 test_that("move_panel app works", {

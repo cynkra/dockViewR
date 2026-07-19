@@ -119,14 +119,11 @@ shiny::tags$iframe(
 
 ## Dynamically move panel
 
-You can __move__ individual panels in the dock with `move_panel()` which expects:
+You can __move__ individual panels in the dock with `move_panel()`. It expects the dock proxy, the `id` of the panel to move, and a `position` list using the same vocabulary as `panel()`:
 
-- The dock id.
-- The panel id: can be a string or numeric value.
-- The position. If left NULL, the panel is moved to the latest index. Otherwise choose one of `"left", "right", "top", "bottom", "center"`.
-- `group`: id of the panel that belongs to another group. The panel will be moved relative to the second group, depending on
-the position parameter. If left NULL, it is added on the right side.
-- index: If panels belong to the same group, you can use index to move the target panel at the desired position. When group is left NULL, index must be passed and cannot exceed the total number of panels or be negative.
+- `referencePanel` or `referenceGroup`: the panel or group to move next to.
+- `direction`: one of `"above"`, `"below"`, `"left"`, `"right"` (put the moved panel in a new group on that side of the reference) or `"within"` (put it in the reference's group).
+- `index`: optional placement within the reference group, used with `direction = "within"`.
 
 ```{r move-panel, eval=FALSE, echo = FALSE}
 library(dockViewR)
