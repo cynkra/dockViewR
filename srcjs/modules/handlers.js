@@ -1,4 +1,4 @@
-import { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, withServerDriven } from '../modules/proxy';
+import { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, withServerDriven, withRestore } from '../modules/proxy';
 
 const deserializeFunction = (obj) => {
   if (obj && typeof obj === 'object' && obj.__IS_FUNCTION__) {
@@ -58,9 +58,11 @@ const setShinyHandlers = (id, mode, api) => {
     saveDock(id, api)
   })
 
-  // Restore layout
+  // Restore layout. Tagged "restore", not "server", so a consumer can skip its
+  // redundant replay of the layout the server just pushed while still committing
+  // the geometry a move / resize / add echoes back.
   Shiny.addCustomMessageHandler(id + '_restore-state', (m) => {
-    withServerDriven(id, () => restoreDock(id, m, api));
+    withRestore(id, () => restoreDock(id, m, api));
   })
 
   Shiny.addCustomMessageHandler(id + '_move-group2', (m) => {

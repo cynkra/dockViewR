@@ -33,11 +33,13 @@ test_that("_state-source tags programmatic vs user layout changes", {
   app$wait_for_idle()
   expect_identical(app$get_value(input = "dock_state-source"), "server")
 
-  # A restore (fromJSON -- the issue's headline case) is tagged server across
-  # its whole teardown/rebuild cascade, not just the first frame.
+  # A restore (fromJSON) reports its own source, "restore", across the whole
+  # teardown/rebuild cascade -- distinct from the "server" tag on the add and
+  # move above, so a consumer can skip the redundant replay of the just-pushed
+  # layout while still committing the geometry those other ops echo back.
   app$click("restore")
   app$wait_for_idle()
-  expect_identical(app$get_value(input = "dock_state-source"), "server")
+  expect_identical(app$get_value(input = "dock_state-source"), "restore")
   expect_false("c" %in% app$get_value(export = "panel_ids"))
 
   # A genuine user gesture (closing a panel, as a tab-X click would) is tagged

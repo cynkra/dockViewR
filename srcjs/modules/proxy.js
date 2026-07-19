@@ -297,36 +297,39 @@ const clean_dock_state = (state) => {
 // Provenance for `_state`. dockview delivers onDidLayoutChange -- where
 // saveDock() runs -- on a microtask: its AsapEvent coalesces a burst of layout
 // mutations into one notification fired via queueMicrotask, *after* the api
-// call that caused them has returned. A flag set and cleared around the
-// synchronous call would already be down by then, so withServerDriven() instead
+// call that caused them has returned. A source set and cleared around the
+// synchronous call would already be gone by then, so runWithSource() instead
 // clears it on a microtask queued right after the call. Microtasks drain FIFO
 // and dockview enqueues its notification during the mutation -- ahead of this
-// clear -- so saveDock() sees the flag up for exactly the changes the server
-// initiated, then it goes down. A user gesture (drag, tab close) reaches
-// dockview without this wrapper and is reported as "client". Attribution is
-// causal, not timed: there are no wall-clock windows.
-const serverDriven = {};
+// clear -- so saveDock() reads the source for exactly the changes the server
+// initiated, then it clears. A user gesture (drag, tab close) reaches dockview
+// without this wrapper and reads as "client". A restore reads as "restore"
+// rather than "server": its echo merely replays the layout the server just
+// pushed, so a consumer can skip it, where a move / resize / add echo is the
+// only server-side record of the geometry the client realised and must be kept.
+// Attribution is causal, not timed: there are no wall-clock windows.
+const serverSource = {};
 
-const serverDrivenFor = (id) => serverDriven[id] === true;
-
-const runServerDriven = (id, value, fn) => {
-  const prev = serverDrivenFor(id);
-  serverDriven[id] = value;
+const runWithSource = (id, source, fn) => {
+  const prev = serverSource[id];
+  serverSource[id] = source;
   try {
     return fn();
   } finally {
     queueMicrotask(() => {
-      serverDriven[id] = prev;
+      serverSource[id] = prev;
     });
   }
 };
 
-const withServerDriven = (id, fn) => runServerDriven(id, true, fn);
+const withServerDriven = (id, fn) => runWithSource(id, "server", fn);
+
+const withRestore = (id, fn) => runWithSource(id, "restore", fn);
 
 const saveDock = (id, api) => {
   const state = clean_dock_state(api.toJSON());
-  Shiny.setInputValue(id + "_state-source", serverDrivenFor(id) ? "server" : "client");
+  Shiny.setInputValue(id + "_state-source", serverSource[id] || "client");
   Shiny.setInputValue(id + "_state", state);
 }
 
-export { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, withServerDriven, runServerDriven, serverDrivenFor };
+export { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, withServerDriven, withRestore };
