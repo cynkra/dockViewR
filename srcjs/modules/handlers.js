@@ -1,4 +1,4 @@
-import { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, withServerDriven } from '../modules/proxy';
+import { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, withServerDriven, setRestoring } from '../modules/proxy';
 
 const deserializeFunction = (obj) => {
   if (obj && typeof obj === 'object' && obj.__IS_FUNCTION__) {
@@ -29,9 +29,7 @@ const restoreDock = (id, state, api) => {
       }
     });
   }
-  let res = api.fromJSON(state);
-  Shiny.setInputValue(id + '_restored', true, { priority: 'event' });
-  return res;
+  return api.fromJSON(state);
 }
 
 const setShinyHandlers = (id, mode, api) => {
@@ -58,9 +56,19 @@ const setShinyHandlers = (id, mode, api) => {
     saveDock(id, api)
   })
 
-  // Restore layout
+  // Restore layout. Gate `_state` across the whole rebuild: raise `restoring` so
+  // requestSync stays a no-op while fromJSON tears down and rebuilds, then emit
+  // the single settled layout from a one-shot onDidLayoutFromJSON (fired
+  // synchronously at the end of fromJSON), server-tagged. No empty or
+  // intermediate frame escapes.
   Shiny.addCustomMessageHandler(id + '_restore-state', (m) => {
-    withServerDriven(id, () => restoreDock(id, m, api));
+    setRestoring(id, true);
+    const settled = api.onDidLayoutFromJSON(() => {
+      settled.dispose();
+      withServerDriven(id, () => saveDock(id, api));
+      setRestoring(id, false);
+    });
+    restoreDock(id, m, api);
   })
 
   Shiny.addCustomMessageHandler(id + '_move-group2', (m) => {

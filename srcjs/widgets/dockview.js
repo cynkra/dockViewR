@@ -1,7 +1,6 @@
 import 'widgets';
 import 'dockview-core/dist/styles/dockview.css';
 import { setDockViewCallbacks } from '../modules/callbacks';
-import { saveDock, withServerDriven } from '../modules/proxy';
 import { setShinyHandlers } from '../modules/handlers';
 import { instantiateDock, initDockPanels } from '../modules/dock';
 
@@ -29,19 +28,12 @@ HTMLWidgets.widget({
         // Instantiate dockView
         api = instantiateDock(id, x);
 
-        // The initial layout (and the empty grid before its panels land) is
-        // produced by the server, not a user gesture, so its `_state` is
-        // reported as server-initiated -- same as a later proxy push.
-        withServerDriven(id, () => {
-          // Init state
-          saveDock(id, api)
-
-          // Set API callbacks: onAddPanel, ...
-          teardown = setDockViewCallbacks(id, api);
-
-          // Init panels
-          initDockPanels(x, api);
-        });
+        // Wire callbacks (which arm the ResizeObserver gate), then add the
+        // initial panels. `_state` stays gated until the ResizeObserver reports
+        // real geometry, so the empty grid and the pre-size structure never reach
+        // the consumer -- only the settled layout does.
+        teardown = setDockViewCallbacks(id, api);
+        initDockPanels(x, api);
 
         // Set any Shiny handlers for proxy operations
         if (HTMLWidgets.shinyMode) {

@@ -74,6 +74,11 @@ get_grid <- function(dock) {
 #' @export
 grid_shape <- function(dock) {
   grid <- get_grid(dock)
+
+  if (is.null(grid)) {
+    return(NULL)
+  }
+
   list(
     orientation = grid[["orientation"]],
     root = shape_node(grid[["root"]])
@@ -82,6 +87,10 @@ grid_shape <- function(dock) {
 
 #' @keywords internal
 shape_node <- function(node) {
+  if (is.null(node)) {
+    return(NULL)
+  }
+
   if (node[["type"]] == "leaf") {
     list(
       type = "leaf",
@@ -138,6 +147,10 @@ get_groups_panels <- function(dock) {
 
 #' @keywords internal
 extract_active_view <- function(x) {
+  if (is.null(x)) {
+    return(NULL)
+  }
+
   if (x[["type"]] == "leaf") {
     active_view <- x[["data"]][["activeView"]]
     group_id <- x[["data"]][["id"]]
@@ -167,8 +180,11 @@ get_active_views <- function(dock) {
 get_active_panel <- function(dock) {
   active_group <- get_active_group(dock)
   active_views <- get_active_views(dock)
-  # We need no check since there is always an active group
-  # and an active view.
+
+  if (is.null(active_group) || is.null(active_views)) {
+    return(NULL)
+  }
+
   active_views[[active_group]]
 }
 

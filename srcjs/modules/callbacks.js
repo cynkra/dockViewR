@@ -1,4 +1,4 @@
-import { saveDock, withServerDriven } from '../modules/proxy';
+import { saveDock, withServerDriven, isRestoring } from '../modules/proxy';
 
 const setDockViewCallbacks = (id, api) => {
 
@@ -32,6 +32,14 @@ const setDockViewCallbacks = (id, api) => {
   let flushScheduled = false;
   let persisting = false;
 
+  // `_state` must only ever surface a settled layout. `seeded` gates the initial
+  // render frames -- the empty grid, and the zero-sized structure before the
+  // ResizeObserver reports real geometry -- while `isRestoring` gates a restore's
+  // teardown/rebuild (fromJSON), whose single settled emit the restore handler
+  // fires on onDidLayoutFromJSON. Until those open, requestSync is a no-op, so no
+  // empty or partial frame reaches the consumer.
+  let seeded = false;
+
   // One settled `_state` per gesture. A single gesture fires several dockview
   // events (a tab move that splits a group fires onDidMovePanel, onDidAddGroup
   // and onDidActivePanelChange); persisting in each would emit several times and
@@ -42,7 +50,7 @@ const setDockViewCallbacks = (id, api) => {
   // `_state-source`; a separate gesture runs in a later task and gets its own
   // flush, so two gestures never merge into one (mis)tagged emit.
   const requestSync = () => {
-    if (flushScheduled || persisting) return;
+    if (flushScheduled || persisting || isRestoring(id) || !seeded) return;
 
     flushScheduled = true;
     queueMicrotask(() => {
@@ -58,8 +66,6 @@ const setDockViewCallbacks = (id, api) => {
   };
 
   api.onDidMovePanel(requestSync);
-
-  api.onDidLayoutFromJSON(requestSync);
 
   api.onDidMaximizedGroupChange(requestSync);
 
@@ -130,13 +136,17 @@ const setDockViewCallbacks = (id, api) => {
     // A container / window resize changes the layout but has no gesture, and no
     // event-driven end (the window-drag-end belongs to the OS). `_state` must
     // still reflect it -- consumers read the input directly, to drive observers
-    // and to serialise -- so debounce the container's own resize and persist
-    // once it settles. It is environmental, not server-initiated, so it reads
-    // as "client". A container-only resize (a bslib sidebar toggle, a flex
-    // change) fires no window `resize`, so re-fit embedded widgets here too --
-    // guarded like the gesture flush, since the re-fit and `toJSON` re-fire
-    // events while a group is maximized. The first observation is the initial
-    // layout landing (server-tagged); later ones are user resizes.
+    // and to serialise -- so debounce the container's own resize and persist once
+    // it settles. The debounce also lets dockview lay its grid out against the new
+    // size before `saveDock` reads it, so the emitted geometry is real. It is
+    // environmental, not server-initiated, so it reads as "client". A
+    // container-only resize (a bslib sidebar toggle, a flex change) fires no
+    // window `resize`, so re-fit embedded widgets here too -- guarded like the
+    // gesture flush, since the re-fit and `toJSON` re-fire events while a group is
+    // maximized. The first observation is the initial layout landing: it opens the
+    // `seeded` gate and runs the full persist (server-tagged, plus binding the
+    // panels' inputs, which the gated init flush no longer does); later ones are
+    // user resizes.
     let resizeBaseline = null;
     let resizeTimer = null;
     const resizeObserver = new ResizeObserver((entries) => {
@@ -154,12 +164,8 @@ const setDockViewCallbacks = (id, api) => {
         persisting = true;
         try {
           if (seeding) {
-            // First real size. The synchronous render captures the layout while
-            // the grid is still zero-sized, and a size-only settle never re-fires
-            // onDidLayoutChange, so this is the only reliable signal that the
-            // initial layout landed. Server-tagged -- the render is
-            // server-initiated -- completing the zero-sized grid.
-            withServerDriven(id, () => saveDock(id, api));
+            seeded = true;
+            withServerDriven(id, () => persistState());
           } else {
             persistState();
           }

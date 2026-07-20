@@ -329,4 +329,16 @@ const saveDock = (id, api) => {
   Shiny.setInputValue(id + "_state", state);
 }
 
-export { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, withServerDriven, runServerDriven, serverDrivenFor };
+// A restore (`_restore-state` -> fromJSON) tears down and rebuilds the whole
+// layout, firing the same events a gesture would. `restoring` marks that window:
+// `_state` stays gated (requestSync is a no-op) until fromJSON completes, where
+// the restore handler emits the single settled layout.
+const restoring = {};
+
+const isRestoring = (id) => restoring[id] === true;
+
+const setRestoring = (id, value) => {
+  restoring[id] = value;
+};
+
+export { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, withServerDriven, runServerDriven, serverDrivenFor, isRestoring, setRestoring };

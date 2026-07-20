@@ -259,3 +259,62 @@ test_that("container listeners are torn down on re-render", {
 
   expect_equal(unlist(app$get_js("window.__c")), 1)
 })
+
+test_that("re-init and restore surface only a settled `_state`, never a transient", {
+  skip_on_cran()
+
+  appdir <- system.file(package = "dockViewR", "examples", "state_source")
+
+  app <- AppDriver$new(
+    appdir,
+    name = "state_source_hygiene",
+    seed = 121,
+    height = 752,
+    width = 1211
+  )
+  app$wait_for_idle()
+
+  # Capture the shape of every `_state` emission: panel count, grid width, root
+  # child count. A settled frame has panels and real geometry; an empty grid or a
+  # zero-sized mid-build structure -- the transients this gates out -- does not.
+  app$run_js(
+    "window.__seq = [];
+     var o = Shiny.setInputValue;
+     Shiny.setInputValue = function (n, v, p) {
+       if (typeof n === 'string' && /dock_state$/.test(n)) {
+         window.__seq.push({
+           np: (v && v.panels) ? Object.keys(v.panels).length : 0,
+           gw: (v && v.grid) ? v.grid.width : 0,
+           rc: (v && v.grid && v.grid.root && v.grid.root.data) ? v.grid.root.data.length : 0
+         });
+       }
+       return o.apply(this, arguments);
+     };"
+  )
+
+  count_js <- "window.__seq.length"
+  transient_js <- "window.__seq.some(function (f) { return !f.np || !f.gw || !f.rc; })"
+
+  # A re-render tears the widget down and rebuilds it -- the path that used to
+  # leak an empty grid, then a zero-sized structure, before the settled layout.
+  app$run_js("window.__seq = [];")
+  app$click("rerender")
+  app$wait_for_idle()
+  expect_gt(unlist(app$get_js(count_js)), 0)
+  expect_false(unlist(app$get_js(transient_js)))
+
+  # A restore (fromJSON) tears down and rebuilds again. Only the settled restored
+  # layout surfaces -- no empty or intermediate frame from the cascade escapes,
+  # and the restore is not swallowed either.
+  app$click("save")
+  app$click("add")
+  app$wait_for_idle()
+  app$run_js("window.__seq = [];")
+  app$click("restore")
+  app$wait_for_idle()
+  expect_gt(unlist(app$get_js(count_js)), 0)
+  expect_false(unlist(app$get_js(transient_js)))
+
+  # The restored layout is exactly the saved {a, b}.
+  expect_setequal(app$get_value(export = "panel_ids"), c("a", "b"))
+})
