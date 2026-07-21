@@ -13,8 +13,7 @@ server <- function(input, output, session) {
   dock_proxy <- dock_view_proxy("dock")
 
   exportTestValues(
-    grid = get_grid(dock_proxy),
-    state_source = session$input[["dock_state-source"]]
+    grid = get_grid(dock_proxy)
   )
 
   output$dock <- renderDockView({

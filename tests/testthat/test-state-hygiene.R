@@ -1,62 +1,13 @@
 library(shinytest2)
 
-test_that("_state-source tags programmatic vs user layout changes", {
+test_that("_state tracks a settled container resize", {
   skip_on_cran()
 
-  appdir <- system.file(package = "dockViewR", "examples", "state_source")
+  appdir <- system.file(package = "dockViewR", "examples", "state")
 
   app <- AppDriver$new(
     appdir,
-    name = "state_source",
-    seed = 121,
-    height = 752,
-    width = 1211
-  )
-  app$wait_for_idle()
-
-  # The initial layout is produced by the server (the panels passed to
-  # dock_view()), not a user gesture.
-  expect_identical(app$get_value(input = "dock_state-source"), "server")
-
-  # Stash the {a, b} layout to restore later.
-  app$click("save")
-
-  # A programmatic apply (add_panel -> _add-panel handler) is tagged server.
-  app$click("add")
-  app$wait_for_idle()
-  expect_identical(app$get_value(input = "dock_state-source"), "server")
-  expect_true("c" %in% app$get_value(export = "panel_ids"))
-
-  # A programmatic move stays server -- its dockview events coalesce into one
-  # flush that runs inside the op's provenance window.
-  app$click("move")
-  app$wait_for_idle()
-  expect_identical(app$get_value(input = "dock_state-source"), "server")
-
-  # A restore (fromJSON -- the issue's headline case) is tagged server across
-  # its whole teardown/rebuild cascade, not just the first frame.
-  app$click("restore")
-  app$wait_for_idle()
-  expect_identical(app$get_value(input = "dock_state-source"), "server")
-  expect_false("c" %in% app$get_value(export = "panel_ids"))
-
-  # A genuine user gesture (closing a panel, as a tab-X click would) is tagged
-  # client -- the next layout change after a server apply is not mis-attributed.
-  app$run_js(
-    "HTMLWidgets.find('#dock').getWidget().component.api.getPanel('a').api.close()"
-  )
-  app$wait_for_idle()
-  expect_identical(app$get_value(input = "dock_state-source"), "client")
-})
-
-test_that("_state tracks a settled container resize, tagged client", {
-  skip_on_cran()
-
-  appdir <- system.file(package = "dockViewR", "examples", "state_source")
-
-  app <- AppDriver$new(
-    appdir,
-    name = "state_source_resize",
+    name = "state_resize",
     seed = 121,
     height = 752,
     width = 1211
@@ -68,32 +19,36 @@ test_that("_state tracks a settled container resize, tagged client", {
       "(function(){var s=Shiny.shinyapp.$inputValues['dock_state'];return s && s.grid ? s.grid.width : 0;})()"
     ))
   }
+  # The poll below exits on a width that differs from this baseline, so the seed
+  # has to have landed first: starting from an unseeded 0 the very first read
+  # would satisfy it and the resize would never be exercised.
   before <- grid_width()
+  expect_gt(before, 0)
 
   # A container / window resize changes the layout but has no gesture and no
   # event-driven end, so it is debounced and persisted once it settles. `_state`
-  # must reflect it -- consumers read the input directly -- and it is tagged
-  # client: environmental, not server-initiated. The debounced emit produces no
-  # Shiny activity until it fires, so poll for it rather than wait_for_idle.
+  # must reflect it -- consumers read the input directly. The debounced emit
+  # produces no Shiny activity until it fires, so poll for the settled width
+  # rather than wait_for_idle.
   app$set_window_size(width = 820, height = 700)
   for (i in 1:30) {
     Sys.sleep(0.1)
-    if (identical(app$get_value(input = "dock_state-source"), "client")) break
+    if (!identical(grid_width(), before)) break
   }
 
-  expect_identical(app$get_value(input = "dock_state-source"), "client")
-  expect_gt(grid_width(), 0)
-  expect_false(identical(grid_width(), before))
+  after <- grid_width()
+  expect_gt(after, 0)
+  expect_false(identical(after, before))
 })
 
 test_that("maximizing a group emits a bounded number of `_state` updates", {
   skip_on_cran()
 
-  appdir <- system.file(package = "dockViewR", "examples", "state_source")
+  appdir <- system.file(package = "dockViewR", "examples", "state")
 
   app <- AppDriver$new(
     appdir,
-    name = "state_source_maximize",
+    name = "state_maximize",
     seed = 121,
     height = 752,
     width = 1211
@@ -117,14 +72,14 @@ test_that("maximizing a group emits a bounded number of `_state` updates", {
   expect_lt(unlist(app$get_js("window.__c")), 10)
 })
 
-test_that("set_panel_title persists the new title, tagged server", {
+test_that("set_panel_title persists the new title", {
   skip_on_cran()
 
-  appdir <- system.file(package = "dockViewR", "examples", "state_source")
+  appdir <- system.file(package = "dockViewR", "examples", "state")
 
   app <- AppDriver$new(
     appdir,
-    name = "state_source_settitle",
+    name = "state_settitle",
     seed = 121,
     height = 752,
     width = 1211
@@ -132,36 +87,33 @@ test_that("set_panel_title persists the new title, tagged server", {
   app$wait_for_idle()
 
   # setTitle fires no allowlisted gesture, so without an explicit persist the new
-  # title never reaches `_state` with server provenance. Capture the source tags:
-  # the server-driven title save must be among them.
+  # title never reaches `_state`. Count the `_state` emits: exactly the one
+  # explicit persist, no stray extra from a lingering initial one-shot.
   app$run_js(
-    "window.__src = [];
+    "window.__c = 0;
      var o = Shiny.setInputValue;
      Shiny.setInputValue = function (n, v, p) {
-       if (typeof n === 'string' && /_state-source$/.test(n)) window.__src.push(v);
+       if (typeof n === 'string' && /_state$/.test(n)) window.__c++;
        return o.apply(this, arguments);
      };"
   )
   app$click("settitle")
   app$wait_for_idle()
 
-  # exactly one emit, tagged server -- the explicit persist. No stray client from
-  # a lingering initial one-shot (which this PR replaced with the seeding branch).
-  expect_equal(unlist(app$get_js("window.__src.length")), 1)
-  expect_identical(unlist(app$get_js("window.__src[0]")), "server")
+  expect_equal(unlist(app$get_js("window.__c")), 1)
   expect_true(unlist(app$get_js(
     "(JSON.stringify(Shiny.shinyapp.$inputValues['dock_state'] || {})).indexOf('Renamed') >= 0"
   )))
 })
 
-test_that("initial layout is captured with real pixels, tagged server", {
+test_that("initial layout is captured with real pixels", {
   skip_on_cran()
 
-  appdir <- system.file(package = "dockViewR", "examples", "state_source")
+  appdir <- system.file(package = "dockViewR", "examples", "state")
 
   app <- AppDriver$new(
     appdir,
-    name = "state_source_initial",
+    name = "state_initial",
     seed = 121,
     height = 752,
     width = 1211
@@ -169,9 +121,8 @@ test_that("initial layout is captured with real pixels, tagged server", {
   app$wait_for_idle()
 
   # The synchronous render captures a zero-sized grid; the ResizeObserver's first
-  # real-size observation completes it, server-tagged. Without that, `_state`
-  # carries a zero grid until the first gesture (which then mis-tags it client).
-  expect_identical(app$get_value(input = "dock_state-source"), "server")
+  # real-size observation completes it. Without that, `_state` would carry a zero
+  # grid until the first gesture.
   expect_gt(
     unlist(app$get_js("Shiny.shinyapp.$inputValues['dock_state'].grid.width")),
     0
@@ -181,11 +132,11 @@ test_that("initial layout is captured with real pixels, tagged server", {
 test_that("a container-only resize re-fits widgets without looping", {
   skip_on_cran()
 
-  appdir <- system.file(package = "dockViewR", "examples", "state_source")
+  appdir <- system.file(package = "dockViewR", "examples", "state")
 
   app <- AppDriver$new(
     appdir,
-    name = "state_source_container_resize",
+    name = "state_container_resize",
     seed = 121,
     height = 752,
     width = 1211
@@ -223,11 +174,11 @@ test_that("a container-only resize re-fits widgets without looping", {
 test_that("container listeners are torn down on re-render", {
   skip_on_cran()
 
-  appdir <- system.file(package = "dockViewR", "examples", "state_source")
+  appdir <- system.file(package = "dockViewR", "examples", "state")
 
   app <- AppDriver$new(
     appdir,
-    name = "state_source_teardown",
+    name = "state_teardown",
     seed = 121,
     height = 752,
     width = 1211
@@ -263,11 +214,11 @@ test_that("container listeners are torn down on re-render", {
 test_that("re-init and restore surface only a settled `_state`, never a transient", {
   skip_on_cran()
 
-  appdir <- system.file(package = "dockViewR", "examples", "state_source")
+  appdir <- system.file(package = "dockViewR", "examples", "state")
 
   app <- AppDriver$new(
     appdir,
-    name = "state_source_hygiene",
+    name = "state_hygiene",
     seed = 121,
     height = 752,
     width = 1211
@@ -361,11 +312,11 @@ test_that("a restore rebinds the panels' inputs and outputs", {
 test_that("a failed restore does not wedge `_state`", {
   skip_on_cran()
 
-  appdir <- system.file(package = "dockViewR", "examples", "state_source")
+  appdir <- system.file(package = "dockViewR", "examples", "state")
 
   app <- AppDriver$new(
     appdir,
-    name = "state_source_failed_restore",
+    name = "state_failed_restore",
     seed = 121,
     height = 752,
     width = 1211

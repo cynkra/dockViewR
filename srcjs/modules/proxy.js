@@ -294,35 +294,6 @@ const clean_dock_state = (state) => {
   return state;
 };
 
-// Provenance for `_state`. dockview delivers onDidLayoutChange -- where
-// saveDock() runs -- on a microtask: its AsapEvent coalesces a burst of layout
-// mutations into one notification fired via queueMicrotask, *after* the api
-// call that caused them has returned. A flag set and cleared around the
-// synchronous call would already be down by then, so withServerDriven() instead
-// clears it on a microtask queued right after the call. Microtasks drain FIFO
-// and dockview enqueues its notification during the mutation -- ahead of this
-// clear -- so saveDock() sees the flag up for exactly the changes the server
-// initiated, then it goes down. A user gesture (drag, tab close) reaches
-// dockview without this wrapper and is reported as "client". Attribution is
-// causal, not timed: there are no wall-clock windows.
-const serverDriven = {};
-
-const serverDrivenFor = (id) => serverDriven[id] === true;
-
-const runServerDriven = (id, value, fn) => {
-  const prev = serverDrivenFor(id);
-  serverDriven[id] = value;
-  try {
-    return fn();
-  } finally {
-    queueMicrotask(() => {
-      serverDriven[id] = prev;
-    });
-  }
-};
-
-const withServerDriven = (id, fn) => runServerDriven(id, true, fn);
-
 // `_state` must only ever hold a valid, settled layout, so every write goes
 // through saveDock and two windows are held shut. `seeded` opens once the
 // ResizeObserver reports real geometry -- the render itself leaves the grid
@@ -351,8 +322,7 @@ const saveDock = (id, api) => {
   if (!isSeeded(id) || isRestoring(id)) return;
 
   const state = clean_dock_state(api.toJSON());
-  Shiny.setInputValue(id + "_state-source", serverDrivenFor(id) ? "server" : "client");
   Shiny.setInputValue(id + "_state", state);
 }
 
-export { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, withServerDriven, runServerDriven, serverDrivenFor, isRestoring, setRestoring, isSeeded, setSeeded };
+export { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, isRestoring, setRestoring, isSeeded, setSeeded };

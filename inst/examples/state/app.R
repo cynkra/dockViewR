@@ -10,7 +10,7 @@ ui <- fluidPage(
   actionButton("addfresh", "Add unplaced panel"),
   actionButton("settitle", "Set title"),
   actionButton("rerender", "Re-render"),
-  verbatimTextOutput("source"),
+  verbatimTextOutput("state"),
   dockViewOutput("dock")
 )
 
@@ -23,9 +23,13 @@ server <- function(input, output, session) {
     panel_ids = get_panels_ids(dock_proxy)
   )
 
-  output$source <- renderText({
-    req(input[["dock_state-source"]])
-    sprintf("last _state change: %s", input[["dock_state-source"]])
+  output$state <- renderText({
+    state <- req(input[["dock_state"]])
+    sprintf(
+      "panels: %s | grid width: %s",
+      paste(names(state$panels), collapse = ", "),
+      state$grid$width
+    )
   })
 
   output$dock <- renderDockView({
