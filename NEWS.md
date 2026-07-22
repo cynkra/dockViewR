@@ -10,6 +10,8 @@
 
 - Added `set_size()` to resize the group a panel belongs to from the server. The caller gives a single target fraction of the group's splitview along its axis; the other groups in that split keep their relative sizes and share the remaining space.
 
+- The widget now dispatches a `dockview:active-panel` DOM event on the dock container each time a panel becomes active, carrying the newly active panel's id in `event.detail.id`. It is the client-side counterpart of `input[["<dock_ID>_active-panel"]]`: because the widget's dockview `api` is closure-private, this event is the only handle a consumer's own JavaScript has onto activation. A consumer can listen for it to run DOM work on the tick a panel activates — for example to move deferred content into a panel whose element dockview mounts lazily on first activation, before paint and without a server round-trip. The event bubbles, so a listener can bind to a single dock container or to `document`.
+
 ## Bug fixes
 
 - `input$<dock_id>_state` now only ever surfaces a settled layout. A restore (`restore_dock()` → `fromJSON`) and a widget re-render each tear the layout down and rebuild it; the empty grid and the zero-sized intermediate structure produced along the way used to reach the input, so a consumer mirroring `_state` into storage could commit an empty or partial layout. Emission is now gated across both windows — a restore emits its single settled layout at `onDidLayoutFromJSON`, and the initial render holds until the ResizeObserver reports real geometry — so every `_state` a consumer receives is a valid, settled layout that needs no per-frame guard.

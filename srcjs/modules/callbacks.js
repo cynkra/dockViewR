@@ -133,7 +133,24 @@ const setDockViewCallbacks = (id, api) => {
 
   api.onDidActivePanelChange((e) => {
     requestSync();
-    if (HTMLWidgets.shinyMode && e !== undefined) {
+
+    if (e === undefined) return;
+
+    // Re-broadcast activation as a DOM event on the container: the dockview `api`
+    // is closure-private, so this is a consumer's only client-side handle onto
+    // activation. A consumer listens to relocate deferred DOM into a panel on the
+    // tick it mounts -- before paint, no server round-trip.
+    const container = document.getElementById(id);
+    if (container) {
+      container.dispatchEvent(
+        new CustomEvent('dockview:active-panel', {
+          bubbles: true,
+          detail: { id: e.id }
+        })
+      );
+    }
+
+    if (HTMLWidgets.shinyMode) {
       Shiny.setInputValue(id + '_active-panel', e.id);
     }
   });
