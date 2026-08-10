@@ -1,6 +1,12 @@
-import { saveDock, withServerDriven, isRestoring } from '../modules/proxy';
+import {
+  saveDock, withServerDriven, isRestoring, setRestoring, setSeeded
+} from '../modules/proxy';
 
 const setDockViewCallbacks = (id, api) => {
+
+  // A re-render builds a fresh dock, zero-sized until its ResizeObserver reports
+  // geometry, so the previous render's gate must not carry over.
+  setSeeded(id, false);
 
   // Re-fit embedded widgets (plots, ECharts, DT, ...) into their new panel
   // size. A render concern, kept off the per-frame layout stream.
@@ -10,6 +16,9 @@ const setDockViewCallbacks = (id, api) => {
 
   // Push the current layout to Shiny and rebind each panel's DOM, so inputs /
   // outputs inside moved or restored panels keep working. A state concern.
+  // Binding is deliberately not gated: saveDock decides on its own whether the
+  // layout is settled enough to publish, while a dock rendered inside a hidden
+  // tab -- measuring 0x0, so never seeded -- still needs working inputs.
   const persistState = () => {
     if (!HTMLWidgets.shinyMode) return;
 
@@ -32,14 +41,6 @@ const setDockViewCallbacks = (id, api) => {
   let flushScheduled = false;
   let persisting = false;
 
-  // `_state` must only ever surface a settled layout. `seeded` gates the initial
-  // render frames -- the empty grid, and the zero-sized structure before the
-  // ResizeObserver reports real geometry -- while `isRestoring` gates a restore's
-  // teardown/rebuild (fromJSON), whose single settled emit the restore handler
-  // fires on onDidLayoutFromJSON. Until those open, requestSync is a no-op, so no
-  // empty or partial frame reaches the consumer.
-  let seeded = false;
-
   // One settled `_state` per gesture. A single gesture fires several dockview
   // events (a tab move that splits a group fires onDidMovePanel, onDidAddGroup
   // and onDidActivePanelChange); persisting in each would emit several times and
@@ -49,8 +50,11 @@ const setDockViewCallbacks = (id, api) => {
   // window, ahead of its clear -- so `saveDock` reads the correct
   // `_state-source`; a separate gesture runs in a later task and gets its own
   // flush, so two gestures never merge into one (mis)tagged emit.
+  // A restore is skipped wholesale: fromJSON replaces the panels' DOM as it goes,
+  // so binding mid-rebuild would bind markup that is about to be discarded. The
+  // settled callback below does the one persist the restore needs.
   const requestSync = () => {
-    if (flushScheduled || persisting || isRestoring(id) || !seeded) return;
+    if (flushScheduled || persisting || isRestoring(id)) return;
 
     flushScheduled = true;
     queueMicrotask(() => {
@@ -66,6 +70,33 @@ const setDockViewCallbacks = (id, api) => {
   };
 
   api.onDidMovePanel(requestSync);
+
+  // fromJSON fires this once the rebuild is complete, and nothing else calls
+  // fromJSON, so this is the restore's settle boundary: reopen the gate, then
+  // persist once. It has to be the full persist -- restoreDock unbinds the old
+  // panels and fromJSON re-creates their bodies, so without the rebind the
+  // restored panels come back as dead DOM -- plus the widget re-fit a gesture
+  // flush would have done. Server-initiated, so it reads as "server". The event
+  // fires synchronously from within fromJSON, while the rebuilt panel bodies are
+  // still being attached, so the persist waits for the microtask after it -- the
+  // same point the coalesced gesture flush would have run.
+  api.onDidLayoutFromJSON(() => {
+    queueMicrotask(() => {
+      setRestoring(id, false);
+
+      persisting = true;
+      try {
+        withServerDriven(id, () => persistState());
+        refitWidgets();
+      } finally {
+        persisting = false;
+      }
+
+      if (HTMLWidgets.shinyMode) {
+        Shiny.setInputValue(id + '_restored', true, { priority: 'event' });
+      }
+    });
+  });
 
   api.onDidMaximizedGroupChange(requestSync);
 
@@ -164,7 +195,7 @@ const setDockViewCallbacks = (id, api) => {
         persisting = true;
         try {
           if (seeding) {
-            seeded = true;
+            setSeeded(id, true);
             withServerDriven(id, () => persistState());
           } else {
             persistState();

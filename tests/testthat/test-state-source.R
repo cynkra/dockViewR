@@ -317,4 +317,71 @@ test_that("re-init and restore surface only a settled `_state`, never a transien
 
   # The restored layout is exactly the saved {a, b}.
   expect_setequal(app$get_value(export = "panel_ids"), c("a", "b"))
+
+  app$stop()
+})
+
+test_that("a restore rebinds the panels' inputs and outputs", {
+  skip_on_cran()
+
+  appdir <- system.file(package = "dockViewR", "examples", "serialise")
+
+  app <- AppDriver$new(
+    appdir,
+    name = "serialise_rebind",
+    seed = 121,
+    height = 752,
+    width = 1211
+  )
+  app$wait_for_idle()
+
+  # The slider shares a group with panel 2 and starts behind it, so bring it to
+  # the front -- an inactive tab renders no content to bind.
+  app$run_js(
+    "HTMLWidgets.find('#dock').getWidget().component.api.getPanel('test').api.setActive()"
+  )
+  app$wait_for_idle()
+
+  # A restore unbinds every panel and fromJSON re-creates their bodies, so the
+  # settled persist has to rebind them. Without that the slider is dead DOM: it
+  # still renders, but reports nothing back, so the server keeps the stale value.
+  app$click("save")
+  app$wait_for_idle()
+  app$set_inputs(states = "1", wait_ = FALSE)
+  app$click("restore")
+  app$wait_for_idle()
+
+  app$set_inputs(obs = 781)
+  app$wait_for_idle()
+  expect_equal(app$get_value(input = "obs"), 781)
+
+  app$stop()
+})
+
+test_that("a failed restore does not wedge `_state`", {
+  skip_on_cran()
+
+  appdir <- system.file(package = "dockViewR", "examples", "state_source")
+
+  app <- AppDriver$new(
+    appdir,
+    name = "state_source_failed_restore",
+    seed = 121,
+    height = 752,
+    width = 1211
+  )
+  app$wait_for_idle()
+
+  # A corrupt layout makes fromJSON revert and rethrow *before* it fires
+  # onDidLayoutFromJSON, so the restore never reaches its settle boundary. The
+  # gate must still be lowered, or `_state` would stay shut for the rest of the
+  # session and no later change would ever reach the consumer.
+  app$click("restorebad")
+  app$wait_for_idle()
+
+  app$click("addfresh")
+  app$wait_for_idle()
+  expect_true("z" %in% app$get_value(export = "panel_ids"))
+
+  app$stop()
 })

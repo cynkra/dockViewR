@@ -6,6 +6,8 @@ ui <- fluidPage(
   actionButton("move", "Move panel"),
   actionButton("save", "Save layout"),
   actionButton("restore", "Restore layout"),
+  actionButton("restorebad", "Restore corrupt layout"),
+  actionButton("addfresh", "Add unplaced panel"),
   actionButton("settitle", "Set title"),
   actionButton("rerender", "Re-render"),
   verbatimTextOutput("source"),
@@ -68,6 +70,14 @@ server <- function(input, output, session) {
   observeEvent(input$restore, {
     req(saved_layout())
     restore_dock(dock_proxy, saved_layout())
+  })
+
+  observeEvent(input$restorebad, {
+    restore_dock(dock_proxy, list())
+  })
+
+  observeEvent(input$addfresh, {
+    add_panel(dock_proxy, panel(id = "z", title = "Z", content = "Panel Z"))
   })
 
   observeEvent(input$settitle, {

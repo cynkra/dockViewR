@@ -181,7 +181,7 @@ get_active_panel <- function(dock) {
   active_group <- get_active_group(dock)
   active_views <- get_active_views(dock)
 
-  if (is.null(active_group) || is.null(active_views)) {
+  if (!isTRUE(active_group %in% names(active_views))) {
     return(NULL)
   }
 

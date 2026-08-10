@@ -56,19 +56,19 @@ const setShinyHandlers = (id, mode, api) => {
     saveDock(id, api)
   })
 
-  // Restore layout. Gate `_state` across the whole rebuild: raise `restoring` so
-  // requestSync stays a no-op while fromJSON tears down and rebuilds, then emit
-  // the single settled layout from a one-shot onDidLayoutFromJSON (fired
-  // synchronously at the end of fromJSON), server-tagged. No empty or
-  // intermediate frame escapes.
+  // Restore layout. Raise `restoring` so no intermediate frame of fromJSON's
+  // teardown/rebuild reaches `_state`; the onDidLayoutFromJSON callback lowers it
+  // again and emits the settled layout. On a corrupted layout fromJSON reverts
+  // and rethrows *before* firing that event, so the flag is cleared here too --
+  // otherwise `_state` would stay gated for the rest of the session.
   Shiny.addCustomMessageHandler(id + '_restore-state', (m) => {
     setRestoring(id, true);
-    const settled = api.onDidLayoutFromJSON(() => {
-      settled.dispose();
-      withServerDriven(id, () => saveDock(id, api));
+    try {
+      restoreDock(id, m, api);
+    } catch (e) {
       setRestoring(id, false);
-    });
-    restoreDock(id, m, api);
+      throw e;
+    }
   })
 
   Shiny.addCustomMessageHandler(id + '_move-group2', (m) => {
