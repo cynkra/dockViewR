@@ -355,4 +355,4 @@ const saveDock = (id, api) => {
   Shiny.setInputValue(id + "_state", state);
 }
 
-export { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, withServerDriven, runServerDriven, serverDrivenFor, isRestoring, setRestoring, setSeeded };
+export { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, withServerDriven, runServerDriven, serverDrivenFor, isRestoring, setRestoring, isSeeded, setSeeded };

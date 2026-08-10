@@ -1,5 +1,5 @@
 import {
-  saveDock, withServerDriven, isRestoring, setRestoring, setSeeded
+  saveDock, withServerDriven, isRestoring, setRestoring, isSeeded, setSeeded
 } from '../modules/proxy';
 
 const setDockViewCallbacks = (id, api) => {
@@ -62,7 +62,12 @@ const setDockViewCallbacks = (id, api) => {
       persisting = true;
       try {
         persistState();
-        refitWidgets();
+
+        // Nothing to re-fit into a dock that has no geometry yet, and the
+        // `resize` it dispatches would restart the ResizeObserver's debounce --
+        // delaying the very observation that settles the initial layout. The
+        // seeding branch re-fits once the size is known.
+        if (isSeeded(id)) refitWidgets();
       } finally {
         persisting = false;
       }
