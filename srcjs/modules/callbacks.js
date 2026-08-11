@@ -92,7 +92,7 @@ const setDockViewCallbacks = (id, api) => {
       persisting = true;
       try {
         withServerDriven(id, () => persistState());
-        refitWidgets();
+        if (isSeeded(id)) refitWidgets();
       } finally {
         persisting = false;
       }
