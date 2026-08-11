@@ -26,6 +26,41 @@
 
 ### Bug fixes
 
+- `input$<dock_id>_state` now only ever surfaces a settled layout. A
+  restore
+  ([`restore_dock()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
+  → `fromJSON`) and a widget re-render each tear the layout down and
+  rebuild it; the empty grid and the zero-sized intermediate structure
+  produced along the way used to reach the input, so a consumer
+  mirroring `_state` into storage could commit an empty or partial
+  layout. Emission is now gated across both windows — a restore emits
+  its single settled layout at `onDidLayoutFromJSON`, and the initial
+  render holds until the ResizeObserver reports real geometry — so every
+  `_state` a consumer receives is a valid, settled layout that needs no
+  per-frame guard.
+
+  A dock that has not been shown yet therefore has no state to report:
+  it never measured, so there is no geometry to publish. Until it is
+  first displayed
+  [`save_dock()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
+  publishes nothing and the readers derived from `_state`
+  ([`get_grid()`](https://cynkra.github.io/dockViewR/reference/dock-state.md),
+  [`grid_shape()`](https://cynkra.github.io/dockViewR/reference/dock-state.md),
+  [`get_panels_ids()`](https://cynkra.github.io/dockViewR/reference/dock-state.md),
+  [`get_active_views()`](https://cynkra.github.io/dockViewR/reference/dock-state.md),
+  [`get_active_panel()`](https://cynkra.github.io/dockViewR/reference/dock-state.md),
+  …) return `NULL`, where a dock in a not-yet-opened tab previously
+  reported a zero-sized layout. Everything converges as soon as the dock
+  becomes visible; code that reads these on a possibly-hidden dock
+  should treat `NULL` as “not laid out yet” rather than as an error.
+
+- `input$<dock_id>_restored` now fires after the restored layout has
+  been published to `input$<dock_id>_state` and the restored panels have
+  been rebound, rather than as soon as `fromJSON()` returned. An
+  [`observeEvent()`](https://rdrr.io/pkg/shiny/man/observeEvent.html) on
+  it can therefore read the restored layout directly instead of racing
+  the state update.
+
 - `input$<dock_id>_state` is now emitted once per layout gesture rather
   than on every `onDidLayoutChange` frame. The per-frame stream was the
   source of the `onDidLayoutChange → resize → onDidLayoutChange`
