@@ -1,4 +1,4 @@
-import { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, withServerDriven } from '../modules/proxy';
+import { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, withServerDriven, setRestoring } from '../modules/proxy';
 
 const deserializeFunction = (obj) => {
   if (obj && typeof obj === 'object' && obj.__IS_FUNCTION__) {
@@ -29,9 +29,7 @@ const restoreDock = (id, state, api) => {
       }
     });
   }
-  let res = api.fromJSON(state);
-  Shiny.setInputValue(id + '_restored', true, { priority: 'event' });
-  return res;
+  return api.fromJSON(state);
 }
 
 const setShinyHandlers = (id, mode, api) => {
@@ -58,9 +56,19 @@ const setShinyHandlers = (id, mode, api) => {
     saveDock(id, api)
   })
 
-  // Restore layout
+  // Restore layout. Raise `restoring` so no intermediate frame of fromJSON's
+  // teardown/rebuild reaches `_state`; the onDidLayoutFromJSON callback lowers it
+  // again and emits the settled layout. On a corrupted layout fromJSON reverts
+  // and rethrows *before* firing that event, so the flag is cleared here too --
+  // otherwise `_state` would stay gated for the rest of the session.
   Shiny.addCustomMessageHandler(id + '_restore-state', (m) => {
-    withServerDriven(id, () => restoreDock(id, m, api));
+    setRestoring(id, true);
+    try {
+      restoreDock(id, m, api);
+    } catch (e) {
+      setRestoring(id, false);
+      throw e;
+    }
   })
 
   Shiny.addCustomMessageHandler(id + '_move-group2', (m) => {

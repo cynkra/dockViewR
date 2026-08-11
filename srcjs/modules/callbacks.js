@@ -1,6 +1,12 @@
-import { saveDock, withServerDriven } from '../modules/proxy';
+import {
+  saveDock, withServerDriven, isRestoring, setRestoring, isSeeded, setSeeded
+} from '../modules/proxy';
 
 const setDockViewCallbacks = (id, api) => {
+
+  // A re-render builds a fresh dock, zero-sized until its ResizeObserver reports
+  // geometry, so the previous render's gate must not carry over.
+  setSeeded(id, false);
 
   // Re-fit embedded widgets (plots, ECharts, DT, ...) into their new panel
   // size. A render concern, kept off the per-frame layout stream.
@@ -10,6 +16,9 @@ const setDockViewCallbacks = (id, api) => {
 
   // Push the current layout to Shiny and rebind each panel's DOM, so inputs /
   // outputs inside moved or restored panels keep working. A state concern.
+  // Binding is deliberately not gated: saveDock decides on its own whether the
+  // layout is settled enough to publish, while a dock rendered inside a hidden
+  // tab -- measuring 0x0, so never seeded -- still needs working inputs.
   const persistState = () => {
     if (!HTMLWidgets.shinyMode) return;
 
@@ -41,8 +50,11 @@ const setDockViewCallbacks = (id, api) => {
   // window, ahead of its clear -- so `saveDock` reads the correct
   // `_state-source`; a separate gesture runs in a later task and gets its own
   // flush, so two gestures never merge into one (mis)tagged emit.
+  // A restore is skipped wholesale: fromJSON replaces the panels' DOM as it goes,
+  // so binding mid-rebuild would bind markup that is about to be discarded. The
+  // settled callback below does the one persist the restore needs.
   const requestSync = () => {
-    if (flushScheduled || persisting) return;
+    if (flushScheduled || persisting || isRestoring(id)) return;
 
     flushScheduled = true;
     queueMicrotask(() => {
@@ -50,7 +62,12 @@ const setDockViewCallbacks = (id, api) => {
       persisting = true;
       try {
         persistState();
-        refitWidgets();
+
+        // Nothing to re-fit into a dock that has no geometry yet, and the
+        // `resize` it dispatches would restart the ResizeObserver's debounce --
+        // delaying the very observation that settles the initial layout. The
+        // seeding branch re-fits once the size is known.
+        if (isSeeded(id)) refitWidgets();
       } finally {
         persisting = false;
       }
@@ -59,7 +76,32 @@ const setDockViewCallbacks = (id, api) => {
 
   api.onDidMovePanel(requestSync);
 
-  api.onDidLayoutFromJSON(requestSync);
+  // fromJSON fires this once the rebuild is complete, and nothing else calls
+  // fromJSON, so this is the restore's settle boundary: reopen the gate, then
+  // persist once. It has to be the full persist -- restoreDock unbinds the old
+  // panels and fromJSON re-creates their bodies, so without the rebind the
+  // restored panels come back as dead DOM -- plus the widget re-fit a gesture
+  // flush would have done. Server-initiated, so it reads as "server". The event
+  // fires synchronously from within fromJSON, while the rebuilt panel bodies are
+  // still being attached, so the persist waits for the microtask after it -- the
+  // same point the coalesced gesture flush would have run.
+  api.onDidLayoutFromJSON(() => {
+    queueMicrotask(() => {
+      setRestoring(id, false);
+
+      persisting = true;
+      try {
+        withServerDriven(id, () => persistState());
+        if (isSeeded(id)) refitWidgets();
+      } finally {
+        persisting = false;
+      }
+
+      if (HTMLWidgets.shinyMode) {
+        Shiny.setInputValue(id + '_restored', true, { priority: 'event' });
+      }
+    });
+  });
 
   api.onDidMaximizedGroupChange(requestSync);
 
@@ -130,13 +172,17 @@ const setDockViewCallbacks = (id, api) => {
     // A container / window resize changes the layout but has no gesture, and no
     // event-driven end (the window-drag-end belongs to the OS). `_state` must
     // still reflect it -- consumers read the input directly, to drive observers
-    // and to serialise -- so debounce the container's own resize and persist
-    // once it settles. It is environmental, not server-initiated, so it reads
-    // as "client". A container-only resize (a bslib sidebar toggle, a flex
-    // change) fires no window `resize`, so re-fit embedded widgets here too --
-    // guarded like the gesture flush, since the re-fit and `toJSON` re-fire
-    // events while a group is maximized. The first observation is the initial
-    // layout landing (server-tagged); later ones are user resizes.
+    // and to serialise -- so debounce the container's own resize and persist once
+    // it settles. The debounce also lets dockview lay its grid out against the new
+    // size before `saveDock` reads it, so the emitted geometry is real. It is
+    // environmental, not server-initiated, so it reads as "client". A
+    // container-only resize (a bslib sidebar toggle, a flex change) fires no
+    // window `resize`, so re-fit embedded widgets here too -- guarded like the
+    // gesture flush, since the re-fit and `toJSON` re-fire events while a group is
+    // maximized. The first observation is the initial layout landing: it opens the
+    // `seeded` gate and runs the full persist (server-tagged, plus binding the
+    // panels' inputs, which the gated init flush no longer does); later ones are
+    // user resizes.
     let resizeBaseline = null;
     let resizeTimer = null;
     const resizeObserver = new ResizeObserver((entries) => {
@@ -154,12 +200,8 @@ const setDockViewCallbacks = (id, api) => {
         persisting = true;
         try {
           if (seeding) {
-            // First real size. The synchronous render captures the layout while
-            // the grid is still zero-sized, and a size-only settle never re-fires
-            // onDidLayoutChange, so this is the only reliable signal that the
-            // initial layout landed. Server-tagged -- the render is
-            // server-initiated -- completing the zero-sized grid.
-            withServerDriven(id, () => saveDock(id, api));
+            setSeeded(id, true);
+            withServerDriven(id, () => persistState());
           } else {
             persistState();
           }

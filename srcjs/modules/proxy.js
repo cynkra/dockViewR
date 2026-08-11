@@ -323,10 +323,36 @@ const runServerDriven = (id, value, fn) => {
 
 const withServerDriven = (id, fn) => runServerDriven(id, true, fn);
 
+// `_state` must only ever hold a valid, settled layout, so every write goes
+// through saveDock and two windows are held shut. `seeded` opens once the
+// ResizeObserver reports real geometry -- the render itself leaves the grid
+// zero-sized, so anything emitted before that carries no usable geometry.
+// `restoring` closes again across a restore (`_restore-state` -> fromJSON),
+// which tears down and rebuilds the layout firing the same events a gesture
+// would; the settled layout is emitted once when fromJSON completes. Gating
+// here rather than at each call site keeps the direct writers (`_save-state`,
+// `_set-size`, `_set-panel-title`) from publishing a transient of their own.
+const seeded = {};
+const restoring = {};
+
+const isSeeded = (id) => seeded[id] === true;
+
+const setSeeded = (id, value) => {
+  seeded[id] = value;
+};
+
+const isRestoring = (id) => restoring[id] === true;
+
+const setRestoring = (id, value) => {
+  restoring[id] = value;
+};
+
 const saveDock = (id, api) => {
+  if (!isSeeded(id) || isRestoring(id)) return;
+
   const state = clean_dock_state(api.toJSON());
   Shiny.setInputValue(id + "_state-source", serverDrivenFor(id) ? "server" : "client");
   Shiny.setInputValue(id + "_state", state);
 }
 
-export { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, withServerDriven, runServerDriven, serverDrivenFor };
+export { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, withServerDriven, runServerDriven, serverDrivenFor, isRestoring, setRestoring, isSeeded, setSeeded };

@@ -101,7 +101,11 @@ test_that("dock state app works", {
     width = 1211
   )
 
-  Sys.sleep(2)
+  # Every export here derives from `_state`, which lands once the ResizeObserver
+  # reports real geometry rather than on the initial zero-sized render, so wait
+  # for the input itself instead of guessing at a sleep.
+  app$wait_for_value(input = "dock_state")
+  app$wait_for_idle()
   app$expect_values(input = "obs", output = FALSE, export = TRUE)
   app$click("save")
   app$run_js(
