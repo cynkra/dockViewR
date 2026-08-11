@@ -15,6 +15,18 @@
   panel X next to panel Y” with the same placement grammar they use to
   add panels.
 
+- Removed `input[["<dock_ID>_state-source"]]` (added in 0.3.0) and the
+  provenance machinery behind it. It tagged each `_state` update
+  `"server"` or `"client"` so a consumer could ignore an echo of a
+  layout it had just pushed. No consumer relies on it any more, and a
+  future `dockview-core` will report the same programmatic-vs-user
+  origin natively through its layout-mutation transaction events, so the
+  hand-rolled tag is not worth carrying until then. Note that the
+  bundled 4.13.1 carries no such native signal: an app that still needs
+  to tell its own echo from a user gesture has to track the layouts it
+  pushes itself, since the settled-`_state` gating above removes
+  transients, not provenance.
+
 ### New features
 
 - Added
@@ -76,8 +88,7 @@
   the gestures, not the layout stream. The initial layout is captured
   once; a container / window resize has no gesture boundary, so it is
   debounced and persisted once it settles, so `_state` always reflects
-  the live dock. `input$<dock_id>_state-source` tags that resize update
-  `"client"` (environmental, not server-initiated).
+  the live dock.
 
 - Upgrade the bundled `dockview-core` to 4.13.1, which carries the
   upstream fix for panel content not rendering when a panel is dragged
