@@ -6,6 +6,7 @@ ui <- fluidPage(
     tags$script(HTML(
       "document.addEventListener('dockview:active-panel', function(e) {
         Shiny.setInputValue('event_panel', e.detail.id, {priority: 'event'});
+        Shiny.setInputValue('event_dock', e.detail.dock, {priority: 'event'});
       });"
     ))
   ),
@@ -24,6 +25,13 @@ server <- function(input, output, session) {
           id = "b",
           title = "B",
           content = "Panel B",
+          active = FALSE,
+          position = list(referencePanel = "a", direction = "within")
+        ),
+        panel(
+          id = "c",
+          title = "C",
+          content = "Panel C",
           active = FALSE,
           position = list(referencePanel = "a", direction = "within")
         )

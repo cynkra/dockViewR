@@ -4,6 +4,8 @@ import {
 
 const setDockViewCallbacks = (id, api) => {
 
+  const container = document.getElementById(id);
+
   // A re-render builds a fresh dock, zero-sized until its ResizeObserver reports
   // geometry, so the previous render's gate must not carry over.
   setSeeded(id, false);
@@ -136,22 +138,27 @@ const setDockViewCallbacks = (id, api) => {
 
     if (e === undefined) return;
 
+    // Written before the dispatch below: `dispatchEvent` is synchronous, so a
+    // listener that activates another panel re-enters this handler and writes the
+    // newer id. Writing first lets that nested write land last and win, where
+    // dispatching first would let this frame overwrite it with a superseded id.
+    if (HTMLWidgets.shinyMode) {
+      Shiny.setInputValue(id + '_active-panel', e.id);
+    }
+
     // Re-broadcast activation as a DOM event on the container: the dockview `api`
     // is closure-private, so this is a consumer's only client-side handle onto
     // activation. A consumer listens to relocate deferred DOM into a panel on the
-    // tick it mounts -- before paint, no server round-trip.
-    const container = document.getElementById(id);
+    // tick it mounts -- before paint, no server round-trip. Panel ids are unique
+    // only within a dock, so `dock` tells a document-level listener which one
+    // fired.
     if (container) {
       container.dispatchEvent(
         new CustomEvent('dockview:active-panel', {
           bubbles: true,
-          detail: { id: e.id }
+          detail: { id: e.id, dock: id }
         })
       );
-    }
-
-    if (HTMLWidgets.shinyMode) {
-      Shiny.setInputValue(id + '_active-panel', e.id);
     }
   });
 
@@ -161,8 +168,6 @@ const setDockViewCallbacks = (id, api) => {
       Shiny.setInputValue(id + '_active-group', e.id);
     }
   });
-
-  const container = document.getElementById(id);
 
   // The pointerup listener and ResizeObserver live on the container element,
   // which outlives the dock api across a reactive re-render -- unlike the api's
