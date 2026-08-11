@@ -1,4 +1,4 @@
-import { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, withServerDriven, setRestoring } from '../modules/proxy';
+import { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, setRestoring } from '../modules/proxy';
 
 const deserializeFunction = (obj) => {
   if (obj && typeof obj === 'object' && obj.__IS_FUNCTION__) {
@@ -36,19 +36,19 @@ const setShinyHandlers = (id, mode, api) => {
   Shiny.addCustomMessageHandler(id + '_add-panel', (m) => {
     // Transform the removeCallback string into a function
     HTMLWidgets.evaluateStringMember(m.panel, m.evals)
-    withServerDriven(id, () => addPanel(m.panel, mode, api));
+    addPanel(m.panel, mode, api);
   });
 
   Shiny.addCustomMessageHandler(id + '_rm-panel', (m) => {
-    withServerDriven(id, () => removePanel(m, mode, api));
+    removePanel(m, mode, api);
   })
 
   Shiny.addCustomMessageHandler(id + '_move-panel', (m) => {
-    withServerDriven(id, () => movePanel(m, mode, api));
+    movePanel(m, mode, api);
   })
 
   Shiny.addCustomMessageHandler(id + '_select-panel', (m) => {
-    withServerDriven(id, () => selectPanel(m, mode, api));
+    selectPanel(m, mode, api);
   })
 
   // Force save dock
@@ -72,21 +72,18 @@ const setShinyHandlers = (id, mode, api) => {
   })
 
   Shiny.addCustomMessageHandler(id + '_move-group2', (m) => {
-    withServerDriven(id, () => moveGroup2(m, mode, api));
+    moveGroup2(m, mode, api);
   })
 
   Shiny.addCustomMessageHandler(id + '_move-group', (m) => {
-    withServerDriven(id, () => moveGroup(m, mode, api));
+    moveGroup(m, mode, api);
   })
 
   // A programmatic group resize fires only onDidLayoutChange, which no gesture
-  // hooks, so persist explicitly -- inside withServerDriven, so `_state` reflects
-  // the resize tagged "server" -- then re-fit widgets, as a gesture flush would.
+  // hooks, so persist explicitly, then re-fit widgets, as a gesture flush would.
   Shiny.addCustomMessageHandler(id + '_set-size', (m) => {
-    withServerDriven(id, () => {
-      setSize(m, mode, api);
-      saveDock(id, api);
-    });
+    setSize(m, mode, api);
+    saveDock(id, api);
     window.dispatchEvent(new Event('resize'));
   })
 
@@ -98,13 +95,10 @@ const setShinyHandlers = (id, mode, api) => {
   })
 
   // Set title. setTitle fires only onDidTitleChange, which no gesture hooks, so
-  // persist explicitly -- inside withServerDriven, so `_state` reflects the new
-  // title tagged "server".
+  // persist explicitly so `_state` reflects the new title.
   Shiny.addCustomMessageHandler(id + '_set-panel-title', (m) => {
-    withServerDriven(id, () => {
-      api.getPanel(m.id).api.setTitle(m.title);
-      saveDock(id, api);
-    });
+    api.getPanel(m.id).api.setTitle(m.title);
+    saveDock(id, api);
   })
 }
 

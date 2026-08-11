@@ -1,5 +1,5 @@
 import {
-  saveDock, withServerDriven, isRestoring, setRestoring, isSeeded, setSeeded
+  saveDock, isRestoring, setRestoring, isSeeded, setSeeded
 } from '../modules/proxy';
 
 const setDockViewCallbacks = (id, api) => {
@@ -45,11 +45,7 @@ const setDockViewCallbacks = (id, api) => {
   // events (a tab move that splits a group fires onDidMovePanel, onDidAddGroup
   // and onDidActivePanelChange); persisting in each would emit several times and
   // push the coalescing onto every consumer. Instead each event flags a pending
-  // flush, coalesced onto one microtask. The microtask drains within the same
-  // task as the events that scheduled it -- inside the server op's provenance
-  // window, ahead of its clear -- so `saveDock` reads the correct
-  // `_state-source`; a separate gesture runs in a later task and gets its own
-  // flush, so two gestures never merge into one (mis)tagged emit.
+  // flush, coalesced onto one microtask, so the burst becomes a single emit.
   // A restore is skipped wholesale: fromJSON replaces the panels' DOM as it goes,
   // so binding mid-rebuild would bind markup that is about to be discarded. The
   // settled callback below does the one persist the restore needs.
@@ -81,17 +77,17 @@ const setDockViewCallbacks = (id, api) => {
   // persist once. It has to be the full persist -- restoreDock unbinds the old
   // panels and fromJSON re-creates their bodies, so without the rebind the
   // restored panels come back as dead DOM -- plus the widget re-fit a gesture
-  // flush would have done. Server-initiated, so it reads as "server". The event
-  // fires synchronously from within fromJSON, while the rebuilt panel bodies are
-  // still being attached, so the persist waits for the microtask after it -- the
-  // same point the coalesced gesture flush would have run.
+  // flush would have done. The event fires synchronously from within fromJSON,
+  // while the rebuilt panel bodies are still being attached, so the persist
+  // waits for the microtask after it -- the same point the coalesced gesture
+  // flush would have run.
   api.onDidLayoutFromJSON(() => {
     queueMicrotask(() => {
       setRestoring(id, false);
 
       persisting = true;
       try {
-        withServerDriven(id, () => persistState());
+        persistState();
         if (isSeeded(id)) refitWidgets();
       } finally {
         persisting = false;
@@ -174,15 +170,13 @@ const setDockViewCallbacks = (id, api) => {
     // still reflect it -- consumers read the input directly, to drive observers
     // and to serialise -- so debounce the container's own resize and persist once
     // it settles. The debounce also lets dockview lay its grid out against the new
-    // size before `saveDock` reads it, so the emitted geometry is real. It is
-    // environmental, not server-initiated, so it reads as "client". A
+    // size before `saveDock` reads it, so the emitted geometry is real. A
     // container-only resize (a bslib sidebar toggle, a flex change) fires no
     // window `resize`, so re-fit embedded widgets here too -- guarded like the
     // gesture flush, since the re-fit and `toJSON` re-fire events while a group is
     // maximized. The first observation is the initial layout landing: it opens the
-    // `seeded` gate and runs the full persist (server-tagged, plus binding the
-    // panels' inputs, which the gated init flush no longer does); later ones are
-    // user resizes.
+    // `seeded` gate and runs the full persist (binding the panels' inputs, which
+    // the gated init flush no longer does); later ones are user resizes.
     let resizeBaseline = null;
     let resizeTimer = null;
     const resizeObserver = new ResizeObserver((entries) => {
@@ -199,12 +193,9 @@ const setDockViewCallbacks = (id, api) => {
 
         persisting = true;
         try {
-          if (seeding) {
-            setSeeded(id, true);
-            withServerDriven(id, () => persistState());
-          } else {
-            persistState();
-          }
+          if (seeding) setSeeded(id, true);
+
+          persistState();
           refitWidgets();
         } finally {
           persisting = false;

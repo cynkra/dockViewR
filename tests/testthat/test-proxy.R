@@ -489,7 +489,6 @@ test_that("set_size app works", {
   app$click("skew")
   app$wait_for_idle()
   expect_equal(fractions()[["A"]], 0.5, tolerance = 0.05)
-  expect_identical(app$get_value(export = "state_source"), "server")
 
   # Sizing C to 0.6 keeps A and B's relative sizes: they were 2:1 (0.5 vs 0.25)
   # and stay 2:1 while sharing the remaining 0.4.
@@ -498,7 +497,6 @@ test_that("set_size app works", {
   f <- fractions()
   expect_equal(f[["C"]], 0.6, tolerance = 0.05)
   expect_equal(f[["A"]] / f[["B"]], 2, tolerance = 0.1)
-  expect_identical(app$get_value(export = "state_source"), "server")
 
   # Idempotent: repeating the identical resize must not creep the siblings.
   # (Regression for the gap-coordinate drift where A grew and B shrank on every
