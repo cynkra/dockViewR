@@ -4,9 +4,17 @@
 
 - `move_panel()` now places the moved panel with the same `position` vocabulary as `add_panel()` and `panel()` — a list carrying a `referencePanel` or `referenceGroup` plus a `direction` (one of "above", "below", "left", "right", "within") and an optional `index` — replacing the previous scalar `position` / `group` / `index` arguments. Server-side callers can now express "move panel X next to panel Y" with the same placement grammar they use to add panels.
 
-- Removed `input[["<dock_ID>_state-source"]]` (added in 0.3.0) and the provenance machinery behind it. It tagged each `_state` update `"server"` or `"client"` so a consumer could ignore an echo of a layout it had just pushed. No consumer relies on it any more, and a future `dockview-core` will report the same programmatic-vs-user origin natively through its layout-mutation transaction events, so the hand-rolled tag is not worth carrying until then. Note that the bundled 4.13.1 carries no such native signal: an app that still needs to tell its own echo from a user gesture has to track the layouts it pushes itself, since the settled-`_state` gating above removes transients, not provenance.
+- Removed `input[["<dock_ID>_state-source"]]` (added in 0.3.0) and the provenance machinery behind it. It tagged each `_state` update `"server"` or `"client"` so a consumer could ignore an echo of a layout it had just pushed. No consumer relies on it any more, and the bundled dockview now reports the same programmatic-vs-user origin natively: `onDidActivePanelChange` carries an `origin` of `"user"` or `"api"`, as do the `onWillMutateLayout` / `onDidMutateLayout` structural-mutation events. Re-exposing a provenance input is therefore a matter of surfacing that signal rather than hand-rolling one, should a consumer need it again. In the meantime, an app that must tell its own echo from a user gesture tracks the layouts it pushes itself, since the settled-`_state` gating below removes transients, not provenance.
+
+- `dock_view(theme = "replit")` no longer works. Upstream dropped the Replit theme, so the argument now errors on it. The default is unchanged (`"light-spaced"`), and eleven new themes are available in its place (see below).
 
 ## New features
+
+- Upgraded the bundled dockview from `dockview-core` 4.13.1 to `dockview` 8.0.0, four majors of upstream fixes. The stylesheet moved packages upstream, which is why the dependency is now `dockview` rather than `dockview-core`. Layouts serialised by the previous version still restore: dockview 8's serialisation format is the 4.13.1 format plus optional fields, so a stored `input[["<dock_ID>_state"]]` needs no migration. The bundle grows from 214 KB to 500 KB, roughly a third of which is the stylesheet now carrying 18 themes instead of 8.
+
+  dockview 8 splits its feature set across an MIT core and a separately licensed commercial package. dockViewR bundles only the MIT core, so the options gating upstream's commercial features (`pinnedTabs`, `smartGuides`, `layoutHistory`, `dndCompass`, `autoHideEdgeGroups`, `dockToEdgeGroups`, multi-row tabs, tab context menus and advanced overflow) have no implementation behind them here. Passing them through `dock_view(...)` is accepted and does nothing.
+
+- Eleven new themes: `"nord"`, `"nord-spaced"`, `"catppuccin-mocha"`, `"catppuccin-mocha-spaced"`, `"monokai"`, `"solarized-light"`, `"solarized-light-spaced"`, `"github-dark"`, `"github-dark-spaced"`, `"github-light"` and `"github-light-spaced"`, bringing the total to 18.
 
 - Added `set_size()` to resize the group a panel belongs to from the server. The caller gives a single target fraction of the group's splitview along its axis; the other groups in that split keep their relative sizes and share the remaining space.
 

@@ -8,7 +8,9 @@ dock_view(
   panels = list(),
   ...,
   theme = c("light-spaced", "light", "abyss", "abyss-spaced", "dark", "vs", "dracula",
-    "replit"),
+    "nord", "nord-spaced", "catppuccin-mocha", "catppuccin-mocha-spaced", "monokai",
+    "solarized-light", "solarized-light-spaced", "github-dark", "github-dark-spaced",
+    "github-light", "github-light-spaced"),
   add_tab = new_add_tab_plugin(),
   width = NULL,
   height = NULL,
@@ -22,7 +24,11 @@ dock_view(
 \url{https://dockview.dev/docs/api/dockview/options/}.}
 
 \item{theme}{Theme. One of
-\code{c("abyss", "dark", "light", "vs", "dracula", "replit")}.}
+\code{c("light-spaced", "light", "abyss", "abyss-spaced", "dark", "vs",
+"dracula", "nord", "nord-spaced", "catppuccin-mocha",
+"catppuccin-mocha-spaced", "monokai", "solarized-light",
+"solarized-light-spaced", "github-dark", "github-dark-spaced",
+"github-light", "github-light-spaced")}.}
 
 \item{add_tab}{Globally controls the add tab behavior. List with enable and callback.
 Enable is a boolean, default to FALSE and callback is a
@@ -50,8 +56,8 @@ creating IDE-like layouts in Shiny applications or R Markdown documents.
 \section{Examples in Shinylive}{
 \describe{
   \item{example-1}{
-    \href{https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6EAAQCwAEyIEA1gDUWcaljG4hwhnFRF2wgLyiwAC1KlU7RAHoLDNuQYAzKATgYA5i1KGArnQwsi1rZwDk5wALTUUOwwYQQMUBAWYkIAlELcLIxQDACefOyGbDlpEBlZuXx07GUlZfEVkjLyilglQl4swgA8YcKoUK5wAPr2LLxQdNxwgiLCjXIK1ADyXqarghJS0mIlbRzBAG7B3b32XhAEpP4QfGyoq7jCRKv3pI-scOzs1ynCIGrPNakAAk8xO6go4mCABEts1qHx-rM5lshgdFjNhFisf0IHBuDp9BlOJjsdjcfjSWTsSxxHoDABGFRqanYq6kKb0sQABQS+OETLwLNZwmIZAopHpXFcABkWCThSLhNVacEAJIQV5UpVYsREKrM5E6gwAOS8MDoxyI9ieVUOUCuJHMhuN2JgbHpAAZVEadTAoAAPekMz2hn2urEHHheOD0gCsocVIpS4eNqG4RFIKyBG3E8tI3IzpB2SbJJWTqepFP4pZpdP0YgATC6lezOQ2wLy8dxhM2hb6yWLyGQpQM5QqB9SPlNLhqtbXWWIozYJlMW66xLJsixV3BEOvjQQNgBhHIZCBQhjsMRcwhnlQGAAq8Q47q+1xvHdgD7EAHE4Nk15gLegzZCWk5lpWra7tm84SA6UDgTqKYLn02geNc9LEqQ2oiho9jBBQzhdvyHaClBIp5holyYR2NiuMYyQQcI5asqx2Iob6nhwPAt4aOmHhMRxagAL57E8LyrKC+aFpm4IaBewSyThSLYhoACOtyalJ+rsOxhQkgwEBEAwMBaa8wK6Sk5ZiQCkkguICHyZCwSPruVKqWSMCkAQgHAI8R5iDAqCuA+dxScuO6THAKZzAwRCoPSABiACCMoAMoAKIALrCiJlbxdQ0DwISwiPlgACqmVqCUIlCAURQpegfAdO8hzBCkYAidlQA}{Open in Shinylive}
-    \if{html}{\out{<iframe class="iframe_shinylive" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6EAAQCwAEyIEA1gDUWcaljG4hwhnFRF2wgLyiwAC1KlU7RAHoLDNuQYAzKATgYA5i1KGArnQwsi1rZwDk5wALTUUOwwYQQMUBAWYkIAlELcLIxQDACefOyGbDlpEBlZuXx07GUlZfEVkjLyilglQl4swgA8YcKoUK5wAPr2LLxQdNxwgiLCjXIK1ADyXqarghJS0mIlbRzBAG7B3b32XhAEpP4QfGyoq7jCRKv3pI-scOzs1ynCIGrPNakAAk8xO6go4mCABEts1qHx-rM5lshgdFjNhFisf0IHBuDp9BlOJjsdjcfjSWTsSxxHoDABGFRqanYq6kKb0sQABQS+OETLwLNZwmIZAopHpXFcABkWCThSLhNVacEAJIQV5UpVYsREKrM5E6gwAOS8MDoxyI9ieVUOUCuJHMhuN2JgbHpAAZVEadTAoAAPekMz2hn2urEHHheOD0gCsocVIpS4eNqG4RFIKyBG3E8tI3IzpB2SbJJWTqepFP4pZpdP0YgATC6lezOQ2wLy8dxhM2hb6yWLyGQpQM5QqB9SPlNLhqtbXWWIozYJlMW66xLJsixV3BEOvjQQNgBhHIZCBQhjsMRcwhnlQGAAq8Q47q+1xvHdgD7EAHE4Nk15gLegzZCWk5lpWra7tm84SA6UDgTqKYLn02geNc9LEqQ2oiho9jBBQzhdvyHaClBIp5holyYR2NiuMYyQQcI5asqx2Iob6nhwPAt4aOmHhMRxagAL57E8LyrKC+aFpm4IaBewSyThSLYhoACOtyalJ+rsOxhQkgwEBEAwMBaa8wK6Sk5ZiQCkkguICHyZCwSPruVKqWSMCkAQgHAI8R5iDAqCuA+dxScuO6THAKZzAwRCoPSABiACCMoAMoAKIALrCiJlbxdQ0DwISwiPlgACqmVqCUIlCAURQpegfAdO8hzBCkYAidlQA" style="height: 800px; width: 100vw; max-width: 1400px; border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem; position: absolute; left: 50\%; margin-top: 30px; transform: translateX(-50\%); z-index: 1"></iframe>}}
+    \href{https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6EAAQCwAEyIEA1gDUWcaljG4hwhnFRF2wgLyiwAC1KlU7RAHoLDNuQYAzKATgYA5i1KGArnQwsi1rZwDk5wALTUUOwwYQQMUBAWYkIAlELcLIxQDACefOyGbDlpEBlZuXx07GUlZfEVkjLyilglQl4swgA8YcKoUK5wAPr2LLxQdNxwgiLCjXIK1ADyXqarghJS0mIlbRzBAG7B3b32XhAEpP4QfGyoq7jCRKv3pI-scOzs1ynCIGrPNakAAk8xO6go4mCABEts1qHx-rM5lshgdFjNhFisf0IHBuDp9BlOJjsdjcfjSWTsSxxHoDABGFRqanYq6kKb0sQABQS+OETLwLNZwmIZAopHpXFcABkWCThSLhNVacEAJIQV5UpVYsREKrM5E6gwAOS8MDoxyI9ieVUOUCuJHMhuN2JgbHpAAZVEadTAoAAPekMz2hn2urEHHheOD0gCsocVIpS4eNqG4RFIKyBG3E8tI3IzpB2SbJJWTqepFP4pZpdP0YgATC6lezOQ2wLy8dxhM2hb6yWLyGQpQM5QqB9SPlNLhqtbXWWIozYJlMW66xLJsixV3BEOvjQQNgBhHIZCBQhjsMRcwhnlQGAAq8Q47q+1xvHdgD7EAHE4Nk15gLegzZCWk5lpWra7tm84SA6UDgTqKYLn02geNc9LEqQ2oiho9jBBQzhdvyHaClBIp5holyYR2NiuMYyQQcI5asqx2Iob6nhwPAt4ZAxpBhOw-TOOITEcWoAC+exPC8qygvmhaZuCGgXsESk4Ui2IaAAjrcmryfq7DsYUJIMBARAMDA+mvMCRkpOW0kAnJILiAhKmQsEj67lSWlkjApAEIBwCPEeYgwKgrgPnc8nLjukxwCmcwMEQqD0gAYgAgjKADKACiAC6wqSZWKXUNA8CEsIj5YAAqnlaglJJQgFEUmXoHwHTvIcwQpGAkkFUAA}{Open in Shinylive}
+    \if{html}{\out{<iframe class="iframe_shinylive" src="https://shinylive.io/r/app/#code=NobwRAdghgtgpmAXGKAHVA6ASmANGAYwHsIAXOMpMAdzgCMAnRRASwgGdSoAbbgCgA6EAAQCwAEyIEA1gDUWcaljG4hwhnFRF2wgLyiwAC1KlU7RAHoLDNuQYAzKATgYA5i1KGArnQwsi1rZwDk5wALTUUOwwYQQMUBAWYkIAlELcLIxQDACefOyGbDlpEBlZuXx07GUlZfEVkjLyilglQl4swgA8YcKoUK5wAPr2LLxQdNxwgiLCjXIK1ADyXqarghJS0mIlbRzBAG7B3b32XhAEpP4QfGyoq7jCRKv3pI-scOzs1ynCIGrPNakAAk8xO6go4mCABEts1qHx-rM5lshgdFjNhFisf0IHBuDp9BlOJjsdjcfjSWTsSxxHoDABGFRqanYq6kKb0sQABQS+OETLwLNZwmIZAopHpXFcABkWCThSLhNVacEAJIQV5UpVYsREKrM5E6gwAOS8MDoxyI9ieVUOUCuJHMhuN2JgbHpAAZVEadTAoAAPekMz2hn2urEHHheOD0gCsocVIpS4eNqG4RFIKyBG3E8tI3IzpB2SbJJWTqepFP4pZpdP0YgATC6lezOQ2wLy8dxhM2hb6yWLyGQpQM5QqB9SPlNLhqtbXWWIozYJlMW66xLJsixV3BEOvjQQNgBhHIZCBQhjsMRcwhnlQGAAq8Q47q+1xvHdgD7EAHE4Nk15gLegzZCWk5lpWra7tm84SA6UDgTqKYLn02geNc9LEqQ2oiho9jBBQzhdvyHaClBIp5holyYR2NiuMYyQQcI5asqx2Iob6nhwPAt4ZAxpBhOw-TOOITEcWoAC+exPC8qygvmhaZuCGgXsESk4Ui2IaAAjrcmryfq7DsYUJIMBARAMDA+mvMCRkpOW0kAnJILiAhKmQsEj67lSWlkjApAEIBwCPEeYgwKgrgPnc8nLjukxwCmcwMEQqD0gAYgAgjKADKACiAC6wqSZWKXUNA8CEsIj5YAAqnlaglJJQgFEUmXoHwHTvIcwQpGAkkFUAA" style="height: 800px; width: 100vw; max-width: 1400px; border: 1px solid rgba(0,0,0,0.175); border-radius: .375rem; position: absolute; left: 50\%; margin-top: 30px; transform: translateX(-50\%); z-index: 1"></iframe>}}
     \if{html}{\out{<a style='height: 800px; display: block;'></a>}}
   }
 }

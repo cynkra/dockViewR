@@ -2,7 +2,7 @@
   "output": {
     "dock": {
       "x": {
-        "theme": "replit",
+        "theme": "light-spaced",
         "panels": [
           {
             "id": "1",

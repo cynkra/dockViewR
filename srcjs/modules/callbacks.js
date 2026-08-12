@@ -133,17 +133,20 @@ const setDockViewCallbacks = (id, api) => {
     }
   });
 
+  // dockview 8 emits `{ panel, origin }` here rather than the panel itself, and
+  // `panel` is undefined when a dock is left with no active panel.
   api.onDidActivePanelChange((e) => {
     requestSync();
 
-    if (e === undefined) return;
+    const panel = e?.panel;
+    if (panel === undefined) return;
 
     // Written before the dispatch below: `dispatchEvent` is synchronous, so a
     // listener that activates another panel re-enters this handler and writes the
     // newer id. Writing first lets that nested write land last and win, where
     // dispatching first would let this frame overwrite it with a superseded id.
     if (HTMLWidgets.shinyMode) {
-      Shiny.setInputValue(id + '_active-panel', e.id);
+      Shiny.setInputValue(id + '_active-panel', panel.id);
     }
 
     // Re-broadcast activation as a DOM event on the container: the dockview `api`
@@ -156,7 +159,7 @@ const setDockViewCallbacks = (id, api) => {
       container.dispatchEvent(
         new CustomEvent('dockview:active-panel', {
           bubbles: true,
-          detail: { id: e.id, dock: id }
+          detail: { id: panel.id, dock: id }
         })
       );
     }
