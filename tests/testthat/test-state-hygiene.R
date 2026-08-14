@@ -171,6 +171,65 @@ test_that("a container-only resize re-fits widgets without looping", {
   expect_lt(unlist(app$get_js("window.__c")), 3)
 })
 
+test_that("a gesture that changes no panel body books no rebind", {
+  skip_on_cran()
+
+  appdir <- system.file(package = "dockViewR", "examples", "state")
+
+  app <- AppDriver$new(
+    appdir,
+    name = "state_rebind_scope",
+    seed = 121,
+    height = 752,
+    width = 1211
+  )
+  on.exit(app$stop(), add = TRUE)
+  app$wait_for_idle()
+
+  # Each `Shiny.bindAll` books a walk over every bound output on the page,
+  # whether or not the scope it was handed holds anything unbound -- so a sync
+  # that binds nothing still costs one. Count the calls across gestures that
+  # change no panel body; they have to book none. Adding a panel brings in a body
+  # that does need binding, and is the control that keeps the assertions above it
+  # from passing vacuously.
+  app$run_js(
+    "window.__b = 0;
+     var ob = Shiny.bindAll;
+     Shiny.bindAll = function () {
+       window.__b++;
+       return ob.apply(this, arguments);
+     };
+     var oi = Shiny.initializeInputs;
+     Shiny.initializeInputs = function () {
+       window.__b++;
+       return oi.apply(this, arguments);
+     };"
+  )
+
+  app$run_js(
+    "window.__b = 0;
+     document
+       .querySelector('.dv-sash')
+       .dispatchEvent(new PointerEvent('pointerup', { bubbles: true }));"
+  )
+  Sys.sleep(0.2)
+  app$wait_for_idle()
+  expect_equal(unlist(app$get_js("window.__b")), 0)
+
+  app$run_js(
+    "window.__b = 0;
+     document.getElementById('dock').style.width = '620px';"
+  )
+  Sys.sleep(0.5)
+  app$wait_for_idle()
+  expect_equal(unlist(app$get_js("window.__b")), 0)
+
+  app$run_js("window.__b = 0;")
+  app$click("add")
+  app$wait_for_idle()
+  expect_gt(unlist(app$get_js("window.__b")), 0)
+})
+
 test_that("container listeners are torn down on re-render", {
   skip_on_cran()
 
@@ -270,6 +329,36 @@ test_that("re-init and restore surface only a settled `_state`, never a transien
   expect_setequal(app$get_value(export = "panel_ids"), c("a", "b"))
 
   app$stop()
+})
+
+test_that("a panel revealed for the first time gets its inputs bound", {
+  skip_on_cran()
+
+  appdir <- system.file(package = "dockViewR", "examples", "serialise")
+
+  app <- AppDriver$new(
+    appdir,
+    name = "serialise_reveal_bind",
+    seed = 121,
+    height = 752,
+    width = 1211
+  )
+  on.exit(app$stop(), add = TRUE)
+  app$wait_for_idle()
+
+  # The slider's panel starts behind panel 2, so dockview keeps its body out of
+  # the document and there is nothing to bind while the dock renders. Bringing it
+  # to the front attaches that body, and the sync that follows has to bind it --
+  # otherwise the slider is dead DOM: it renders, but its value never reaches the
+  # server.
+  app$run_js(
+    "HTMLWidgets.find('#dock').getWidget().component.api.getPanel('test').api.setActive()"
+  )
+  app$wait_for_idle()
+
+  app$set_inputs(obs = 781)
+  app$wait_for_idle()
+  expect_equal(app$get_value(input = "obs"), 781)
 })
 
 test_that("a restore rebinds the panels' inputs and outputs", {
