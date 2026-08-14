@@ -16,20 +16,64 @@ const setDockViewCallbacks = (id, api) => {
     window.dispatchEvent(new Event('resize'));
   };
 
-  // Push the current layout to Shiny and rebind each panel's DOM, so inputs /
-  // outputs inside moved or restored panels keep working. A state concern.
-  // Binding is deliberately not gated: saveDock decides on its own whether the
-  // layout is settled enough to publish, while a dock rendered inside a hidden
-  // tab -- measuring 0x0, so never seeded -- still needs working inputs.
+  // Bind the panel bodies that have entered the document since the last sync, so
+  // inputs / outputs inside new or newly revealed panels start working.
+  //
+  // Binding costs more than the scope it is handed: `Shiny.bindAll` ends by
+  // booking a walk over every `.shiny-bound-output` on the page, re-sending each
+  // one's hidden state and size, and books it even when the scope holds nothing
+  // unbound. Most gestures change no panel body at all -- a sash drag, a
+  // maximize, a container resize -- so binding every panel on every sync pays
+  // that walk for nothing.
+  //
+  // So bind a body when it enters the document and again whenever it comes back,
+  // and skip it while it simply stays there. The bodies a gesture leaves attached
+  // throughout -- everything a sash drag, a maximize or a resize touches -- are
+  // what this skips; a body that returns is not, because the walk a bind books is
+  // also how Shiny learns one of its outputs is on screen again, and leaving that
+  // to the outputs' own 100ms-debounced observers delays a tab switch.
+  //
+  // The record is per panel and holds the element, not just a flag: dockview
+  // takes a background tab's body out of the document rather than hiding it, so
+  // "still the same element, still attached" is the condition to skip on, and
+  // `getElementById` returning nothing is how a departure is noticed. Comparing
+  // elements rather than ids also covers a restore, which rebuilds the bodies
+  // under the ids they already had.
+  const attachedPanes = new Map();
+
+  const bindPanels = () => {
+    const live = new Set();
+
+    api.panels.forEach((panel) => {
+      live.add(panel.id);
+
+      const pane = document.getElementById(`${id}-${panel.id}`);
+      if (!pane) {
+        attachedPanes.delete(panel.id);
+        return;
+      }
+      if (attachedPanes.get(panel.id) === pane) return;
+
+      attachedPanes.set(panel.id, pane);
+      Shiny.initializeInputs($(pane));
+      Shiny.bindAll($(pane));
+    });
+
+    attachedPanes.forEach((_, panelId) => {
+      if (!live.has(panelId)) attachedPanes.delete(panelId);
+    });
+  };
+
+  // Push the current layout to Shiny and bind whatever the gesture brought into
+  // the document. A state concern. Binding is deliberately not gated: saveDock
+  // decides on its own whether the layout is settled enough to publish, while a
+  // dock rendered inside a hidden tab -- measuring 0x0, so never seeded -- still
+  // needs working inputs.
   const persistState = () => {
     if (!HTMLWidgets.shinyMode) return;
 
     saveDock(id, api);
-    api.panels.map((panel) => {
-      let pane = `#${id}-${panel.id}`;
-      Shiny.initializeInputs($(pane));
-      Shiny.bindAll($(pane));
-    });
+    bindPanels();
   };
 
   // While a group is maximized, `api.toJSON()` (read by saveDock) re-fires
