@@ -83,7 +83,7 @@ server <- function(input, output, session) {
           )
         )
       ),
-      theme = "replit"
+      theme = "light-spaced"
     )
   })
 
@@ -307,7 +307,7 @@ server <- function(input, output, session) {
           )
         )
       ),
-      theme = "replit"
+      theme = "light-spaced"
     )
   })
 

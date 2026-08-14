@@ -18,16 +18,71 @@
 - Removed `input[["<dock_ID>_state-source"]]` (added in 0.3.0) and the
   provenance machinery behind it. It tagged each `_state` update
   `"server"` or `"client"` so a consumer could ignore an echo of a
-  layout it had just pushed. No consumer relies on it any more, and a
-  future `dockview-core` will report the same programmatic-vs-user
-  origin natively through its layout-mutation transaction events, so the
-  hand-rolled tag is not worth carrying until then. Note that the
-  bundled 4.13.1 carries no such native signal: an app that still needs
-  to tell its own echo from a user gesture has to track the layouts it
-  pushes itself, since the settled-`_state` gating above removes
+  layout it had just pushed. No consumer relies on it any more, and the
+  bundled dockview now reports the same programmatic-vs-user origin
+  natively: `onDidActivePanelChange` carries an `origin` of `"user"` or
+  `"api"`, as do the `onWillMutateLayout` / `onDidMutateLayout`
+  structural-mutation events. Re-exposing a provenance input is
+  therefore a matter of surfacing that signal rather than hand-rolling
+  one, should a consumer need it again. In the meantime, an app that
+  must tell its own echo from a user gesture tracks the layouts it
+  pushes itself, since the settled-`_state` gating below removes
   transients, not provenance.
 
+- `dock_view(theme = "replit")` no longer works. Upstream dropped the
+  Replit theme, so the argument now errors on it. The default is
+  unchanged (`"light-spaced"`), and eleven new themes are available in
+  its place (see below).
+
 ### New features
+
+- Upgraded the bundled dockview from `dockview-core` 4.13.1 to
+  `dockview` 8.0.0, spanning four major versions. The stylesheet moved
+  packages upstream, which is why the dependency is now `dockview`
+  rather than `dockview-core`. Layouts serialised by the previous
+  version still restore: dockview 8’s serialisation format is the 4.13.1
+  format plus optional fields, so a stored `input[["<dock_ID>_state"]]`
+  needs no migration, whether it was persisted through
+  [`save_dock()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
+  or read off the input directly. The bundle grows from 214 KB to 500
+  KB, roughly a third of which is the stylesheet now carrying 18 themes
+  instead of 8.
+
+  dockview 8 splits its feature set across an MIT core and a separately
+  licensed commercial package. dockViewR bundles only the MIT core.
+  Concretely that means three things arrive here: edge groups
+  (`api.addEdgeGroup()`, absent in 4.13.1), the module architecture the
+  split is built on, and the missing-module diagnostic below. Upstream’s
+  headline 8.0 features are all on the commercial side and are not
+  available.
+
+  Setting an option that a commercial module implements (`smartGuides`,
+  `layoutHistory`, `pinnedTabs`, `dndCompass`, `autoHideEdgeGroups`,
+  `dockToEdgeGroups`, `overflow.mode: "wrap"`, `overflow.search`,
+  `keyboardNavigation`, the tab context-menu callbacks) no longer fails
+  silently. dockview validates options at construction and on every
+  update, and logs one deduplicated error per missing module naming the
+  exact option path:
+
+  ``` text
+  dockview: `smartGuides` requires the "SmartGuides" module, which ships in
+  dockview-enterprise.
+  ```
+
+  Two caveats on that. It reports *declared intent* only, so it fires
+  for an option you passed to
+  [`dock_view()`](https://cynkra.github.io/dockViewR/reference/dock_view.md)
+  but stays deliberately silent when a user simply interacts
+  (right-clicking a tab without the context-menu module shows the
+  browser’s own menu and logs nothing). And it is a browser-console
+  error, not an R condition, so it will not surface in the R console or
+  in logs.
+
+- Eleven new themes: `"nord"`, `"nord-spaced"`, `"catppuccin-mocha"`,
+  `"catppuccin-mocha-spaced"`, `"monokai"`, `"solarized-light"`,
+  `"solarized-light-spaced"`, `"github-dark"`, `"github-dark-spaced"`,
+  `"github-light"` and `"github-light-spaced"`, bringing the total to
+  18.
 
 - Added
   [`set_size()`](https://cynkra.github.io/dockViewR/reference/panel-operations.md)
