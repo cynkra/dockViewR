@@ -10,7 +10,11 @@
 #' @param ... Other options. See
 #' \url{https://dockview.dev/docs/api/dockview/options/}.
 #' @param theme Theme. One of
-#' \code{c("abyss", "dark", "light", "vs", "dracula", "replit")}.
+#' \code{c("light-spaced", "light", "abyss", "abyss-spaced", "dark", "vs",
+#' "dracula", "nord", "nord-spaced", "catppuccin-mocha",
+#' "catppuccin-mocha-spaced", "monokai", "solarized-light",
+#' "solarized-light-spaced", "github-dark", "github-dark-spaced",
+#' "github-light", "github-light-spaced")}.
 #' @param add_tab Globally controls the add tab behavior. List with enable and callback.
 #' Enable is a boolean, default to FALSE and callback is a
 #' JavaScript function passed with \link[htmlwidgets]{JS}.
@@ -72,7 +76,7 @@
 #'          )
 #'        )
 #'      ),
-#'      theme = "replit"
+#'      theme = "light-spaced"
 #'    )
 #'  })
 #'
@@ -100,7 +104,17 @@ dock_view <- function(
     "dark",
     "vs",
     "dracula",
-    "replit"
+    "nord",
+    "nord-spaced",
+    "catppuccin-mocha",
+    "catppuccin-mocha-spaced",
+    "monokai",
+    "solarized-light",
+    "solarized-light-spaced",
+    "github-dark",
+    "github-dark-spaced",
+    "github-light",
+    "github-light-spaced"
   ),
   add_tab = new_add_tab_plugin(),
   width = NULL,
