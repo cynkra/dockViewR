@@ -384,11 +384,13 @@ test_that("a panel hidden and shown again keeps its inputs live", {
     app$wait_for_idle()
   }
 
-  # Bringing another tab to the front takes this body out of the document and
-  # coming back puts the same element in again, so the bind from its first reveal
-  # still stands and the sync after the return deliberately skips it. That is only
-  # sound if the binding really does survive the round trip, so drive it: the
-  # slider has to keep reporting after the body has been away.
+  # Bringing another tab to the front takes this body out of the document, so
+  # coming back is a fresh arrival: it has to be rebound, both because Shiny only
+  # learns an output is on screen again through the refresh a bind books, and
+  # because the slider has to keep reporting. Only the body that returned is
+  # rebound though -- the panels that never left are skipped -- so the count pins
+  # both halves at once: two calls, being `initializeInputs` and `bindAll` over
+  # one pane, where rebinding the whole dock would be six.
   activate("test")
   app$set_inputs(obs = 781)
   app$wait_for_idle()
@@ -396,7 +398,23 @@ test_that("a panel hidden and shown again keeps its inputs live", {
   activate("2")
   expect_false(unlist(app$get_js("!!document.getElementById('dock-test')")))
 
+  app$run_js(
+    "window.__b = 0;
+     var ob = Shiny.bindAll;
+     Shiny.bindAll = function () {
+       window.__b++;
+       return ob.apply(this, arguments);
+     };
+     var oi = Shiny.initializeInputs;
+     Shiny.initializeInputs = function () {
+       window.__b++;
+       return oi.apply(this, arguments);
+     };"
+  )
+
   activate("test")
+  expect_equal(unlist(app$get_js("window.__b")), 2)
+
   app$set_inputs(obs = 222)
   app$wait_for_idle()
   expect_equal(app$get_value(input = "obs"), 222)

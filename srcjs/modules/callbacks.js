@@ -26,22 +26,41 @@ const setDockViewCallbacks = (id, api) => {
   // maximize, a container resize -- so binding every panel on every sync pays
   // that walk for nothing.
   //
-  // A body is bindable exactly once. `getElementById` sees it only while its tab
-  // is in front, since dockview keeps a background tab's body out of the
-  // document, and a bound body stays bound across detach and re-attach. So bind
-  // on the first sync that finds one attached and skip it afterwards, keyed on
-  // the element rather than the panel id -- a restore rebuilds the bodies under
-  // the ids they already had.
-  const boundPanes = new WeakSet();
+  // So bind a body when it enters the document and again whenever it comes back,
+  // and skip it while it simply stays there. The bodies a gesture leaves attached
+  // throughout -- everything a sash drag, a maximize or a resize touches -- are
+  // what this skips; a body that returns is not, because the walk a bind books is
+  // also how Shiny learns one of its outputs is on screen again, and leaving that
+  // to the outputs' own 100ms-debounced observers delays a tab switch.
+  //
+  // The record is per panel and holds the element, not just a flag: dockview
+  // takes a background tab's body out of the document rather than hiding it, so
+  // "still the same element, still attached" is the condition to skip on, and
+  // `getElementById` returning nothing is how a departure is noticed. Comparing
+  // elements rather than ids also covers a restore, which rebuilds the bodies
+  // under the ids they already had.
+  const attachedPanes = new Map();
 
   const bindPanels = () => {
-    api.panels.forEach((panel) => {
-      const pane = document.getElementById(`${id}-${panel.id}`);
-      if (!pane || boundPanes.has(pane)) return;
+    const live = new Set();
 
-      boundPanes.add(pane);
+    api.panels.forEach((panel) => {
+      live.add(panel.id);
+
+      const pane = document.getElementById(`${id}-${panel.id}`);
+      if (!pane) {
+        attachedPanes.delete(panel.id);
+        return;
+      }
+      if (attachedPanes.get(panel.id) === pane) return;
+
+      attachedPanes.set(panel.id, pane);
       Shiny.initializeInputs($(pane));
       Shiny.bindAll($(pane));
+    });
+
+    attachedPanes.forEach((_, panelId) => {
+      if (!live.has(panelId)) attachedPanes.delete(panelId);
     });
   };
 
