@@ -361,6 +361,48 @@ test_that("a panel revealed for the first time gets its inputs bound", {
   expect_equal(app$get_value(input = "obs"), 781)
 })
 
+test_that("content placed into a panel as it mounts is bound with it", {
+  skip_on_cran()
+
+  appdir <- system.file(package = "dockViewR", "examples", "serialise")
+
+  app <- AppDriver$new(
+    appdir,
+    name = "serialise_mount_inject",
+    seed = 121,
+    height = 752,
+    width = 1211
+  )
+  on.exit(app$stop(), add = TRUE)
+  app$wait_for_idle()
+
+  # Relocating deferred content onto the tick a panel activates is what the
+  # `dockview:active-panel` event is for, and that content has to arrive bound:
+  # the body is entering the document, so the sync behind it binds the body and
+  # everything it now holds. Content added to a body that was already in the
+  # document is the caller's to bind instead, and that boundary is what this pins.
+  app$run_js(
+    "document.addEventListener('dockview:active-panel', function (e) {
+       var body = document.getElementById(e.detail.dock + '-' + e.detail.id);
+       if (body && !document.getElementById('deferred')) {
+         body.insertAdjacentHTML(
+           'beforeend',
+           '<button id=\"deferred\" type=\"button\" class=\"btn action-button\">go</button>'
+         );
+       }
+     });"
+  )
+
+  app$run_js(
+    "HTMLWidgets.find('#dock').getWidget().component.api.getPanel('test').api.setActive()"
+  )
+  app$wait_for_idle()
+
+  expect_true(unlist(app$get_js(
+    "document.getElementById('deferred').classList.contains('shiny-bound-input')"
+  )))
+})
+
 test_that("a panel hidden and shown again keeps its inputs live", {
   skip_on_cran()
 
