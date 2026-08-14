@@ -2,7 +2,7 @@ import 'widgets';
 import 'dockview/dist/styles/dockview.css';
 import { setDockViewCallbacks } from '../modules/callbacks';
 import { setShinyHandlers } from '../modules/handlers';
-import { instantiateDock, initDockPanels } from '../modules/dock';
+import { instantiateDock, initDockPanels, initEdgeGroups } from '../modules/dock';
 
 HTMLWidgets.widget({
 
@@ -33,6 +33,7 @@ HTMLWidgets.widget({
         // real geometry, so the empty grid and the pre-size structure never reach
         // the consumer -- only the settled layout does.
         teardown = setDockViewCallbacks(id, api);
+        initEdgeGroups(x, api);
         initDockPanels(x, api);
 
         // Set any Shiny handlers for proxy operations

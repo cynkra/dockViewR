@@ -69,6 +69,56 @@ get_grid <- function(dock) {
   get_dock(dock)[["grid"]]
 }
 
+#' get dock edge groups
+#'
+#' Edge groups are serialised beside the grid rather than inside it, keyed by
+#' edge rather than by group id. `get_edge_groups()` returns that raw record;
+#' the group-level helpers ([get_groups_ids()], [get_groups_panels()],
+#' [get_active_views()]) fold edge groups in so a rail's panels are reported
+#' like any other group's.
+#'
+#' @rdname dock-state
+#' @export
+get_edge_groups <- function(dock) {
+  get_dock(dock)[["edgeGroups"]]
+}
+
+#' Whether the edge group at `position` is currently visible
+#'
+#' @param position Edge position. One of `"left"`, `"right"`, `"top"`,
+#'   `"bottom"`.
+#' @return `TRUE` or `FALSE`, or `NULL` when no edge group is pinned to
+#'   `position` (or the dock has not yet published a state).
+#' @rdname dock-state
+#' @export
+is_edge_group_visible <- function(dock, position) {
+  validate_edge_position(position)
+  edge <- get_edge_groups(dock)[[position]]
+  if (is.null(edge)) {
+    return(NULL)
+  }
+  isTRUE(edge[["visible"]])
+}
+
+#' @keywords internal
+# The group node of each edge group, named by group id. An edge that has never
+# held a panel serialises without a `group`, so those are dropped: there is no
+# group to report.
+edge_group_nodes <- function(dock) {
+  edges <- get_edge_groups(dock)
+  if (length(edges) == 0) {
+    return(list())
+  }
+
+  groups <- lapply(edges, function(edge) edge[["group"]])
+  groups <- Filter(function(group) !is.null(group[["id"]]), groups)
+  if (length(groups) == 0) {
+    return(list())
+  }
+
+  setNames(groups, vapply(groups, function(group) group[["id"]], character(1)))
+}
+
 #' get dock grid shape
 #' @rdname dock-state
 #' @export
@@ -117,6 +167,11 @@ get_groups <- function(dock) {
 #' @rdname dock-state
 #' @export
 get_groups_ids <- function(dock) {
+  c(grid_group_ids(dock), names(edge_group_nodes(dock)))
+}
+
+#' @keywords internal
+grid_group_ids <- function(dock) {
   unlist(
     lapply(get_groups(dock), function(group) {
       find_group_id(group)
@@ -137,12 +192,19 @@ find_group_id <- function(x) {
 #' @rdname dock-state
 #' @export
 get_groups_panels <- function(dock) {
-  setNames(
-    lapply(get_groups(dock), function(group) {
-      group[["data"]][["views"]]
-    }),
-    get_groups_ids(dock)
-  )
+  grid_groups <- get_groups(dock)
+  edge_groups <- edge_group_nodes(dock)
+
+  grid_views <- lapply(grid_groups, function(group) {
+    group[["data"]][["views"]]
+  })
+  edge_views <- lapply(edge_groups, function(group) {
+    group[["views"]]
+  })
+
+  # Named off the grid ids alone, as before edge groups existed; the edge
+  # entries are already named by their own group id.
+  c(setNames(grid_views, grid_group_ids(dock)), edge_views)
 }
 
 #' @keywords internal
@@ -170,7 +232,18 @@ extract_active_view <- function(x) {
 #' @export
 get_active_views <- function(dock) {
   root <- get_grid(dock)[["root"]]
-  result <- extract_active_view(root)
+  result <- c(
+    extract_active_view(root),
+    vapply(
+      edge_group_nodes(dock),
+      function(group) {
+        active_view <- group[["activeView"]]
+        if (is.null(active_view)) NA_character_ else as.character(active_view)
+      },
+      character(1)
+    )
+  )
+  result <- result[!is.na(result)]
   if (length(result) == 0) NULL else result
 }
 

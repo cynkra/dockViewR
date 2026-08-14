@@ -84,6 +84,14 @@ class CustomTab {
   }
 }
 
+// An edge group cannot be maximised, floated or popped out, and its header runs
+// along the rail rather than across the top, so the standard header actions do
+// not apply to it. dockview reports the placement on the group api.
+const isEdgeGroup = (config) => {
+  const loc = config && config.api && config.api.location;
+  return !!loc && loc.type === 'edge';
+}
+
 class RightHeader {
   get element() {
     return this._element
@@ -94,6 +102,7 @@ class RightHeader {
   }
 
   init(config) {
+    if (isEdgeGroup(config)) return null;
     this._element.style = 'height: 100%; padding: 8px'
     this._element.innerHTML = '<i class="fas fa-expand" role="presentation" aria-label="expand icon"></i>'
     this._element.addEventListener('click', (e) => {
@@ -124,6 +133,7 @@ class LeftHeader {
   }
 
   init(config) {
+    if (isEdgeGroup(config)) return null;
     // If addTab is false, we do not need to render this component
     let params = config.group._params.params;
     let dockId = getDockId(config);

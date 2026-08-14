@@ -279,3 +279,71 @@ validate_move_targets <- function(from, to, context) {
     ))
   }
 }
+
+#' Dockview edge group operations
+#'
+#' Manipulate edge groups, that is groups pinned to one of the four edges of a
+#' dock, from the server. See
+#' \url{https://dockview.dev/docs/core/groups/edgeGroups}.
+#'
+#' @param dock Dock proxy object created with [dock_view_proxy()].
+#' @param edge_group An edge group object created with [edge_group()].
+#' @param position Edge position. One of `"left"`, `"right"`, `"top"`,
+#'   `"bottom"`.
+#' @param visible Whether the edge group should be visible.
+#'
+#' @return All functions return the dock proxy object invisibly, so they can be
+#'   chained.
+#'
+#' @details
+#' - `add_edge_group()`: pins a new edge group to the requested edge.
+#' - `remove_edge_group()`: removes the edge group pinned to `position`,
+#'   disposing of the panels it holds.
+#' - `set_edge_group_visible()`: shows or hides the edge group at `position`
+#'   without removing it. This is how a rail is collapsed from the server, since
+#'   dockview's click-to-collapse belongs to a module this package does not
+#'   bundle.
+#'
+#' Read the current visibility back with [is_edge_group_visible()].
+#'
+#' @seealso [edge_group()], [is_edge_group_visible()]
+#' @export
+#' @rdname edge-group-proxy
+add_edge_group <- function(dock, edge_group) {
+  if (!is_edge_group(edge_group)) {
+    stop("`edge_group` must be created with `edge_group()`.")
+  }
+
+  send_dock_message(
+    dock,
+    "add-edge-group",
+    list(
+      position = edge_group[["position"]],
+      options = edge_group[["options"]]
+    )
+  )
+}
+
+#' @export
+#' @rdname edge-group-proxy
+remove_edge_group <- function(dock, position) {
+  validate_edge_position(position)
+  send_dock_message(dock, "rm-edge-group", list(position = position))
+}
+
+#' @export
+#' @rdname edge-group-proxy
+set_edge_group_visible <- function(dock, position, visible) {
+  validate_edge_position(position)
+  if (!is.logical(visible) || length(visible) != 1 || is.na(visible)) {
+    stop(sprintf(
+      "<EdgeGroup (position: %s)>: `visible` must be a single boolean value.",
+      position
+    ))
+  }
+  send_dock_message(
+    dock,
+    "set-edge-group-visible",
+    list(position = position, visible = visible)
+  )
+}

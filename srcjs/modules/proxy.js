@@ -325,4 +325,24 @@ const saveDock = (id, api) => {
   Shiny.setInputValue(id + "_state", state);
 }
 
-export { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, isRestoring, setRestoring, isSeeded, setSeeded };
+// Edge groups. Thin passthroughs: the R side has already validated the position
+// and the option names are dockview's own, so there is nothing to translate.
+const addEdgeGroup = (m, mode, api) => {
+  evalDockView(() => {
+    api.addEdgeGroup(m.position, m.options);
+  }, mode);
+}
+
+const removeEdgeGroup = (m, mode, api) => {
+  evalDockView(() => {
+    api.removeEdgeGroup(m.position);
+  }, mode);
+}
+
+const setEdgeGroupVisible = (m, mode, api) => {
+  evalDockView(() => {
+    api.setEdgeGroupVisible(m.position, m.visible);
+  }, mode);
+}
+
+export { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, isRestoring, setRestoring, isSeeded, setSeeded, addEdgeGroup, removeEdgeGroup, setEdgeGroupVisible };

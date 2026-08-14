@@ -1,4 +1,4 @@
-import { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, setRestoring } from '../modules/proxy';
+import { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, setRestoring, addEdgeGroup, removeEdgeGroup, setEdgeGroupVisible } from '../modules/proxy';
 
 const deserializeFunction = (obj) => {
   if (obj && typeof obj === 'object' && obj.__IS_FUNCTION__) {
@@ -29,6 +29,22 @@ const restoreDock = (id, state, api) => {
       }
     });
   }
+  // fromJSON creates the edge groups the incoming state names, but leaves any
+  // other edge in place, so a rail added since the save would survive a restore
+  // that never knew about it. Drop those first, so the dock ends up as the
+  // saved layout rather than the saved layout plus whatever has accumulated.
+  const wanted = (state && state.edgeGroups) || {};
+  const live = api.groups
+    .map((group) => group.api.location)
+    .filter((location) => location && location.type === 'edge')
+    .map((location) => location.position);
+
+  live.forEach((position) => {
+    if (!wanted[position]) {
+      api.removeEdgeGroup(position);
+    }
+  });
+
   return api.fromJSON(state);
 }
 
@@ -98,6 +114,23 @@ const setShinyHandlers = (id, mode, api) => {
   // persist explicitly so `_state` reflects the new title.
   Shiny.addCustomMessageHandler(id + '_set-panel-title', (m) => {
     api.getPanel(m.id).api.setTitle(m.title);
+    saveDock(id, api);
+  })
+
+  // Edge groups. Adding or removing one adds or removes a dockview group, so
+  // onDidAddGroup / onDidRemoveGroup carry it into the coalesced flush like any
+  // other gesture. Toggling visibility fires nothing, so persist explicitly --
+  // `_state` is where `is_edge_group_visible()` reads from.
+  Shiny.addCustomMessageHandler(id + '_add-edge-group', (m) => {
+    addEdgeGroup(m, mode, api);
+  })
+
+  Shiny.addCustomMessageHandler(id + '_rm-edge-group', (m) => {
+    removeEdgeGroup(m, mode, api);
+  })
+
+  Shiny.addCustomMessageHandler(id + '_set-edge-group-visible', (m) => {
+    setEdgeGroupVisible(m, mode, api);
     saveDock(id, api);
   })
 }
