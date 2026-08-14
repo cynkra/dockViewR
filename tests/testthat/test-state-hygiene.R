@@ -361,6 +361,47 @@ test_that("a panel revealed for the first time gets its inputs bound", {
   expect_equal(app$get_value(input = "obs"), 781)
 })
 
+test_that("a panel hidden and shown again keeps its inputs live", {
+  skip_on_cran()
+
+  appdir <- system.file(package = "dockViewR", "examples", "serialise")
+
+  app <- AppDriver$new(
+    appdir,
+    name = "serialise_reattach",
+    seed = 121,
+    height = 752,
+    width = 1211
+  )
+  on.exit(app$stop(), add = TRUE)
+  app$wait_for_idle()
+
+  activate <- function(id) {
+    app$run_js(sprintf(
+      "HTMLWidgets.find('#dock').getWidget().component.api.getPanel('%s').api.setActive()",
+      id
+    ))
+    app$wait_for_idle()
+  }
+
+  # Bringing another tab to the front takes this body out of the document and
+  # coming back puts the same element in again, so the bind from its first reveal
+  # still stands and the sync after the return deliberately skips it. That is only
+  # sound if the binding really does survive the round trip, so drive it: the
+  # slider has to keep reporting after the body has been away.
+  activate("test")
+  app$set_inputs(obs = 781)
+  app$wait_for_idle()
+
+  activate("2")
+  expect_false(unlist(app$get_js("!!document.getElementById('dock-test')")))
+
+  activate("test")
+  app$set_inputs(obs = 222)
+  app$wait_for_idle()
+  expect_equal(app$get_value(input = "obs"), 222)
+})
+
 test_that("a restore rebinds the panels' inputs and outputs", {
   skip_on_cran()
 
