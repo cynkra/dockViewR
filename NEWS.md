@@ -10,9 +10,18 @@
 
 ## New features
 
-- Upgraded the bundled dockview from `dockview-core` 4.13.1 to `dockview` 8.0.0, four majors of upstream fixes. The stylesheet moved packages upstream, which is why the dependency is now `dockview` rather than `dockview-core`. Layouts serialised by the previous version still restore: dockview 8's serialisation format is the 4.13.1 format plus optional fields, so a stored `input[["<dock_ID>_state"]]` needs no migration. The bundle grows from 214 KB to 500 KB, roughly a third of which is the stylesheet now carrying 18 themes instead of 8.
+- Upgraded the bundled dockview from `dockview-core` 4.13.1 to `dockview` 8.0.0, spanning four major versions. The stylesheet moved packages upstream, which is why the dependency is now `dockview` rather than `dockview-core`. Layouts serialised by the previous version still restore: dockview 8's serialisation format is the 4.13.1 format plus optional fields, so a stored `input[["<dock_ID>_state"]]` needs no migration, whether it was persisted through `save_dock()` or read off the input directly. The bundle grows from 214 KB to 500 KB, roughly a third of which is the stylesheet now carrying 18 themes instead of 8.
 
-  dockview 8 splits its feature set across an MIT core and a separately licensed commercial package. dockViewR bundles only the MIT core, so the options gating upstream's commercial features (`pinnedTabs`, `smartGuides`, `layoutHistory`, `dndCompass`, `autoHideEdgeGroups`, `dockToEdgeGroups`, multi-row tabs, tab context menus and advanced overflow) have no implementation behind them here. Passing them through `dock_view(...)` is accepted and does nothing.
+  dockview 8 splits its feature set across an MIT core and a separately licensed commercial package. dockViewR bundles only the MIT core. Concretely that means three things arrive here: edge groups (`api.addEdgeGroup()`, absent in 4.13.1), the module architecture the split is built on, and the missing-module diagnostic below. Upstream's headline 8.0 features are all on the commercial side and are not available.
+
+  Setting an option that a commercial module implements (`smartGuides`, `layoutHistory`, `pinnedTabs`, `dndCompass`, `autoHideEdgeGroups`, `dockToEdgeGroups`, `overflow.mode: "wrap"`, `overflow.search`, `keyboardNavigation`, the tab context-menu callbacks) no longer fails silently. dockview validates options at construction and on every update, and logs one deduplicated error per missing module naming the exact option path:
+
+  ```text
+  dockview: `smartGuides` requires the "SmartGuides" module, which ships in
+  dockview-enterprise.
+  ```
+
+  Two caveats on that. It reports *declared intent* only, so it fires for an option you passed to `dock_view()` but stays deliberately silent when a user simply interacts (right-clicking a tab without the context-menu module shows the browser's own menu and logs nothing). And it is a browser-console error, not an R condition, so it will not surface in the R console or in logs.
 
 - Eleven new themes: `"nord"`, `"nord-spaced"`, `"catppuccin-mocha"`, `"catppuccin-mocha-spaced"`, `"monokai"`, `"solarized-light"`, `"solarized-light-spaced"`, `"github-dark"`, `"github-dark-spaced"`, `"github-light"` and `"github-light-spaced"`, bringing the total to 18.
 
