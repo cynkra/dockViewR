@@ -39,12 +39,16 @@ JavaScript option names (camelCase) for these extras.
 
 Two of those options need a dockview module that this package does not
 bundle, and have no effect here: \code{autoHide}, the pinnable tool-window
-behaviour, and anything relying on \code{dockToEdgeGroups}, which reveals an
-edge by dragging onto it. Both ship in the commercially licensed
-\code{dockview-enterprise}. Setting either logs an error in the browser console
-naming the missing module. Click-to-collapse is part of \code{autoHide}, so an
-edge group created here is a static rail: resize it with the sash, or drive
-it from the server with \code{\link[=set_edge_group_visible]{set_edge_group_visible()}}.}
+behaviour, and \code{dockToEdgeGroups}, which reveals an edge by dragging onto
+it. Both ship in the commercially licensed \code{dockview-enterprise}. Setting
+either logs an error in the browser console naming the missing module.
+
+Everything else about an edge group is core, including collapsing. Clicking
+the active tab of a rail collapses it to \code{collapsed_size} and clicking again
+expands it, and it can be resized with the sash. Note that collapsing and
+\code{\link[=set_edge_group_visible]{set_edge_group_visible()}} are different: a collapsed rail leaves its header
+strip standing, while an invisible one renders at zero and leaves the
+collapsed state untouched.}
 }
 \value{
 A list of class \code{dock_edge_group} with the camelCased options

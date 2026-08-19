@@ -101,22 +101,19 @@ is_edge_group_visible <- function(dock, position) {
 }
 
 #' @keywords internal
-# The group node of each edge group, named by group id. An edge that has never
-# held a panel serialises without a `group`, so those are dropped: there is no
-# group to report.
+# The group node of each edge group, named by group id. Every serialised edge
+# carries one, including an empty rail, so there is nothing to filter out: the
+# only entry dockview writes without a group is deleted whole, and that path
+# needs the enterprise drag-reveal to reach. The length guard has to stay, since
+# `setNames(list(), character(0))` carries a names attribute and would turn
+# `get_groups_ids()` from NULL into character(0) on an empty dock.
 edge_group_nodes <- function(dock) {
-  edges <- get_edge_groups(dock)
-  if (length(edges) == 0) {
-    return(list())
-  }
-
-  groups <- lapply(edges, function(edge) edge[["group"]])
-  groups <- Filter(function(group) !is.null(group[["id"]]), groups)
+  groups <- lapply(get_edge_groups(dock), `[[`, "group")
   if (length(groups) == 0) {
     return(list())
   }
 
-  setNames(groups, vapply(groups, function(group) group[["id"]], character(1)))
+  setNames(groups, vapply(groups, `[[`, character(1), "id"))
 }
 
 #' get dock grid shape

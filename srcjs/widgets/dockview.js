@@ -33,7 +33,7 @@ HTMLWidgets.widget({
         // real geometry, so the empty grid and the pre-size structure never reach
         // the consumer -- only the settled layout does.
         teardown = setDockViewCallbacks(id, api);
-        initEdgeGroups(x, api);
+        initEdgeGroups(id, x, api);
         initDockPanels(x, api);
 
         // Set any Shiny handlers for proxy operations

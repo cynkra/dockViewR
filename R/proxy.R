@@ -300,9 +300,10 @@ validate_move_targets <- function(from, to, context) {
 #' - `remove_edge_group()`: removes the edge group pinned to `position`,
 #'   disposing of the panels it holds.
 #' - `set_edge_group_visible()`: shows or hides the edge group at `position`
-#'   without removing it. This is how a rail is collapsed from the server, since
-#'   dockview's click-to-collapse belongs to a module this package does not
-#'   bundle.
+#'   without removing it. Hiding is not the same as collapsing: an invisible rail
+#'   renders at zero and keeps whatever collapsed state it had, while a collapsed
+#'   one leaves its header strip standing. Collapsing is a user gesture, a click
+#'   on the rail's active tab.
 #'
 #' Read the current visibility back with [is_edge_group_visible()].
 #'

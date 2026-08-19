@@ -86,6 +86,7 @@ server <- function(input, output, session) {
     panels_ids = get_panels_ids(dock_proxy),
     active_group = get_active_group(dock_proxy),
     active_panel = get_active_panel(dock_proxy),
+    active_views = get_active_views(dock_proxy),
     edge_positions = names(get_edge_groups(dock_proxy)),
     left_visible = is_edge_group_visible(dock_proxy, "left"),
     right_visible = is_edge_group_visible(dock_proxy, "right")

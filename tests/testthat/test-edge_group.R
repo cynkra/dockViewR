@@ -175,6 +175,16 @@ test_that("edge_groups app works", {
   expect_true(app$get_value(export = "left_visible"))
   # No right-hand rail yet, so visibility is unknown rather than FALSE.
   expect_null(app$get_value(export = "right_visible"))
+
+  # Asserted directly rather than left to the snapshot below: a rail holding
+  # focus used to make this NULL, which is the headline of the change, and a
+  # snapshot carries it inside a blob that snapshot_accept() can rewrite.
+  expect_identical(app$get_value(export = "active_group"), "left-edge")
+  expect_identical(app$get_value(export = "active_panel"), "tree")
+  expect_identical(
+    app$get_value(export = "active_views")[["left-edge"]],
+    "tree"
+  )
   app$expect_values(input = FALSE, output = FALSE, export = TRUE)
 
   # Adding a rail from the server surfaces in `_state` without an explicit
@@ -185,6 +195,12 @@ test_that("edge_groups app works", {
     app$get_value(export = "edge_positions"),
     c("left", "right")
   )
+  # The new rail is empty, so it serialises a group node with no `activeView`.
+  # That is the NA_character_ branch of get_active_views(): the rail must be
+  # absent from the result rather than present as NA.
+  views <- app$get_value(export = "active_views")
+  expect_false("right-edge" %in% names(views))
+  expect_identical(views[["left-edge"]], "tree")
   app$expect_values(input = FALSE, output = FALSE, export = TRUE)
 
   # Toggling visibility fires no dockview event, so the handler persists

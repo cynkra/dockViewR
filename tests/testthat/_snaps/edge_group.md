@@ -9,7 +9,7 @@
       edge_group(id = "", position = "left")
     Condition
       Error in `edge_group()`:
-      ! <EdgeGroup>: `id` is required and must be a non-empty string.
+      ! <EdgeGroup>: `id` is required and must be a single non-empty string.
     Code
       edge_group(id = "x", position = "left", collapsed = "no")
     Condition

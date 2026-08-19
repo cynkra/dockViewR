@@ -2,6 +2,10 @@
   "export": {
     "active_group": "left-edge",
     "active_panel": "tree",
+    "active_views": {
+      "1": "main",
+      "left-edge": "tree"
+    },
     "edge_positions": "left",
     "groups_ids": [
       "1",

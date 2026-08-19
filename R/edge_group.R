@@ -28,12 +28,16 @@
 #'
 #'   Two of those options need a dockview module that this package does not
 #'   bundle, and have no effect here: `autoHide`, the pinnable tool-window
-#'   behaviour, and anything relying on `dockToEdgeGroups`, which reveals an
-#'   edge by dragging onto it. Both ship in the commercially licensed
-#'   `dockview-enterprise`. Setting either logs an error in the browser console
-#'   naming the missing module. Click-to-collapse is part of `autoHide`, so an
-#'   edge group created here is a static rail: resize it with the sash, or drive
-#'   it from the server with [set_edge_group_visible()].
+#'   behaviour, and `dockToEdgeGroups`, which reveals an edge by dragging onto
+#'   it. Both ship in the commercially licensed `dockview-enterprise`. Setting
+#'   either logs an error in the browser console naming the missing module.
+#'
+#'   Everything else about an edge group is core, including collapsing. Clicking
+#'   the active tab of a rail collapses it to `collapsed_size` and clicking again
+#'   expands it, and it can be resized with the sash. Note that collapsing and
+#'   [set_edge_group_visible()] are different: a collapsed rail leaves its header
+#'   strip standing, while an invisible one renders at zero and leaves the
+#'   collapsed state untouched.
 #'
 #' @return A list of class `dock_edge_group` with the camelCased options
 #'   ready to be sent to the dockview JavaScript API. Contains at least:
@@ -57,15 +61,40 @@ edge_group <- function(
 ) {
   position <- match.arg(position)
 
-  if (missing(id) || is.null(id) || !nzchar(as.character(id))) {
-    stop("<EdgeGroup>: `id` is required and must be a non-empty string.")
+  if (
+    missing(id) ||
+      is.null(id) ||
+      length(id) != 1L ||
+      is.na(id) ||
+      !nzchar(as.character(id))
+  ) {
+    stop("<EdgeGroup>: `id` is required and must be a single non-empty string.")
   }
 
   id <- as.character(id)
 
-  if (!is.logical(collapsed) || length(collapsed) != 1) {
+  if (!is.logical(collapsed) || length(collapsed) != 1 || is.na(collapsed)) {
     stop(sprintf(
       "<EdgeGroup (ID: %s)>: `collapsed` must be a single boolean value.",
+      id
+    ))
+  }
+
+  # The values themselves cannot be checked here: `initialSize` is a request
+  # against a splitview whose available space dockview resolves at layout, as are
+  # the min and max. Type and domain can be.
+  validate_edge_size(initial_size, "initial_size", id)
+  validate_edge_size(minimum_size, "minimum_size", id)
+  validate_edge_size(maximum_size, "maximum_size", id)
+  validate_edge_size(collapsed_size, "collapsed_size", id)
+
+  if (
+    !is.null(minimum_size) &&
+      !is.null(maximum_size) &&
+      minimum_size > maximum_size
+  ) {
+    stop(sprintf(
+      "<EdgeGroup (ID: %s)>: `minimum_size` must not exceed `maximum_size`.",
       id
     ))
   }
@@ -135,6 +164,32 @@ check_edge_groups <- function(edge_groups) {
   }
 
   invisible(edge_groups)
+}
+
+#' @keywords internal
+# A pixel dimension forwarded to dockview: optional, and when given a single
+# finite non-negative number. Whether it can be satisfied is dockview's business,
+# not ours.
+validate_edge_size <- function(value, arg, id) {
+  if (is.null(value)) {
+    return(invisible(NULL))
+  }
+
+  ok <- is.numeric(value) &&
+    length(value) == 1L &&
+    !is.na(value) &&
+    is.finite(value) &&
+    value >= 0
+
+  if (!ok) {
+    stop(sprintf(
+      "<EdgeGroup (ID: %s)>: `%s` must be a single non-negative number.",
+      id,
+      arg
+    ))
+  }
+
+  invisible(NULL)
 }
 
 #' @keywords internal
