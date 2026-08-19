@@ -16,6 +16,7 @@ dock_view(
     "nord", "nord-spaced", "catppuccin-mocha", "catppuccin-mocha-spaced", "monokai",
     "solarized-light", "solarized-light-spaced", "github-dark", "github-dark-spaced",
     "github-light", "github-light-spaced"),
+  edge_groups = list(),
   add_tab = new_add_tab_plugin(),
   width = NULL,
   height = NULL,
@@ -38,6 +39,15 @@ dock_view(
 
   Theme. One of
   `c("light-spaced", "light", "abyss", "abyss-spaced", "dark", "vs", "dracula", "nord", "nord-spaced", "catppuccin-mocha", "catppuccin-mocha-spaced", "monokai", "solarized-light", "solarized-light-spaced", "github-dark", "github-dark-spaced", "github-light", "github-light-spaced")`.
+
+- edge_groups:
+
+  Optional unnamed list of
+  [`edge_group()`](https://cynkra.github.io/dockViewR/reference/edge_group.md)
+  objects to pin to the edges (left, right, top, bottom) of the dock at
+  initialisation. A panel joins one by referencing its id with
+  `position = list(referenceGroup = "<edge-group-id>")`, with no
+  `direction`. See <https://dockview.dev/docs/core/groups/edgeGroups>.
 
 - add_tab:
 

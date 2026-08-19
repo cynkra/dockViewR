@@ -36,6 +36,57 @@
 
 ### New features
 
+- Added edge groups: groups pinned to one edge of the dock, the usual
+  shape for a filter rail or a file tree. Create one with
+  [`edge_group()`](https://cynkra.github.io/dockViewR/reference/edge_group.md)
+  and pass it to `dock_view(edge_groups = )`, or add it later with
+  [`add_edge_group()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md);
+  [`remove_edge_group()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md)
+  and
+  [`set_edge_group_visible()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md)
+  drive it from the server, and
+  [`is_edge_group_visible()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
+  reads the current state back. A panel joins a rail by naming it,
+  `position = list(referenceGroup = "<edge-group-id>")`, with no
+  `direction`: naming the group is the whole instruction, so `direction`
+  is now optional in that case and still required alongside a
+  `referencePanel`.
+
+  A rail is part of the serialised layout, so
+  [`save_dock()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
+  and
+  [`restore_dock()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
+  round-trip its size, visibility and panel contents with the rest of
+  the dock. A restore also removes any edge group the saved layout does
+  not contain, which dockview’s `fromJSON` does not do on its own: it
+  creates the edges named in the state but leaves the others in place,
+  which would otherwise let a rail added since the save survive a
+  restore that never knew about it.
+
+  Edge groups are serialised beside the grid rather than inside it, so
+  [`get_groups_ids()`](https://cynkra.github.io/dockViewR/reference/dock-state.md),
+  [`get_groups_panels()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
+  and
+  [`get_active_views()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
+  now fold them in, and
+  [`get_active_panel()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
+  reports the active panel of a focused rail instead of `NULL`.
+  [`get_edge_groups()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
+  returns the raw per-edge record for anything finer.
+
+  A rail can be resized with its sash, and collapsed to its
+  `collapsed_size` by clicking its active tab, both of which are core
+  dockview behaviour. Collapsing is distinct from
+  [`set_edge_group_visible()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md):
+  a collapsed rail leaves its header strip standing, while an invisible
+  one renders at zero and keeps whatever collapsed state it had. Two
+  edge-group options do need dockview modules that ship in the
+  commercially licensed `dockview-enterprise`, which this package does
+  not bundle, and have no effect here: `autoHide`, the pinnable
+  tool-window behaviour, and `dockToEdgeGroups`, which reveals an edge
+  by dragging onto it. Setting either logs an error in the browser
+  console naming the missing module.
+
 - Upgraded the bundled dockview from `dockview-core` 4.13.1 to
   `dockview` 8.0.0, spanning four major versions. The stylesheet moved
   packages upstream, which is why the dependency is now `dockview`

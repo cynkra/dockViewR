@@ -59,6 +59,7 @@ creating IDE-like layouts in Shiny applications or R Markdown documents.</p>
 <span>    <span class="st">"nord"</span>, <span class="st">"nord-spaced"</span>, <span class="st">"catppuccin-mocha"</span>, <span class="st">"catppuccin-mocha-spaced"</span>, <span class="st">"monokai"</span>,</span>
 <span>    <span class="st">"solarized-light"</span>, <span class="st">"solarized-light-spaced"</span>, <span class="st">"github-dark"</span>, <span class="st">"github-dark-spaced"</span>,</span>
 <span>    <span class="st">"github-light"</span>, <span class="st">"github-light-spaced"</span><span class="op">)</span>,</span>
+<span>  edge_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  add_tab <span class="op">=</span> <span class="fu"><a href="dock_view_plugins.html">new_add_tab_plugin</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  width <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  height <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -86,6 +87,14 @@ creating IDE-like layouts in Shiny applications or R Markdown documents.</p>
 "catppuccin-mocha-spaced", "monokai", "solarized-light",
 "solarized-light-spaced", "github-dark", "github-dark-spaced",
 "github-light", "github-light-spaced")</code>.</p></dd>
+
+
+<dt id="arg-edge-groups">edge_groups<a class="anchor" aria-label="anchor" href="#arg-edge-groups"></a></dt>
+<dd><p>Optional unnamed list of <code><a href="edge_group.html">edge_group()</a></code> objects to pin to
+the edges (left, right, top, bottom) of the dock at initialisation. A panel
+joins one by referencing its id with
+<code>position = list(referenceGroup = "&lt;edge-group-id&gt;")</code>, with no <code>direction</code>.
+See <a href="https://dockview.dev/docs/core/groups/edgeGroups" class="external-link">https://dockview.dev/docs/core/groups/edgeGroups</a>.</p></dd>
 
 
 <dt id="arg-add-tab">add_tab<a class="anchor" aria-label="anchor" href="#arg-add-tab"></a></dt>

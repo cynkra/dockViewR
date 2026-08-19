@@ -11,6 +11,8 @@
   [`get_panels_ids()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
   [`get_active_group()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
   [`get_grid()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
+  [`get_edge_groups()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
+  [`is_edge_group_visible()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
   [`grid_shape()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
   [`get_groups()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
   [`get_groups_ids()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
@@ -33,10 +35,18 @@
   : Create dock view plugins
 - [`dock_view_proxy()`](https://cynkra.github.io/dockViewR/reference/dockview-proxy.md)
   : Create a proxy object to modify an existing dockview instance
+- [`add_edge_group()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md)
+  [`remove_edge_group()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md)
+  [`set_edge_group_visible()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md)
+  : Dockview edge group operations
+- [`edge_group()`](https://cynkra.github.io/dockViewR/reference/edge_group.md)
+  : Edge group
 - [`is_add_tab_plugin()`](https://cynkra.github.io/dockViewR/reference/is_add_tab_plugin.md)
   : Check if object is an add tab plugin
 - [`is_dock_view_plugin()`](https://cynkra.github.io/dockViewR/reference/is_dock_view_plugin.md)
   : Check if object is a dock view plugin of specific type
+- [`is_edge_group()`](https://cynkra.github.io/dockViewR/reference/is_edge_group.md)
+  : Check whether an object is an edge group
 - [`is_remove_tab_plugin()`](https://cynkra.github.io/dockViewR/reference/is_remove_tab_plugin.md)
   : Check if object is a remove tab plugin
 - [`add_panel()`](https://cynkra.github.io/dockViewR/reference/panel-operations.md)
