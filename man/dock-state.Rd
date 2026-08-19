@@ -6,6 +6,8 @@
 \alias{get_panels_ids}
 \alias{get_active_group}
 \alias{get_grid}
+\alias{get_edge_groups}
+\alias{is_edge_group_visible}
 \alias{grid_shape}
 \alias{get_groups}
 \alias{get_groups_ids}
@@ -26,6 +28,10 @@ get_active_group(dock)
 
 get_grid(dock)
 
+get_edge_groups(dock)
+
+is_edge_group_visible(dock, position)
+
 grid_shape(dock)
 
 get_groups(dock)
@@ -44,6 +50,9 @@ restore_dock(dock, data)
 }
 \arguments{
 \item{dock}{Dock proxy created with \code{\link[=dock_view_proxy]{dock_view_proxy()}}.}
+
+\item{position}{Edge position. One of \code{"left"}, \code{"right"}, \code{"top"},
+\code{"bottom"}.}
 
 \item{data}{Data representing a serialised dock object.}
 }
@@ -80,33 +89,16 @@ from \code{\link[=get_groups]{get_groups()}}.
 the ids of each panel within each group.
 \code{\link[=save_dock]{save_dock()}} and \code{\link[=restore_dock]{restore_dock()}} are used for their side effect to
 allow to respectively serialise and restore a dock object.
+
+\code{TRUE} or \code{FALSE}, or \code{NULL} when no edge group is pinned to
+\code{position} (or the dock has not yet published a state).
 }
 \description{
-get dock
-
-get dock panels
-
-get dock panels ids
-
-get dock active group
-
-get dock grid
-
-get dock grid shape
-
-get dock groups
-
-get dock groups ids
-
-get dock groups panels
-
-get active views
-
-get active panel
-
-save a dock
-
-restore a dock
+Edge groups are serialised beside the grid rather than inside it, keyed by
+edge rather than by group id. \code{get_edge_groups()} returns that raw record;
+the group-level helpers (\code{\link[=get_groups_ids]{get_groups_ids()}}, \code{\link[=get_groups_panels]{get_groups_panels()}},
+\code{\link[=get_active_views]{get_active_views()}}) fold edge groups in so a rail's panels are reported
+like any other group's.
 }
 \note{
 Only works with server side functions like \link{add_panel}.

@@ -15,6 +15,11 @@
 #' "catppuccin-mocha-spaced", "monokai", "solarized-light",
 #' "solarized-light-spaced", "github-dark", "github-dark-spaced",
 #' "github-light", "github-light-spaced")}.
+#' @param edge_groups Optional unnamed list of [edge_group()] objects to pin to
+#' the edges (left, right, top, bottom) of the dock at initialisation. A panel
+#' joins one by referencing its id with
+#' `position = list(referenceGroup = "<edge-group-id>")`, with no `direction`.
+#' See \url{https://dockview.dev/docs/core/groups/edgeGroups}.
 #' @param add_tab Globally controls the add tab behavior. List with enable and callback.
 #' Enable is a boolean, default to FALSE and callback is a
 #' JavaScript function passed with \link[htmlwidgets]{JS}.
@@ -116,6 +121,7 @@ dock_view <- function(
     "github-light",
     "github-light-spaced"
   ),
+  edge_groups = list(),
   add_tab = new_add_tab_plugin(),
   width = NULL,
   height = NULL,
@@ -129,6 +135,8 @@ dock_view <- function(
   ids <- check_panel_ids(panels)
   # check reference panels ids
   check_panel_refs(panels, ids)
+  # check edge groups
+  check_edge_groups(edge_groups)
 
   if (!is_add_tab_plugin(add_tab)) {
     stop(
@@ -152,6 +160,12 @@ dock_view <- function(
     mode = get_dock_view_mode(),
     ...
   )
+
+  # Only carried when there is something to carry, so a dock with no edge groups
+  # sends the same payload it always did.
+  if (length(edge_groups) > 0) {
+    x[["edgeGroups"]] <- unname(edge_groups)
+  }
 
   # create widget
   w <- htmlwidgets::createWidget(

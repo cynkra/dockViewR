@@ -11,6 +11,7 @@ dock_view(
     "nord", "nord-spaced", "catppuccin-mocha", "catppuccin-mocha-spaced", "monokai",
     "solarized-light", "solarized-light-spaced", "github-dark", "github-dark-spaced",
     "github-light", "github-light-spaced"),
+  edge_groups = list(),
   add_tab = new_add_tab_plugin(),
   width = NULL,
   height = NULL,
@@ -29,6 +30,12 @@ dock_view(
 "catppuccin-mocha-spaced", "monokai", "solarized-light",
 "solarized-light-spaced", "github-dark", "github-dark-spaced",
 "github-light", "github-light-spaced")}.}
+
+\item{edge_groups}{Optional unnamed list of \code{\link[=edge_group]{edge_group()}} objects to pin to
+the edges (left, right, top, bottom) of the dock at initialisation. A panel
+joins one by referencing its id with
+\code{position = list(referenceGroup = "<edge-group-id>")}, with no \code{direction}.
+See \url{https://dockview.dev/docs/core/groups/edgeGroups}.}
 
 \item{add_tab}{Globally controls the add tab behavior. List with enable and callback.
 Enable is a boolean, default to FALSE and callback is a

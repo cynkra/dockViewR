@@ -1,0 +1,36 @@
+{
+  "export": {
+    "active_group": "left-edge",
+    "active_panel": "tree",
+    "active_views": {
+      "1": "main",
+      "left-edge": "tree"
+    },
+    "edge_positions": [
+      "left",
+      "right"
+    ],
+    "groups_ids": [
+      "1",
+      "left-edge",
+      "right-edge"
+    ],
+    "groups_panels": {
+      "1": [
+        "main"
+      ],
+      "left-edge": [
+        "tree"
+      ],
+      "right-edge": [
+
+      ]
+    },
+    "left_visible": true,
+    "panels_ids": [
+      "tree",
+      "main"
+    ],
+    "right_visible": true
+  }
+}

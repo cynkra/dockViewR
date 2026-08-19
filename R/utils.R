@@ -108,9 +108,16 @@ process_panel_position <- function(
 
   validate_position_direction(id, position)
 
-  if (!is.null(position[["index"]]) && !identical(position[["direction"]], "within")) {
+  # `index` is honoured when joining an existing group, which is either
+  # `direction = "within"` against a `referencePanel` or a bare `referenceGroup`
+  # (dockview reads `position.index` there with no reference to `direction`). It
+  # is ignored only when the placement creates a new group.
+  joins_a_group <- identical(position[["direction"]], "within") ||
+    !is.null(position[["referenceGroup"]])
+
+  if (!is.null(position[["index"]]) && !joins_a_group) {
     warning(sprintf(
-      "<Panel (ID: %s)>: `index` is ignored unless `direction` is \"within\".",
+      "<Panel (ID: %s)>: `index` is ignored unless `direction` is \"within\" or a `referenceGroup` is given.",
       id
     ))
   }
@@ -149,6 +156,15 @@ validate_position_names <- function(id, position) {
 #' @keywords internal
 validate_position_direction <- function(id, position) {
   direction <- position[["direction"]]
+
+  # `direction` is optional when targeting a `referenceGroup`: the panel joins
+  # that group with no further placement, which is how a panel is put into an
+  # edge group. It stays required for a `referencePanel`, where the direction is
+  # the whole instruction.
+  if (is.null(direction) && !is.null(position[["referenceGroup"]])) {
+    return(invisible(NULL))
+  }
+
   if (is.null(direction) || !(direction %in% valid_directions)) {
     stop(sprintf(
       "<Panel (ID: %s)>: `direction` must be one of %s.",
