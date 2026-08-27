@@ -169,6 +169,13 @@
 
 ### Bug fixes
 
+- Collapsing or expanding an edge group now reaches
+  `input$<dock_id>_state`. It changes what dockview serialises but fires
+  none of the events the widget hooks, so the input kept reporting the
+  rail’s previous collapsed state until some unrelated gesture happened
+  to flush. Expanding back to the stale value hid the divergence, which
+  is why it went unnoticed.
+
 - A layout gesture no longer rebinds every panel in the dock. Each
   `Shiny.bindAll()` ends by scheduling a walk over every bound output on
   the page — re-sending each one’s hidden state and, where it reports
