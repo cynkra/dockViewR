@@ -261,3 +261,68 @@ test_that("a rail survives a save and restore round-trip", {
 
   app$stop()
 })
+
+test_that("collapsing a rail reaches `_state`", {
+  skip_on_cran()
+  appdir <- system.file(package = "dockViewR", "examples", "edge_groups")
+  skip_if(!nzchar(appdir))
+
+  app <- AppDriver$new(
+    appdir,
+    name = "edge_group_collapse",
+    seed = 121,
+    height = 752,
+    width = 1211
+  )
+  app$wait_for_idle()
+  app$wait_for_value(input = "dock_state")
+
+  # Clicking the active tab of a rail toggles its collapsed state and changes
+  # nothing else -- no move, no add, no activation change -- so `_state` keeps
+  # up only if the collapse is subscribed in its own right. A click that lands
+  # on some other tab does change the active panel, and would flush for that
+  # reason whether or not the collapse is watched.
+  toggle_rail <- function() {
+    app$run_js(
+      "HTMLWidgets.find('#dock').getWidget().groups
+         .find((g) => g.api.location.type === 'edge')
+         .element.querySelector('.dv-tab').click();"
+    )
+    app$wait_for_idle()
+  }
+
+  rail_collapsed <- function() {
+    isTRUE(unlist(app$get_js(
+      "HTMLWidgets.find('#dock').getWidget().getEdgeGroup('left').isCollapsed()"
+    )))
+  }
+
+  state_collapsed <- function() {
+    isTRUE(app$get_value(input = "dock_state")$edgeGroups$left$collapsed)
+  }
+
+  expect_false(rail_collapsed())
+  expect_false(state_collapsed())
+
+  toggle_rail()
+  expect_true(rail_collapsed())
+  expect_true(state_collapsed())
+
+  toggle_rail()
+  expect_false(rail_collapsed())
+  expect_false(state_collapsed())
+
+  # A restore empties a standing rail rather than rebuilding it, so the rail
+  # that comes back is the one already subscribed. Were it rebuilt instead, the
+  # collapse would go unwatched again from here on.
+  app$click("save")
+  app$wait_for_idle()
+  app$click("restore")
+  app$wait_for_idle()
+
+  toggle_rail()
+  expect_true(rail_collapsed())
+  expect_true(state_collapsed())
+
+  app$stop()
+})
