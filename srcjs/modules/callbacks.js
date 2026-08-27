@@ -163,8 +163,24 @@ const setDockViewCallbacks = (id, api) => {
     }
   });
 
-  api.onDidAddGroup(() => {
+  // Collapsing an edge group changes what `toJSON()` reports but fires none of
+  // the dock-level events around it, so `_state` would only catch up on the
+  // next unrelated gesture -- a move, an add, an activation change. The signal
+  // is per group, and every edge group comes into being through `addEdgeGroup`
+  // -- at init, from the server, or from a restore rebuilding one the saved
+  // layout names -- so subscribing as each group arrives catches them all. A
+  // restore that finds the rail already standing empties it rather than
+  // rebuilding it, leaving in place the subscription it already has. Like the
+  // dock-level ones, that subscription dies with the api it is taken on.
+  // Resizing needs no hook of its own: a sash drag ends on the delegated
+  // `pointerup` listener below.
+  api.onDidAddGroup((group) => {
     requestSync();
+
+    if (group.api.location.type === 'edge') {
+      group.api.onDidCollapsedChange(requestSync);
+    }
+
     if (HTMLWidgets.shinyMode) {
       Shiny.setInputValue(id + '_n-groups', api.groups.length);
     }
