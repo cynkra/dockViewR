@@ -49,6 +49,12 @@ collapsed state it had.
 strip standing, which is what distinguishes it from an invisible one. This
 is the server-side equivalent of the user gesture, a click on the rail's
 active tab.
+
+It is the only route to the collapsed state of a dock that is already
+running. The state can also be \emph{declared} two other ways, neither of which
+needs this: \code{edge_group(collapsed = TRUE)} at construction, and the
+\code{edgeGroups} entry of a payload handed to \code{\link[=restore_dock]{restore_dock()}}, which carries
+\code{collapsed} beside \code{size} and \code{visible} and is honoured on restore.
 }
 
 Read either state back with \code{\link[=is_edge_group_visible]{is_edge_group_visible()}} and

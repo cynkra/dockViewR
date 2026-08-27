@@ -308,6 +308,12 @@ validate_move_targets <- function(from, to, context) {
 #'   is the server-side equivalent of the user gesture, a click on the rail's
 #'   active tab.
 #'
+#'   It is the only route to the collapsed state of a dock that is already
+#'   running. The state can also be *declared* two other ways, neither of which
+#'   needs this: `edge_group(collapsed = TRUE)` at construction, and the
+#'   `edgeGroups` entry of a payload handed to [restore_dock()], which carries
+#'   `collapsed` beside `size` and `visible` and is honoured on restore.
+#'
 #' Read either state back with [is_edge_group_visible()] and
 #' [is_edge_group_collapsed()].
 #'
