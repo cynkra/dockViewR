@@ -1,4 +1,4 @@
-import { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, setRestoring, addEdgeGroup, removeEdgeGroup, setEdgeGroupVisible } from '../modules/proxy';
+import { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, setRestoring, addEdgeGroup, removeEdgeGroup, setEdgeGroupVisible, setEdgeGroupCollapsed } from '../modules/proxy';
 
 const deserializeFunction = (obj) => {
   if (obj && typeof obj === 'object' && obj.__IS_FUNCTION__) {
@@ -132,6 +132,12 @@ const setShinyHandlers = (id, mode, api) => {
   Shiny.addCustomMessageHandler(id + '_set-edge-group-visible', (m) => {
     setEdgeGroupVisible(m, mode, api);
     saveDock(id, api);
+  })
+
+  // collapse()/expand() fire onDidCollapsedChange, which the callbacks watch, so
+  // the flush is already handled -- no explicit saveDock here.
+  Shiny.addCustomMessageHandler(id + '_set-edge-group-collapsed', (m) => {
+    setEdgeGroupCollapsed(m, mode, api);
   })
 }
 

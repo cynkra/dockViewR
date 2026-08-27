@@ -345,4 +345,15 @@ const setEdgeGroupVisible = (m, mode, api) => {
   }, mode);
 }
 
-export { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, isRestoring, setRestoring, isSeeded, setSeeded, addEdgeGroup, removeEdgeGroup, setEdgeGroupVisible };
+// Collapse leaves the rail's header strip standing, where hiding renders it at
+// zero. There is no `setEdgeGroupCollapsed` on the public api, so go through the
+// group's own collapse()/expand(); a position with no rail returns undefined.
+const setEdgeGroupCollapsed = (m, mode, api) => {
+  evalDockView(() => {
+    const group = api.getEdgeGroup(m.position);
+    if (!group) return;
+    if (m.collapsed) group.collapse(); else group.expand();
+  }, mode);
+}
+
+export { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, isRestoring, setRestoring, isSeeded, setSeeded, addEdgeGroup, removeEdgeGroup, setEdgeGroupVisible, setEdgeGroupCollapsed };
