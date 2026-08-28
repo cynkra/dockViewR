@@ -326,3 +326,69 @@ test_that("collapsing a rail reaches `_state`", {
 
   app$stop()
 })
+
+test_that("set_edge_group_collapsed drives a rail from the server", {
+  skip_on_cran()
+  appdir <- system.file(package = "dockViewR", "examples", "edge_groups")
+  skip_if(!nzchar(appdir))
+
+  app <- AppDriver$new(
+    appdir,
+    name = "edge_group_collapsed_setter",
+    seed = 121,
+    height = 752,
+    width = 1211
+  )
+  app$wait_for_idle()
+  app$wait_for_value(input = "dock_state")
+
+  # The sibling test above covers the user gesture and the `_state` flush behind
+  # it. This one covers the server-side pair: the proxy call reaching
+  # collapse() / expand(), and is_edge_group_collapsed() reading it back.
+  rail_collapsed <- function() {
+    isTRUE(unlist(app$get_js(
+      "HTMLWidgets.find('#dock').getWidget().getEdgeGroup('left').isCollapsed()"
+    )))
+  }
+
+  expect_false(rail_collapsed())
+  expect_false(app$get_value(export = "left_collapsed"))
+
+  app$click("collapse_left")
+  app$wait_for_idle()
+  expect_true(rail_collapsed())
+  expect_true(app$get_value(export = "left_collapsed"))
+
+  app$click("expand_left")
+  app$wait_for_idle()
+  expect_false(rail_collapsed())
+  expect_false(app$get_value(export = "left_collapsed"))
+
+  # Collapsed and invisible are independent states, which is the whole reason
+  # both setters exist: hiding a collapsed rail leaves it collapsed.
+  app$click("collapse_left")
+  app$wait_for_idle()
+  app$click("hide_left")
+  app$wait_for_idle()
+  expect_false(app$get_value(export = "left_visible"))
+  expect_true(app$get_value(export = "left_collapsed"))
+
+  app$stop()
+})
+
+test_that("set_edge_group_collapsed works", {
+  dock_proxy <- dock_view_proxy("dock", session = session)
+  expect_snapshot(error = TRUE, {
+    set_edge_group_collapsed(dock_proxy, position = "middle", collapsed = TRUE)
+    set_edge_group_collapsed(dock_proxy, position = "left", collapsed = "yes")
+    set_edge_group_collapsed(dock_proxy, position = "left", collapsed = NA)
+  })
+
+  set_edge_group_collapsed(dock_proxy, position = "top", collapsed = TRUE)
+  expect_identical(
+    session$lastCustomMessage$type,
+    "dock_set-edge-group-collapsed"
+  )
+  expect_identical(session$lastCustomMessage$message$position, "top")
+  expect_true(session$lastCustomMessage$message$collapsed)
+})

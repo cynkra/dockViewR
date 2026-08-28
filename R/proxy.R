@@ -300,14 +300,27 @@ validate_move_targets <- function(from, to, context) {
 #' - `remove_edge_group()`: removes the edge group pinned to `position`,
 #'   disposing of the panels it holds.
 #' - `set_edge_group_visible()`: shows or hides the edge group at `position`
-#'   without removing it. Hiding is not the same as collapsing: an invisible rail
-#'   renders at zero and keeps whatever collapsed state it had, while a collapsed
-#'   one leaves its header strip standing. Collapsing is a user gesture, a click
-#'   on the rail's active tab.
+#'   without removing it. An invisible rail renders at zero and keeps whatever
+#'   collapsed state it had.
+#' - `set_edge_group_collapsed()`: collapses the edge group at `position` to its
+#'   `collapsed_size`, or expands it again. A collapsed rail keeps its header
+#'   strip standing, which is what distinguishes it from an invisible one. This
+#'   is the server-side equivalent of the user gesture, a click on the rail's
+#'   active tab.
 #'
-#' Read the current visibility back with [is_edge_group_visible()].
+#'   It is the only route to the collapsed state of a dock that is already
+#'   running. The state can also be *declared* two other ways, neither of which
+#'   needs this: `edge_group(collapsed = TRUE)` at construction, and the
+#'   `edgeGroups` entry of a payload handed to [restore_dock()], which carries
+#'   `collapsed` beside `size` and `visible` and is honoured on restore.
 #'
-#' @seealso [edge_group()], [is_edge_group_visible()]
+#' Read either state back with [is_edge_group_visible()] and
+#' [is_edge_group_collapsed()].
+#'
+#' @param collapsed Whether the edge group should be collapsed.
+#'
+#' @seealso [edge_group()], [is_edge_group_visible()],
+#'   [is_edge_group_collapsed()]
 #' @export
 #' @rdname edge-group-proxy
 add_edge_group <- function(dock, edge_group) {
@@ -330,6 +343,23 @@ add_edge_group <- function(dock, edge_group) {
 remove_edge_group <- function(dock, position) {
   validate_edge_position(position)
   send_dock_message(dock, "rm-edge-group", list(position = position))
+}
+
+#' @export
+#' @rdname edge-group-proxy
+set_edge_group_collapsed <- function(dock, position, collapsed) {
+  validate_edge_position(position)
+  if (!is.logical(collapsed) || length(collapsed) != 1 || is.na(collapsed)) {
+    stop(sprintf(
+      "<EdgeGroup (position: %s)>: `collapsed` must be a single boolean value.",
+      position
+    ))
+  }
+  send_dock_message(
+    dock,
+    "set-edge-group-collapsed",
+    list(position = position, collapsed = collapsed)
+  )
 }
 
 #' @export
