@@ -14,19 +14,21 @@ const isEmptyObj = (obj) => {
   return Object.keys(obj).length === 0;
 }
 
-// Custom eval depending on dockViewR mode
-const evalDockView = (callback, mode) => {
+// Custom eval depending on dockViewR mode.
+//
+// `op` names the operation for the dev-mode notification, and is passed in
+// rather than recovered from a stack trace. The stack is not a viable source:
+// the frames belong to the catch site rather than to the throw, the bundle is
+// minified so most frames carry no function name at all, and every call site
+// already knows what it is doing. Naming the R function the developer called is
+// also more use to them than an internal one.
+const evalDockView = (callback, mode, op = 'unknown') => {
   switch (mode) {
     case 'dev':
       try {
         callback();
       } catch (error) {
-        // Get the caller function name from stack trace
-        const stack = new Error().stack;
-        const callerMatch = stack.split('\n')[2]?.match(/at (\w+)/);
-        const callerName = callerMatch ? callerMatch[1] : 'unknown';
-
-        sendNotification(`Error in ${callerName}: ${error.message}`);
+        sendNotification(`Error in ${op}: ${error.message}`);
       }
       break;
     case 'prod':
@@ -78,21 +80,21 @@ const addPanel = (panel, mode, api) => {
     }
   }
   let props = { ...panel, ...internals };
-  evalDockView(() => api.addPanel(props), mode)
+  evalDockView(() => api.addPanel(props), mode, 'add_panel()')
 }
 
 const removePanel = (id, mode, api) => {
   evalDockView(() => {
     let panel = validatedDockElement(api, id, 'panel');
     api.removePanel(panel);
-  }, mode)
+  }, mode, 'remove_panel()');
 }
 
 const selectPanel = (id, mode, api) => {
   evalDockView(() => {
     let panel = validatedDockElement(api, id, 'panel');
     panel.api.setActive();
-  }, mode);
+  }, mode, 'select_panel()');
 }
 
 // add_panel places panels by referencePanel/referenceGroup + direction; moveTo
@@ -127,7 +129,7 @@ const movePanel = (m, mode, api) => {
       position: directionToPosition[position.direction],
       index: position.index
     });
-  }, mode);
+  }, mode, 'move_panel()');
 }
 
 const moveGroup = (m, mode, api) => {
@@ -139,7 +141,7 @@ const moveGroup = (m, mode, api) => {
       group: target,
       position: m.options.position
     });
-  }, mode)
+  }, mode, 'move_group()');
 }
 
 const moveGroup2 = (m, mode, api) => {
@@ -156,7 +158,7 @@ const moveGroup2 = (m, mode, api) => {
       group: groupTarget.api.group,
       position: m.options.position
     });
-  }, mode)
+  }, mode, 'move_group2()');
 }
 
 const orthogonal = (o) => (o === 'HORIZONTAL' ? 'VERTICAL' : 'HORIZONTAL');
@@ -248,7 +250,7 @@ const setSize = (m, mode, api) => {
         axis === 'width' ? { width: to } : { height: to }
       );
     }
-  }, mode);
+  }, mode, 'set_size()');
 };
 
 const serializeFunction = (func) => {
@@ -330,19 +332,19 @@ const saveDock = (id, api) => {
 const addEdgeGroup = (m, mode, api) => {
   evalDockView(() => {
     api.addEdgeGroup(m.position, m.options);
-  }, mode);
+  }, mode, 'add_edge_group()');
 }
 
 const removeEdgeGroup = (m, mode, api) => {
   evalDockView(() => {
     api.removeEdgeGroup(m.position);
-  }, mode);
+  }, mode, 'remove_edge_group()');
 }
 
 const setEdgeGroupVisible = (m, mode, api) => {
   evalDockView(() => {
     api.setEdgeGroupVisible(m.position, m.visible);
-  }, mode);
+  }, mode, 'set_edge_group_visible()');
 }
 
 // Collapse leaves the rail's header strip standing, where hiding renders it at
@@ -353,7 +355,7 @@ const setEdgeGroupCollapsed = (m, mode, api) => {
     const group = api.getEdgeGroup(m.position);
     if (!group) return;
     if (m.collapsed) group.collapse(); else group.expand();
-  }, mode);
+  }, mode, 'set_edge_group_collapsed()');
 }
 
 export { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, isRestoring, setRestoring, isSeeded, setSeeded, addEdgeGroup, removeEdgeGroup, setEdgeGroupVisible, setEdgeGroupCollapsed };

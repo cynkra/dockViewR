@@ -43,6 +43,8 @@
 
 ## Bug fixes
 
+- In dev mode, the notification for a failed proxy call now names the operation that failed. It derived the name from a stack trace before, which reported the bundle's URL: every failure read `Error in http: ...` regardless of what had gone wrong. Three things were against that derivation, so the name is now passed in from the call site instead: the stack was built inside the `catch` and so described where the error was handled rather than thrown, the frame it read was at a fixed index, and the bundle is minified so most frames carry no function name at all. The message names the R function the caller used, `Error in select_panel(): panel with ID 'x' not found`.
+
 - Collapsing or expanding an edge group now reaches `input$<dock_id>_state`. It changes what dockview serialises but fires none of the events the widget hooks, so the input kept reporting the rail's previous collapsed state until some unrelated gesture happened to flush. Expanding back to the stale value hid the divergence, which is why it went unnoticed.
 - `input[["<dock_ID>_active-group"]]` now reports the group a click landed in, rather than whichever group was active before it. dockview changes the active group when a tab is clicked but not when something inside a panel's content is, so an observer reacting to a button inside a panel read a stale value: repeated clicks on an "add panel" button added panels to the wrong group, alternating instead of consistently targeting the group holding the button. The widget now sets the input from a capture-phase `pointerdown` on the panel body, ahead of Shiny processing the click. It deliberately does not activate the group, which would steal focus from the click target.
 
