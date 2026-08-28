@@ -188,6 +188,17 @@
   to flush. Expanding back to the stale value hid the divergence, which
   is why it went unnoticed.
 
+- `input[["<dock_ID>_active-group"]]` now reports the group a click
+  landed in, rather than whichever group was active before it. dockview
+  changes the active group when a tab is clicked but not when something
+  inside a panel’s content is, so an observer reacting to a button
+  inside a panel read a stale value: repeated clicks on an “add panel”
+  button added panels to the wrong group, alternating instead of
+  consistently targeting the group holding the button. The widget now
+  sets the input from a capture-phase `pointerdown` on the panel body,
+  ahead of Shiny processing the click. It deliberately does not activate
+  the group, which would steal focus from the click target.
+
 - A layout gesture no longer rebinds every panel in the dock. Each
   `Shiny.bindAll()` ends by scheduling a walk over every bound output on
   the page — re-sending each one’s hidden state and, where it reports
