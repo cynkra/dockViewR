@@ -55,9 +55,12 @@ test_that("maximizing a group emits a bounded number of `_state` updates", {
   )
   app$wait_for_idle()
 
-  # While a group is maximized, `api.toJSON()` (read by saveDock on each flush)
-  # re-fires onDidMaximizedGroupChange. Without the re-entrancy guard the persist
-  # feeds itself thousands of times; count the emits and assert it stays a handful.
+  # Up to dockview-core 6.1.1, `api.toJSON()` re-fired onDidMaximizedGroupChange
+  # while a group was maximized, so the flush fed itself thousands of times and
+  # needed a re-entrancy guard. Upstream fixed that and the guard is gone; this
+  # now guards against the loop coming back. Measured at 1 emit on dockview 8;
+  # the bound is loose on purpose, since it only has to separate one flush from a
+  # runaway.
   app$run_js(
     "var o = Shiny.setInputValue;
      Shiny.setInputValue = function (n, v, p) {

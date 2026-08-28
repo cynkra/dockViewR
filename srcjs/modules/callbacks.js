@@ -76,16 +76,7 @@ const setDockViewCallbacks = (id, api) => {
     bindPanels();
   };
 
-  // While a group is maximized, `api.toJSON()` (read by saveDock) re-fires
-  // onDidMaximizedGroupChange -- it momentarily exits and re-enters the maximized
-  // state to serialise correct dimensions. Driving the flush off that event then
-  // loops the persist with itself (saveDock -> toJSON -> event -> saveDock).
-  // `persisting` marks the window in which a flush runs; events that fire inside
-  // it are byproducts of the persist, not gestures, so they are ignored. (Real
-  // gestures fire outside it.) This is a dockview bug, fixed in dockview-core
-  // 6.1.1; once the bundled dockview is >= 6.1.1 this guard can be removed.
   let flushScheduled = false;
-  let persisting = false;
 
   // One settled `_state` per gesture. A single gesture fires several dockview
   // events (a tab move that splits a group fires onDidMovePanel, onDidAddGroup
@@ -96,23 +87,18 @@ const setDockViewCallbacks = (id, api) => {
   // so binding mid-rebuild would bind markup that is about to be discarded. The
   // settled callback below does the one persist the restore needs.
   const requestSync = () => {
-    if (flushScheduled || persisting || isRestoring(id)) return;
+    if (flushScheduled || isRestoring(id)) return;
 
     flushScheduled = true;
     queueMicrotask(() => {
       flushScheduled = false;
-      persisting = true;
-      try {
-        persistState();
+      persistState();
 
-        // Nothing to re-fit into a dock that has no geometry yet, and the
-        // `resize` it dispatches would restart the ResizeObserver's debounce --
-        // delaying the very observation that settles the initial layout. The
-        // seeding branch re-fits once the size is known.
-        if (isSeeded(id)) refitWidgets();
-      } finally {
-        persisting = false;
-      }
+      // Nothing to re-fit into a dock that has no geometry yet, and the
+      // `resize` it dispatches would restart the ResizeObserver's debounce --
+      // delaying the very observation that settles the initial layout. The
+      // seeding branch re-fits once the size is known.
+      if (isSeeded(id)) refitWidgets();
     });
   };
 
@@ -130,14 +116,8 @@ const setDockViewCallbacks = (id, api) => {
   api.onDidLayoutFromJSON(() => {
     queueMicrotask(() => {
       setRestoring(id, false);
-
-      persisting = true;
-      try {
-        persistState();
-        if (isSeeded(id)) refitWidgets();
-      } finally {
-        persisting = false;
-      }
+      persistState();
+      if (isSeeded(id)) refitWidgets();
 
       if (HTMLWidgets.shinyMode) {
         Shiny.setInputValue(id + '_restored', true, { priority: 'event' });
@@ -275,16 +255,10 @@ const setDockViewCallbacks = (id, api) => {
 
         const seeding = resizeBaseline === null;
         resizeBaseline = size;
+        if (seeding) setSeeded(id, true);
 
-        persisting = true;
-        try {
-          if (seeding) setSeeded(id, true);
-
-          persistState();
-          refitWidgets();
-        } finally {
-          persisting = false;
-        }
+        persistState();
+        refitWidgets();
       }, 150);
     });
     resizeObserver.observe(container);
