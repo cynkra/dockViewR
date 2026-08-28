@@ -43,6 +43,8 @@
 
 ## Bug fixes
 
+- Dropped the re-entrancy guard around the `_state` flush. Up to dockview-core 6.1.1, `api.toJSON()` re-fired `onDidMaximizedGroupChange` while a group was maximized, so reading the layout inside a flush scheduled another one and the persist fed itself. The bundled dockview has been past that fix for a while and is now on 8.0.0, where `toJSON()` fires nothing: measured, maximizing a group emits exactly one `_state` update with the guard removed. No user-visible change, one less piece of machinery in the hottest path.
+
 - Collapsing or expanding an edge group now reaches `input$<dock_id>_state`. It changes what dockview serialises but fires none of the events the widget hooks, so the input kept reporting the rail's previous collapsed state until some unrelated gesture happened to flush. Expanding back to the stale value hid the divergence, which is why it went unnoticed.
 - `input[["<dock_ID>_active-group"]]` now reports the group a click landed in, rather than whichever group was active before it. dockview changes the active group when a tab is clicked but not when something inside a panel's content is, so an observer reacting to a button inside a panel read a stale value: repeated clicks on an "add panel" button added panels to the wrong group, alternating instead of consistently targeting the group holding the button. The widget now sets the input from a capture-phase `pointerdown` on the panel body, ahead of Shiny processing the click. It deliberately does not activate the group, which would steal focus from the click target.
 
