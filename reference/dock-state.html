@@ -3,11 +3,17 @@
 edge rather than by group id. get_edge_groups() returns that raw record;
 the group-level helpers (get_groups_ids(), get_groups_panels(),
 get_active_views()) fold edge groups in so a rail's panels are reported
-like any other group's."><meta property="og:description" content="Edge groups are serialised beside the grid rather than inside it, keyed by
+like any other group's.
+Collapsed and invisible are different states: a collapsed rail keeps its
+header strip standing, while an invisible one renders at zero and keeps
+whatever collapsed state it had. Set it with set_edge_group_collapsed()."><meta property="og:description" content="Edge groups are serialised beside the grid rather than inside it, keyed by
 edge rather than by group id. get_edge_groups() returns that raw record;
 the group-level helpers (get_groups_ids(), get_groups_panels(),
 get_active_views()) fold edge groups in so a rail's panels are reported
-like any other group's."></head><body>
+like any other group's.
+Collapsed and invisible are different states: a collapsed rail keeps its
+header strip standing, while an invisible one renders at zero and keeps
+whatever collapsed state it had. Set it with set_edge_group_collapsed()."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -48,6 +54,9 @@ edge rather than by group id. <code>get_edge_groups()</code> returns that raw re
 the group-level helpers (<code>get_groups_ids()</code>, <code>get_groups_panels()</code>,
 <code>get_active_views()</code>) fold edge groups in so a rail's panels are reported
 like any other group's.</p>
+<p>Collapsed and invisible are different states: a collapsed rail keeps its
+header strip standing, while an invisible one renders at zero and keeps
+whatever collapsed state it had. Set it with <code><a href="edge-group-proxy.html">set_edge_group_collapsed()</a></code>.</p>
     </div>
 
     <div class="section level2">
@@ -65,6 +74,8 @@ like any other group's.</p>
 <span><span class="fu">get_edge_groups</span><span class="op">(</span><span class="va">dock</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">is_edge_group_visible</span><span class="op">(</span><span class="va">dock</span>, <span class="va">position</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">is_edge_group_collapsed</span><span class="op">(</span><span class="va">dock</span>, <span class="va">position</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">grid_shape</span><span class="op">(</span><span class="va">dock</span><span class="op">)</span></span>
 <span></span>
@@ -130,6 +141,8 @@ from <code>get_groups()</code>.
 the ids of each panel within each group.
 <code>save_dock()</code> and <code>restore_dock()</code> are used for their side effect to
 allow to respectively serialise and restore a dock object.</p>
+<p><code>TRUE</code> or <code>FALSE</code>, or <code>NULL</code> when no edge group is pinned to
+<code>position</code> (or the dock has not yet published a state).</p>
 <p><code>TRUE</code> or <code>FALSE</code>, or <code>NULL</code> when no edge group is pinned to
 <code>position</code> (or the dock has not yet published a state).</p>
     </div>

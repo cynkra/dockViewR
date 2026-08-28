@@ -13,6 +13,7 @@
   [`get_grid()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
   [`get_edge_groups()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
   [`is_edge_group_visible()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
+  [`is_edge_group_collapsed()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
   [`grid_shape()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
   [`get_groups()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
   [`get_groups_ids()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
@@ -37,6 +38,7 @@
   : Create a proxy object to modify an existing dockview instance
 - [`add_edge_group()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md)
   [`remove_edge_group()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md)
+  [`set_edge_group_collapsed()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md)
   [`set_edge_group_visible()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md)
   : Dockview edge group operations
 - [`edge_group()`](https://cynkra.github.io/dockViewR/reference/edge_group.md)

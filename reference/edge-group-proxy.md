@@ -11,6 +11,8 @@ add_edge_group(dock, edge_group)
 
 remove_edge_group(dock, position)
 
+set_edge_group_collapsed(dock, position, collapsed)
+
 set_edge_group_visible(dock, position, visible)
 ```
 
@@ -30,6 +32,10 @@ set_edge_group_visible(dock, position, visible)
 
   Edge position. One of `"left"`, `"right"`, `"top"`, `"bottom"`.
 
+- collapsed:
+
+  Whether the edge group should be collapsed.
+
 - visible:
 
   Whether the edge group should be visible.
@@ -47,15 +53,30 @@ chained.
   disposing of the panels it holds.
 
 - `set_edge_group_visible()`: shows or hides the edge group at
-  `position` without removing it. Hiding is not the same as collapsing:
-  an invisible rail renders at zero and keeps whatever collapsed state
-  it had, while a collapsed one leaves its header strip standing.
-  Collapsing is a user gesture, a click on the rail's active tab.
+  `position` without removing it. An invisible rail renders at zero and
+  keeps whatever collapsed state it had.
 
-Read the current visibility back with
-[`is_edge_group_visible()`](https://cynkra.github.io/dockViewR/reference/dock-state.md).
+- `set_edge_group_collapsed()`: collapses the edge group at `position`
+  to its `collapsed_size`, or expands it again. A collapsed rail keeps
+  its header strip standing, which is what distinguishes it from an
+  invisible one. This is the server-side equivalent of the user gesture,
+  a click on the rail's active tab.
+
+  It is the only route to the collapsed state of a dock that is already
+  running. The state can also be *declared* two other ways, neither of
+  which needs this: `edge_group(collapsed = TRUE)` at construction, and
+  the `edgeGroups` entry of a payload handed to
+  [`restore_dock()`](https://cynkra.github.io/dockViewR/reference/dock-state.md),
+  which carries `collapsed` beside `size` and `visible` and is honoured
+  on restore.
+
+Read either state back with
+[`is_edge_group_visible()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
+and
+[`is_edge_group_collapsed()`](https://cynkra.github.io/dockViewR/reference/dock-state.md).
 
 ## See also
 
 [`edge_group()`](https://cynkra.github.io/dockViewR/reference/edge_group.md),
-[`is_edge_group_visible()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
+[`is_edge_group_visible()`](https://cynkra.github.io/dockViewR/reference/dock-state.md),
+[`is_edge_group_collapsed()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)

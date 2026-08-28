@@ -36,6 +36,18 @@
 
 ### New features
 
+- [`set_edge_group_collapsed()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md)
+  collapses an edge group to its `collapsed_size` from the server, or
+  expands it again, and
+  [`is_edge_group_collapsed()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
+  reads that state back. Previously `collapsed` could be named at
+  construction through
+  [`edge_group()`](https://cynkra.github.io/dockViewR/reference/edge_group.md)
+  but never set afterwards, while its sibling `visible` had both halves.
+  The two states stay independent: a collapsed rail keeps its header
+  strip standing, an invisible one renders at zero, and hiding a
+  collapsed rail leaves it collapsed.
+
 - Added edge groups: groups pinned to one edge of the dock, the usual
   shape for a filter rail or a file tree. Create one with
   [`edge_group()`](https://cynkra.github.io/dockViewR/reference/edge_group.md)

@@ -50,6 +50,8 @@ dock, from the server. See
 <span></span>
 <span><span class="fu">remove_edge_group</span><span class="op">(</span><span class="va">dock</span>, <span class="va">position</span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">set_edge_group_collapsed</span><span class="op">(</span><span class="va">dock</span>, <span class="va">position</span>, <span class="va">collapsed</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">set_edge_group_visible</span><span class="op">(</span><span class="va">dock</span>, <span class="va">position</span>, <span class="va">visible</span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -70,6 +72,10 @@ dock, from the server. See
 <code>"bottom"</code>.</p></dd>
 
 
+<dt id="arg-collapsed">collapsed<a class="anchor" aria-label="anchor" href="#arg-collapsed"></a></dt>
+<dd><p>Whether the edge group should be collapsed.</p></dd>
+
+
 <dt id="arg-visible">visible<a class="anchor" aria-label="anchor" href="#arg-visible"></a></dt>
 <dd><p>Whether the edge group should be visible.</p></dd>
 
@@ -86,15 +92,25 @@ chained.</p>
 <li><p><code>remove_edge_group()</code>: removes the edge group pinned to <code>position</code>,
 disposing of the panels it holds.</p></li>
 <li><p><code>set_edge_group_visible()</code>: shows or hides the edge group at <code>position</code>
-without removing it. Hiding is not the same as collapsing: an invisible rail
-renders at zero and keeps whatever collapsed state it had, while a collapsed
-one leaves its header strip standing. Collapsing is a user gesture, a click
-on the rail's active tab.</p></li>
-</ul><p>Read the current visibility back with <code><a href="dock-state.html">is_edge_group_visible()</a></code>.</p>
+without removing it. An invisible rail renders at zero and keeps whatever
+collapsed state it had.</p></li>
+<li><p><code>set_edge_group_collapsed()</code>: collapses the edge group at <code>position</code> to its
+<code>collapsed_size</code>, or expands it again. A collapsed rail keeps its header
+strip standing, which is what distinguishes it from an invisible one. This
+is the server-side equivalent of the user gesture, a click on the rail's
+active tab.</p>
+<p>It is the only route to the collapsed state of a dock that is already
+running. The state can also be <em>declared</em> two other ways, neither of which
+needs this: <code>edge_group(collapsed = TRUE)</code> at construction, and the
+<code>edgeGroups</code> entry of a payload handed to <code><a href="dock-state.html">restore_dock()</a></code>, which carries
+<code>collapsed</code> beside <code>size</code> and <code>visible</code> and is honoured on restore.</p></li>
+</ul><p>Read either state back with <code><a href="dock-state.html">is_edge_group_visible()</a></code> and
+<code><a href="dock-state.html">is_edge_group_collapsed()</a></code>.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="edge_group.html">edge_group()</a></code>, <code><a href="dock-state.html">is_edge_group_visible()</a></code></p></div>
+    <div class="dont-index"><p><code><a href="edge_group.html">edge_group()</a></code>, <code><a href="dock-state.html">is_edge_group_visible()</a></code>,
+<code><a href="dock-state.html">is_edge_group_collapsed()</a></code></p></div>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

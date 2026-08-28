@@ -6,6 +6,11 @@ record; the group-level helpers (`get_groups_ids()`,
 `get_groups_panels()`, `get_active_views()`) fold edge groups in so a
 rail's panels are reported like any other group's.
 
+Collapsed and invisible are different states: a collapsed rail keeps its
+header strip standing, while an invisible one renders at zero and keeps
+whatever collapsed state it had. Set it with
+[`set_edge_group_collapsed()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md).
+
 ## Usage
 
 ``` r
@@ -22,6 +27,8 @@ get_grid(dock)
 get_edge_groups(dock)
 
 is_edge_group_visible(dock, position)
+
+is_edge_group_collapsed(dock, position)
 
 grid_shape(dock)
 
@@ -87,6 +94,9 @@ flake. `get_groups()` returns a list of panel groups from `get_grid()`.
 containing the ids of each panel within each group. `save_dock()` and
 `restore_dock()` are used for their side effect to allow to respectively
 serialise and restore a dock object.
+
+`TRUE` or `FALSE`, or `NULL` when no edge group is pinned to `position`
+(or the dock has not yet published a state).
 
 `TRUE` or `FALSE`, or `NULL` when no edge group is pinned to `position`
 (or the dock has not yet published a state).
