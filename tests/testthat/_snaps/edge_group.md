@@ -84,3 +84,21 @@
       Error in `set_edge_group_visible()`:
       ! <EdgeGroup (position: left)>: `visible` must be a single boolean value.
 
+# set_edge_group_collapsed works
+
+    Code
+      set_edge_group_collapsed(dock_proxy, position = "middle", collapsed = TRUE)
+    Condition
+      Error in `validate_edge_position()`:
+      ! <EdgeGroup>: invalid value (middle) for `position`. `position` must be one of left, right, top, bottom.
+    Code
+      set_edge_group_collapsed(dock_proxy, position = "left", collapsed = "yes")
+    Condition
+      Error in `set_edge_group_collapsed()`:
+      ! <EdgeGroup (position: left)>: `collapsed` must be a single boolean value.
+    Code
+      set_edge_group_collapsed(dock_proxy, position = "left", collapsed = NA)
+    Condition
+      Error in `set_edge_group_collapsed()`:
+      ! <EdgeGroup (position: left)>: `collapsed` must be a single boolean value.
+

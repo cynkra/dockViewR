@@ -9,6 +9,8 @@ ui <- fluidPage(
     actionButton("rm", "Remove right edge group"),
     actionButton("hide_left", "Hide left edge group"),
     actionButton("show_left", "Show left edge group"),
+    actionButton("collapse_left", "Collapse left edge group"),
+    actionButton("expand_left", "Expand left edge group"),
     actionButton("save", "Save layout"),
     actionButton("restore", "Restore saved layout")
   ),
@@ -70,6 +72,14 @@ server <- function(input, output, session) {
     set_edge_group_visible(dock_proxy, position = "left", visible = TRUE)
   })
 
+  observeEvent(input$collapse_left, {
+    set_edge_group_collapsed(dock_proxy, position = "left", collapsed = TRUE)
+  })
+
+  observeEvent(input$expand_left, {
+    set_edge_group_collapsed(dock_proxy, position = "left", collapsed = FALSE)
+  })
+
   observeEvent(input$save, {
     save_dock(dock_proxy)
     saved(input$dock_state)
@@ -89,6 +99,7 @@ server <- function(input, output, session) {
     active_views = get_active_views(dock_proxy),
     edge_positions = names(get_edge_groups(dock_proxy)),
     left_visible = is_edge_group_visible(dock_proxy, "left"),
+    left_collapsed = is_edge_group_collapsed(dock_proxy, "left"),
     right_visible = is_edge_group_visible(dock_proxy, "right")
   )
 }

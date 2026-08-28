@@ -100,6 +100,26 @@ is_edge_group_visible <- function(dock, position) {
   isTRUE(edge[["visible"]])
 }
 
+#' Whether the edge group at `position` is currently collapsed
+#'
+#' Collapsed and invisible are different states: a collapsed rail keeps its
+#' header strip standing, while an invisible one renders at zero and keeps
+#' whatever collapsed state it had. Set it with [set_edge_group_collapsed()].
+#'
+#' @return `TRUE` or `FALSE`, or `NULL` when no edge group is pinned to
+#'   `position` (or the dock has not yet published a state).
+#' @rdname dock-state
+#' @export
+is_edge_group_collapsed <- function(dock, position) {
+  validate_edge_position(position)
+  edge <- get_edge_groups(dock)[[position]]
+  if (is.null(edge)) {
+    return(NULL)
+  }
+  # `collapsed` is optional on the serialised edge: absent means expanded.
+  isTRUE(edge[["collapsed"]])
+}
+
 #' @keywords internal
 # The group node of each edge group, named by group id. Every serialised edge
 # carries one, including an empty rail, so there is nothing to filter out: the

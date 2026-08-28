@@ -261,3 +261,134 @@ test_that("a rail survives a save and restore round-trip", {
 
   app$stop()
 })
+
+test_that("collapsing a rail reaches `_state`", {
+  skip_on_cran()
+  appdir <- system.file(package = "dockViewR", "examples", "edge_groups")
+  skip_if(!nzchar(appdir))
+
+  app <- AppDriver$new(
+    appdir,
+    name = "edge_group_collapse",
+    seed = 121,
+    height = 752,
+    width = 1211
+  )
+  app$wait_for_idle()
+  app$wait_for_value(input = "dock_state")
+
+  # Clicking the active tab of a rail toggles its collapsed state and changes
+  # nothing else -- no move, no add, no activation change -- so `_state` keeps
+  # up only if the collapse is subscribed in its own right. A click that lands
+  # on some other tab does change the active panel, and would flush for that
+  # reason whether or not the collapse is watched.
+  toggle_rail <- function() {
+    app$run_js(
+      "HTMLWidgets.find('#dock').getWidget().groups
+         .find((g) => g.api.location.type === 'edge')
+         .element.querySelector('.dv-tab').click();"
+    )
+    app$wait_for_idle()
+  }
+
+  rail_collapsed <- function() {
+    isTRUE(unlist(app$get_js(
+      "HTMLWidgets.find('#dock').getWidget().getEdgeGroup('left').isCollapsed()"
+    )))
+  }
+
+  state_collapsed <- function() {
+    isTRUE(app$get_value(input = "dock_state")$edgeGroups$left$collapsed)
+  }
+
+  expect_false(rail_collapsed())
+  expect_false(state_collapsed())
+
+  toggle_rail()
+  expect_true(rail_collapsed())
+  expect_true(state_collapsed())
+
+  toggle_rail()
+  expect_false(rail_collapsed())
+  expect_false(state_collapsed())
+
+  # A restore empties a standing rail rather than rebuilding it, so the rail
+  # that comes back is the one already subscribed. Were it rebuilt instead, the
+  # collapse would go unwatched again from here on.
+  app$click("save")
+  app$wait_for_idle()
+  app$click("restore")
+  app$wait_for_idle()
+
+  toggle_rail()
+  expect_true(rail_collapsed())
+  expect_true(state_collapsed())
+
+  app$stop()
+})
+
+test_that("set_edge_group_collapsed drives a rail from the server", {
+  skip_on_cran()
+  appdir <- system.file(package = "dockViewR", "examples", "edge_groups")
+  skip_if(!nzchar(appdir))
+
+  app <- AppDriver$new(
+    appdir,
+    name = "edge_group_collapsed_setter",
+    seed = 121,
+    height = 752,
+    width = 1211
+  )
+  app$wait_for_idle()
+  app$wait_for_value(input = "dock_state")
+
+  # The sibling test above covers the user gesture and the `_state` flush behind
+  # it. This one covers the server-side pair: the proxy call reaching
+  # collapse() / expand(), and is_edge_group_collapsed() reading it back.
+  rail_collapsed <- function() {
+    isTRUE(unlist(app$get_js(
+      "HTMLWidgets.find('#dock').getWidget().getEdgeGroup('left').isCollapsed()"
+    )))
+  }
+
+  expect_false(rail_collapsed())
+  expect_false(app$get_value(export = "left_collapsed"))
+
+  app$click("collapse_left")
+  app$wait_for_idle()
+  expect_true(rail_collapsed())
+  expect_true(app$get_value(export = "left_collapsed"))
+
+  app$click("expand_left")
+  app$wait_for_idle()
+  expect_false(rail_collapsed())
+  expect_false(app$get_value(export = "left_collapsed"))
+
+  # Collapsed and invisible are independent states, which is the whole reason
+  # both setters exist: hiding a collapsed rail leaves it collapsed.
+  app$click("collapse_left")
+  app$wait_for_idle()
+  app$click("hide_left")
+  app$wait_for_idle()
+  expect_false(app$get_value(export = "left_visible"))
+  expect_true(app$get_value(export = "left_collapsed"))
+
+  app$stop()
+})
+
+test_that("set_edge_group_collapsed works", {
+  dock_proxy <- dock_view_proxy("dock", session = session)
+  expect_snapshot(error = TRUE, {
+    set_edge_group_collapsed(dock_proxy, position = "middle", collapsed = TRUE)
+    set_edge_group_collapsed(dock_proxy, position = "left", collapsed = "yes")
+    set_edge_group_collapsed(dock_proxy, position = "left", collapsed = NA)
+  })
+
+  set_edge_group_collapsed(dock_proxy, position = "top", collapsed = TRUE)
+  expect_identical(
+    session$lastCustomMessage$type,
+    "dock_set-edge-group-collapsed"
+  )
+  expect_identical(session$lastCustomMessage$message$position, "top")
+  expect_true(session$lastCustomMessage$message$collapsed)
+})

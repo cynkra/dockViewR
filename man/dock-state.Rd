@@ -8,6 +8,7 @@
 \alias{get_grid}
 \alias{get_edge_groups}
 \alias{is_edge_group_visible}
+\alias{is_edge_group_collapsed}
 \alias{grid_shape}
 \alias{get_groups}
 \alias{get_groups_ids}
@@ -31,6 +32,8 @@ get_grid(dock)
 get_edge_groups(dock)
 
 is_edge_group_visible(dock, position)
+
+is_edge_group_collapsed(dock, position)
 
 grid_shape(dock)
 
@@ -92,6 +95,9 @@ allow to respectively serialise and restore a dock object.
 
 \code{TRUE} or \code{FALSE}, or \code{NULL} when no edge group is pinned to
 \code{position} (or the dock has not yet published a state).
+
+\code{TRUE} or \code{FALSE}, or \code{NULL} when no edge group is pinned to
+\code{position} (or the dock has not yet published a state).
 }
 \description{
 Edge groups are serialised beside the grid rather than inside it, keyed by
@@ -99,6 +105,10 @@ edge rather than by group id. \code{get_edge_groups()} returns that raw record;
 the group-level helpers (\code{\link[=get_groups_ids]{get_groups_ids()}}, \code{\link[=get_groups_panels]{get_groups_panels()}},
 \code{\link[=get_active_views]{get_active_views()}}) fold edge groups in so a rail's panels are reported
 like any other group's.
+
+Collapsed and invisible are different states: a collapsed rail keeps its
+header strip standing, while an invisible one renders at zero and keeps
+whatever collapsed state it had. Set it with \code{\link[=set_edge_group_collapsed]{set_edge_group_collapsed()}}.
 }
 \note{
 Only works with server side functions like \link{add_panel}.
