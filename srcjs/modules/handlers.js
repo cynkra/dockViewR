@@ -1,4 +1,5 @@
 import { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, setRestoring, addEdgeGroup, removeEdgeGroup, setEdgeGroupVisible, setEdgeGroupCollapsed } from '../modules/proxy';
+import { layoutFromContainer } from '../modules/dock';
 
 const deserializeFunction = (obj) => {
   if (obj && typeof obj === 'object' && obj.__IS_FUNCTION__) {
@@ -44,6 +45,12 @@ const restoreDock = (id, state, api) => {
       api.removeEdgeGroup(position);
     }
   });
+
+  // Seed the grid from the container before restoring. A saved rail carries its
+  // size in pixels, and `fromJSON` divides `this.width` rather than the
+  // container's, so restoring before the ResizeObserver has seeded the grid
+  // sizes every edge group against 100px -- see `layoutFromContainer()`.
+  layoutFromContainer(id, api);
 
   return api.fromJSON(state);
 }
