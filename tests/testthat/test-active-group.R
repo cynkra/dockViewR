@@ -20,6 +20,11 @@ test_that("active_group app works", {
     width = 1211
   )
   app$wait_for_idle()
+  # Every exported value below derives from `_state`, which is held until the
+  # ResizeObserver reports real geometry. That settle drives no output, so
+  # `wait_for_idle()` cannot observe it and returns while the exports are still
+  # NULL. Fast enough to pass locally, lost on the slower CI runners.
+  app$wait_for_value(input = "dock_state")
 
   # `app$click("add_panel")` would set the actionButton input directly via
   # websocket, bypassing DOM events — that would not exercise the pointerdown
