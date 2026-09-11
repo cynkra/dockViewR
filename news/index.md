@@ -181,6 +181,21 @@
 
 ### Bug fixes
 
+- A rail restored by
+  [`restore_dock()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
+  now comes back at the pixel size it was saved with. Sizing an edge
+  group divides the splitview’s available space, and dockview’s
+  `fromJSON` lays the shell out from the grid’s width rather than the
+  container’s, so a restore landing before the ResizeObserver had seeded
+  the grid divided the 100x100 default between the rail and the centre:
+  a rail asking for 260px came back at 87px, and nothing re-flowed it
+  once the grid reached its real width. The restore path now seeds the
+  grid from the container first, the same guard construction already
+  applied, so `initial_size` means pixels on both paths. A consumer that
+  hides a rail’s contents below a width threshold was the visible
+  symptom, since the undersized rail rendered present, visible and
+  blank.
+
 - Collapsing or expanding an edge group now reaches
   `input$<dock_id>_state`. It changes what dockview serialises but fires
   none of the events the widget hooks, so the input kept reporting the
