@@ -40,6 +40,8 @@ class Panel {
   }
 }
 
+const defaultCloseIcon = '<i class="fas fa-xmark" role="presentation" aria-label="close icon"></i>';
+
 // Tab with custom remove button
 class DefaultTab {
   constructor() {
@@ -51,7 +53,6 @@ class DefaultTab {
 
     this.action = document.createElement('div');
     this.action.className = 'dv-default-tab-action';
-    this.action.innerHTML = '<i class="fas fa-xmark" role="presentation" aria-label="close icon"></i>';
 
     this._element.appendChild(this._content);
     this._element.appendChild(this.action);
@@ -65,6 +66,10 @@ class DefaultTab {
     let dockId = getDockId(config);
     this._element.id = dockId + '-tab-' + config.api.id;
     this._content.textContent = config.title;
+    // The icon travels in the panel params, so a restored layout keeps it. A
+    // panel without one, including any saved before the plugin carried an
+    // icon, gets the default.
+    this.action.innerHTML = config.params.removeIcon ?? defaultCloseIcon;
     this.action.addEventListener('click', (e) => {
       // Send callback to Shiny for control from the server side
       config.params.removeCallback(config)

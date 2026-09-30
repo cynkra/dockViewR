@@ -10,6 +10,8 @@
 
 ## New features
 
+- The close button of a manual-mode tab takes its icon from the new `icon` argument of `new_remove_tab_plugin()`, a string of HTML or an htmltools tag. It was hard-coded to Font Awesome's xmark, so an app with an icon set of its own could only hide that icon and draw over it. The default, `NULL`, keeps the xmark. The icon is stored in the panel's parameters as `removeIcon`, beside `removeCallback`, so `save_dock()` and `restore_dock()` round-trip it, and a layout saved by an earlier version restores with the xmark. In auto mode the tab and its close button are dockview's own, and `icon` has no effect.
+
 - `set_edge_group_collapsed()` collapses an edge group to its `collapsed_size` from the server, or expands it again, and `is_edge_group_collapsed()` reads that state back. Previously `collapsed` could be named at construction through `edge_group()` but never set afterwards, while its sibling `visible` had both halves. The two states stay independent: a collapsed rail keeps its header strip standing, an invisible one renders at zero, and hiding a collapsed rail leaves it collapsed.
 
 - Added edge groups: groups pinned to one edge of the dock, the usual shape for a filter rail or a file tree. Create one with `edge_group()` and pass it to `dock_view(edge_groups = )`, or add it later with `add_edge_group()`; `remove_edge_group()` and `set_edge_group_visible()` drive it from the server, and `is_edge_group_visible()` reads the current state back. A panel joins a rail by naming it, `position = list(referenceGroup = "<edge-group-id>")`, with no `direction`: naming the group is the whole instruction, so `direction` is now optional in that case and still required alongside a `referencePanel`.
