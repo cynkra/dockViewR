@@ -49,11 +49,24 @@ Currently supports "add_tab" and "remove_tab" plugins.</p>
 <span><span class="fu">new_dock_view_plugin</span><span class="op">(</span><span class="va">type</span>, enable <span class="op">=</span> <span class="cn">FALSE</span>, callback <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'remove_tab'</span></span>
-<span><span class="fu">new_dock_view_plugin</span><span class="op">(</span><span class="va">type</span>, enable <span class="op">=</span> <span class="cn">FALSE</span>, callback <span class="op">=</span> <span class="cn">NULL</span>, mode <span class="op">=</span> <span class="st">"auto"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">new_dock_view_plugin</span><span class="op">(</span></span>
+<span>  <span class="va">type</span>,</span>
+<span>  enable <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  callback <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mode <span class="op">=</span> <span class="st">"auto"</span>,</span>
+<span>  icon <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">new_add_tab_plugin</span><span class="op">(</span>enable <span class="op">=</span> <span class="cn">FALSE</span>, callback <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">new_remove_tab_plugin</span><span class="op">(</span>enable <span class="op">=</span> <span class="cn">FALSE</span>, callback <span class="op">=</span> <span class="cn">NULL</span>, mode <span class="op">=</span> <span class="st">"auto"</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">new_remove_tab_plugin</span><span class="op">(</span></span>
+<span>  enable <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  callback <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mode <span class="op">=</span> <span class="st">"auto"</span>,</span>
+<span>  icon <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -79,6 +92,13 @@ a default callback is used.</p></dd>
 
 <dt id="arg-mode">mode<a class="anchor" aria-label="anchor" href="#arg-mode"></a></dt>
 <dd><p>For remove_tab plugins only. One of "auto" or "manual".</p></dd>
+
+
+<dt id="arg-icon">icon<a class="anchor" aria-label="anchor" href="#arg-icon"></a></dt>
+<dd><p>For remove_tab plugins only. The close button's icon in "manual"
+mode, as a string of HTML or an htmltools tag such as <code><a href="https://rdrr.io/pkg/shiny/man/icon.html" class="external-link">shiny::icon()</a></code>. The
+default, <code>NULL</code>, keeps Font Awesome's xmark. In "auto" mode the tab is
+dockview's own, close button included, so <code>icon</code> has no effect there.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -142,6 +162,24 @@ on the choosen `type“.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $mode</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "manual"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "dock_view_plugin_remove_tab" "dock_view_plugin"           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3] "list"                       </span>
+<span class="r-in"><span><span class="fu">new_remove_tab_plugin</span><span class="op">(</span>enable <span class="op">=</span> <span class="cn">TRUE</span>, mode <span class="op">=</span> <span class="st">"manual"</span>, icon <span class="op">=</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/icon.html" class="external-link">icon</a></span><span class="op">(</span><span class="st">"circle-xmark"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $enable</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $callback</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "(config) =&gt; {\n      Shiny.setInputValue(`${config.dockId}_panel-to-remove`, config.api.id, { priority: 'event' });\n    }\n    "</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "JS_EVAL"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mode</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "manual"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $icon</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "&lt;i class=\"far fa-circle-xmark\" role=\"presentation\" aria-label=\"circle-xmark icon\"&gt;&lt;/i&gt;"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "dock_view_plugin_remove_tab" "dock_view_plugin"           </span>

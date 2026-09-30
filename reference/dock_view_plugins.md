@@ -12,11 +12,24 @@ new_dock_view_plugin(type, ...)
 new_dock_view_plugin(type, enable = FALSE, callback = NULL, ...)
 
 # S3 method for class 'remove_tab'
-new_dock_view_plugin(type, enable = FALSE, callback = NULL, mode = "auto", ...)
+new_dock_view_plugin(
+  type,
+  enable = FALSE,
+  callback = NULL,
+  mode = "auto",
+  icon = NULL,
+  ...
+)
 
 new_add_tab_plugin(enable = FALSE, callback = NULL, ...)
 
-new_remove_tab_plugin(enable = FALSE, callback = NULL, mode = "auto", ...)
+new_remove_tab_plugin(
+  enable = FALSE,
+  callback = NULL,
+  mode = "auto",
+  icon = NULL,
+  ...
+)
 ```
 
 ## Arguments
@@ -41,6 +54,14 @@ new_remove_tab_plugin(enable = FALSE, callback = NULL, mode = "auto", ...)
 - mode:
 
   For remove_tab plugins only. One of "auto" or "manual".
+
+- icon:
+
+  For remove_tab plugins only. The close button's icon in "manual" mode,
+  as a string of HTML or an htmltools tag such as
+  [`shiny::icon()`](https://rdrr.io/pkg/shiny/man/icon.html). The
+  default, `NULL`, keeps Font Awesome's xmark. In "auto" mode the tab is
+  dockview's own, close button included, so `icon` has no effect there.
 
 ## Value
 
@@ -103,6 +124,24 @@ new_remove_tab_plugin(enable = TRUE, mode = "manual")  # convenience function
 #> 
 #> $mode
 #> [1] "manual"
+#> 
+#> attr(,"class")
+#> [1] "dock_view_plugin_remove_tab" "dock_view_plugin"           
+#> [3] "list"                       
+new_remove_tab_plugin(enable = TRUE, mode = "manual", icon = shiny::icon("circle-xmark"))
+#> $enable
+#> [1] TRUE
+#> 
+#> $callback
+#> [1] "(config) => {\n      Shiny.setInputValue(`${config.dockId}_panel-to-remove`, config.api.id, { priority: 'event' });\n    }\n    "
+#> attr(,"class")
+#> [1] "JS_EVAL"
+#> 
+#> $mode
+#> [1] "manual"
+#> 
+#> $icon
+#> [1] "<i class=\"far fa-circle-xmark\" role=\"presentation\" aria-label=\"circle-xmark icon\"></i>"
 #> 
 #> attr(,"class")
 #> [1] "dock_view_plugin_remove_tab" "dock_view_plugin"           
