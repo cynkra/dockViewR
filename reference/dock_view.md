@@ -18,6 +18,7 @@ dock_view(
     "github-light", "github-light-spaced"),
   edge_groups = list(),
   add_tab = new_add_tab_plugin(),
+  close_icon = NULL,
   width = NULL,
   height = NULL,
   elementId = NULL
@@ -59,6 +60,16 @@ dock_view(
   By default, the callback sets a Shiny input
   `input[["<dock_ID>_panel-to-add"]]` so you can create observers with
   custom logic.
+
+- close_icon:
+
+  Icon of the close button on each tab in "manual" remove mode (see
+  [`new_remove_tab_plugin()`](https://cynkra.github.io/dockViewR/reference/dock_view_plugins.md)),
+  as a string of HTML or an htmltools tag such as
+  [`shiny::icon()`](https://rdrr.io/pkg/shiny/man/icon.html). The
+  default, `NULL`, keeps Font Awesome's xmark. In "auto" mode the tab is
+  dockview's own, close button included, so `close_icon` has no effect
+  there.
 
 - width:
 

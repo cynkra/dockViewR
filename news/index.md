@@ -37,19 +37,16 @@
 ### New features
 
 - The close button of a manual-mode tab takes its icon from the new
-  `icon` argument of
-  [`new_remove_tab_plugin()`](https://cynkra.github.io/dockViewR/reference/dock_view_plugins.md),
+  `close_icon` argument of
+  [`dock_view()`](https://cynkra.github.io/dockViewR/reference/dock_view.md),
   a string of HTML or an htmltools tag. It was hard-coded to Font
   Awesome’s xmark, so an app with an icon set of its own could only hide
   that icon and draw over it. The default, `NULL`, keeps the xmark. The
-  icon is stored in the panel’s parameters as `removeIcon`, beside
-  `removeCallback`, so
-  [`save_dock()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
-  and
-  [`restore_dock()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
-  round-trip it, and a layout saved by an earlier version restores with
-  the xmark. In auto mode the tab and its close button are dockview’s
-  own, and `icon` has no effect.
+  icon belongs to the dock rather than to its panels, so every
+  manual-mode tab the dock builds draws it, whether its panel was added
+  or restored, and a saved layout does not carry it. In auto mode the
+  tab and its close button are dockview’s own, and `close_icon` has no
+  effect.
 
 - [`set_edge_group_collapsed()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md)
   collapses an edge group to its `collapsed_size` from the server, or

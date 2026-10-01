@@ -61,6 +61,7 @@ creating IDE-like layouts in Shiny applications or R Markdown documents.</p>
 <span>    <span class="st">"github-light"</span>, <span class="st">"github-light-spaced"</span><span class="op">)</span>,</span>
 <span>  edge_groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  add_tab <span class="op">=</span> <span class="fu"><a href="dock_view_plugins.html">new_add_tab_plugin</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  close_icon <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  width <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  height <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  elementId <span class="op">=</span> <span class="cn">NULL</span></span>
@@ -104,6 +105,14 @@ JavaScript function passed with <a href="https://rdrr.io/pkg/htmlwidgets/man/JS.
 See <code><a href="default_add_tab_callback.html">default_add_tab_callback()</a></code>. By default, the callback
 sets a Shiny input <code>input[["&lt;dock_ID&gt;_panel-to-add"]]</code>
 so you can create observers with custom logic.</p></dd>
+
+
+<dt id="arg-close-icon">close_icon<a class="anchor" aria-label="anchor" href="#arg-close-icon"></a></dt>
+<dd><p>Icon of the close button on each tab in "manual" remove
+mode (see <code><a href="dock_view_plugins.html">new_remove_tab_plugin()</a></code>), as a string of HTML or an htmltools tag
+such as <code><a href="https://rdrr.io/pkg/shiny/man/icon.html" class="external-link">shiny::icon()</a></code>. The default, <code>NULL</code>, keeps Font Awesome's xmark. In
+"auto" mode the tab is dockview's own, close button included, so <code>close_icon</code>
+has no effect there.</p></dd>
 
 
 <dt id="arg-width">width<a class="anchor" aria-label="anchor" href="#arg-width"></a></dt>
