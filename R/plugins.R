@@ -8,10 +8,6 @@
 #' @param callback Optional JavaScript function. If `NULL` and `enable = TRUE`,
 #'   a default callback is used.
 #' @param mode For remove_tab plugins only. One of "auto" or "manual".
-#' @param icon For remove_tab plugins only. The close button's icon in "manual"
-#'   mode, as a string of HTML or an htmltools tag such as [shiny::icon()]. The
-#'   default, `NULL`, keeps Font Awesome's xmark. In "auto" mode the tab is
-#'   dockview's own, close button included, so `icon` has no effect there.
 #' @param ... Additional plugin configuration arguments.
 #'
 #' @return A dock view plugin object of class `add_tab` or `remove_tab`, depending
@@ -25,7 +21,6 @@
 #' # Remove tab plugin
 #' new_dock_view_plugin("remove_tab", enable = TRUE, mode = "auto")
 #' new_remove_tab_plugin(enable = TRUE, mode = "manual")  # convenience function
-#' new_remove_tab_plugin(enable = TRUE, mode = "manual", icon = shiny::icon("circle-xmark"))
 #'
 #' @name dock_view_plugins
 NULL
@@ -78,7 +73,6 @@ new_dock_view_plugin.remove_tab <- function(
   enable = FALSE,
   callback = NULL,
   mode = "auto",
-  icon = NULL,
   ...
 ) {
   plugin <- list(
@@ -87,10 +81,6 @@ new_dock_view_plugin.remove_tab <- function(
     mode = mode,
     ...
   )
-
-  # Carried only when set, so a plugin without one sends the same payload it
-  # always did.
-  plugin$icon <- icon
 
   class(plugin) <- c("dock_view_plugin_remove_tab", "dock_view_plugin", "list")
   validate_dock_view_plugin(plugin)
@@ -108,7 +98,6 @@ new_remove_tab_plugin <- function(
   enable = FALSE,
   callback = NULL,
   mode = "auto",
-  icon = NULL,
   ...
 ) {
   new_dock_view_plugin(
@@ -116,7 +105,6 @@ new_remove_tab_plugin <- function(
     enable = enable,
     callback = callback,
     mode = mode,
-    icon = icon,
     ...
   )
 }
@@ -169,17 +157,6 @@ validate_dock_view_plugin.dock_view_plugin_remove_tab <- function(plugin) {
     stop(
       "`mode` must be one of: ",
       paste(valid_modes, collapse = ", "),
-      call. = FALSE
-    )
-  }
-
-  if (inherits(plugin$icon, c("shiny.tag", "shiny.tag.list"))) {
-    plugin$icon <- as.character(plugin$icon)
-  }
-
-  if (!is.null(plugin$icon) && !(is.character(plugin$icon) && length(plugin$icon) == 1L)) {
-    stop(
-      "`icon` must be a single string of HTML or an htmltools tag.",
       call. = FALSE
     )
   }

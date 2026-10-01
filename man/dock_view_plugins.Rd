@@ -13,24 +13,11 @@ new_dock_view_plugin(type, ...)
 
 \method{new_dock_view_plugin}{add_tab}(type, enable = FALSE, callback = NULL, ...)
 
-\method{new_dock_view_plugin}{remove_tab}(
-  type,
-  enable = FALSE,
-  callback = NULL,
-  mode = "auto",
-  icon = NULL,
-  ...
-)
+\method{new_dock_view_plugin}{remove_tab}(type, enable = FALSE, callback = NULL, mode = "auto", ...)
 
 new_add_tab_plugin(enable = FALSE, callback = NULL, ...)
 
-new_remove_tab_plugin(
-  enable = FALSE,
-  callback = NULL,
-  mode = "auto",
-  icon = NULL,
-  ...
-)
+new_remove_tab_plugin(enable = FALSE, callback = NULL, mode = "auto", ...)
 }
 \arguments{
 \item{type}{Character string specifying the plugin type.}
@@ -43,11 +30,6 @@ new_remove_tab_plugin(
 a default callback is used.}
 
 \item{mode}{For remove_tab plugins only. One of "auto" or "manual".}
-
-\item{icon}{For remove_tab plugins only. The close button's icon in "manual"
-mode, as a string of HTML or an htmltools tag such as \code{\link[shiny:icon]{shiny::icon()}}. The
-default, \code{NULL}, keeps Font Awesome's xmark. In "auto" mode the tab is
-dockview's own, close button included, so \code{icon} has no effect there.}
 }
 \value{
 A dock view plugin object of class \code{add_tab} or \code{remove_tab}, depending
@@ -65,6 +47,5 @@ new_add_tab_plugin(enable = TRUE)  # convenience function
 # Remove tab plugin
 new_dock_view_plugin("remove_tab", enable = TRUE, mode = "auto")
 new_remove_tab_plugin(enable = TRUE, mode = "manual")  # convenience function
-new_remove_tab_plugin(enable = TRUE, mode = "manual", icon = shiny::icon("circle-xmark"))
 
 }
