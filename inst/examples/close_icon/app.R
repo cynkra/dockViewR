@@ -15,11 +15,15 @@ ui <- page_fillable(
     actionButton("save", "Save layout"),
     actionButton("restore", "Restore saved layout")
   ),
-  dockViewOutput("dock")
+  layout_columns(
+    dockViewOutput("dock"),
+    dockViewOutput("plain")
+  )
 )
 
 server <- function(input, output, session) {
   dock_proxy <- dock_view_proxy("dock")
+  plain_proxy <- dock_view_proxy("plain")
   saved <- reactiveVal()
 
   observeEvent(input$save, {
@@ -35,28 +39,33 @@ server <- function(input, output, session) {
     remove_panel(dock_proxy, input[["dock_panel-to-remove"]])
   })
 
+  observeEvent(input[["plain_panel-to-remove"]], {
+    remove_panel(plain_proxy, input[["plain_panel-to-remove"]])
+  })
+
   output$dock <- renderDockView({
     dock_view(
       panels = list(
         panel(
           id = "own",
           title = "Own icon",
-          content = "This tab's close button draws the icon its plugin names.",
-          remove = new_remove_tab_plugin(
-            enable = TRUE,
-            mode = "manual",
-            icon = thin_x
-          )
-        ),
+          content = "This dock names a close icon, so its tabs draw it.",
+          remove = new_remove_tab_plugin(enable = TRUE, mode = "manual")
+        )
+      ),
+      close_icon = thin_x,
+      theme = "light-spaced"
+    )
+  })
+
+  output$plain <- renderDockView({
+    dock_view(
+      panels = list(
         panel(
           id = "default",
           title = "Default icon",
-          content = "This tab's plugin names no icon, so it keeps the xmark.",
-          remove = new_remove_tab_plugin(enable = TRUE, mode = "manual"),
-          position = list(
-            referencePanel = "own",
-            direction = "right"
-          )
+          content = "This dock names no close icon, so its tabs keep the xmark.",
+          remove = new_remove_tab_plugin(enable = TRUE, mode = "manual")
         )
       ),
       theme = "light-spaced"

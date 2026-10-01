@@ -10,7 +10,7 @@
 
 ## New features
 
-- The close button of a manual-mode tab takes its icon from the new `icon` argument of `new_remove_tab_plugin()`, a string of HTML or an htmltools tag. It was hard-coded to Font Awesome's xmark, so an app with an icon set of its own could only hide that icon and draw over it. The default, `NULL`, keeps the xmark. The icon is stored in the panel's parameters as `removeIcon`, beside `removeCallback`, so `save_dock()` and `restore_dock()` round-trip it, and a layout saved by an earlier version restores with the xmark. In auto mode the tab and its close button are dockview's own, and `icon` has no effect.
+- The close button of a manual-mode tab takes its icon from the new `close_icon` argument of `dock_view()`, a string of HTML or an htmltools tag. It was hard-coded to Font Awesome's xmark, so an app with an icon set of its own could only hide that icon and draw over it. The default, `NULL`, keeps the xmark. The icon belongs to the dock rather than to its panels, so every manual-mode tab the dock builds draws it, whether its panel was added or restored, and a saved layout does not carry it. In auto mode the tab and its close button are dockview's own, and `close_icon` has no effect.
 
 - `set_edge_group_collapsed()` collapses an edge group to its `collapsed_size` from the server, or expands it again, and `is_edge_group_collapsed()` reads that state back. Previously `collapsed` could be named at construction through `edge_group()` but never set afterwards, while its sibling `visible` had both halves. The two states stay independent: a collapsed rail keeps its header strip standing, an invisible one renders at zero, and hiding a collapsed rail leaves it collapsed.
 

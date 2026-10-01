@@ -75,9 +75,6 @@ const addPanel = (panel, mode, api) => {
       if (panel.remove.callback !== undefined) {
         internals.params.removeCallback = panel.remove.callback;
       }
-      if (panel.remove.icon !== undefined) {
-        internals.params.removeIcon = panel.remove.icon;
-      }
     }
   }
   let props = { ...panel, ...internals };

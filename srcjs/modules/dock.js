@@ -19,17 +19,20 @@ const instantiateDock = (id, x) => {
           return new Panel(options)
       }
     },
+    // Each of our tabs is built here, from `addPanel()` and from `fromJSON()`
+    // alike, so the close icon comes from the dock rather than from the panel's
+    // params, and a restored layout need not carry it.
     createTabComponent: (options) => {
       switch (options.name) {
         case 'manual':
-          return new DefaultTab();
+          return new DefaultTab(x.closeIcon);
         case 'custom':
           return new CustomTab();
       }
     },
     // Spread operator to include all other options from x
     ...Object.keys(x).reduce((acc, key) => {
-      if (!['theme', 'addTab', 'edgeGroups'].includes(key)) {
+      if (!['theme', 'addTab', 'edgeGroups', 'closeIcon'].includes(key)) {
         acc[key] = x[key];
       }
       return acc;

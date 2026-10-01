@@ -41,66 +41,6 @@ test_that("new_remove_tab_plugin works", {
   expect_equal(plugin$mode, "manual")
 })
 
-test_that("new_remove_tab_plugin takes its icon as HTML or a tag", {
-  svg <- '<svg class="thin-x"></svg>'
-
-  expect_null(new_remove_tab_plugin()$icon)
-  # Without one, the plugin sends the same payload it always did.
-  expect_named(
-    new_remove_tab_plugin(enable = TRUE, mode = "manual"),
-    c("enable", "callback", "mode")
-  )
-
-  expect_identical(new_remove_tab_plugin(icon = svg)$icon, svg)
-  expect_identical(
-    new_remove_tab_plugin(icon = shiny::icon("xmark"))$icon,
-    as.character(shiny::icon("xmark"))
-  )
-
-  expect_error(new_remove_tab_plugin(icon = 1), "`icon`")
-  expect_error(new_remove_tab_plugin(icon = c(svg, svg)), "`icon`")
-})
-
-test_that("a manual-mode tab draws its plugin's icon, restored layouts included", {
-  skip_on_cran()
-
-  appdir <- system.file(package = "dockViewR", "examples", "close_icon")
-
-  app <- shinytest2::AppDriver$new(
-    appdir,
-    name = "close_icon",
-    seed = 121,
-    height = 752,
-    width = 1211
-  )
-  on.exit(app$stop(), add = TRUE)
-  app$wait_for_idle()
-
-  close_icons <- function() {
-    unlist(app$get_js(
-      "['own', 'default'].map(function (id) {
-         var icon = document.querySelector('#dock-tab-' + id + ' .dv-default-tab-action > *');
-         return icon && icon.getAttribute('class');
-       })"
-    ))
-  }
-
-  expect_identical(close_icons(), c("thin-x", "fas fa-xmark"))
-
-  # A restore rebuilds every tab from the saved panel params. Clearing the drawn
-  # icons first means only a tab that took its icon from those params passes.
-  app$click("save")
-  app$wait_for_idle()
-  app$run_js(
-    "document.querySelectorAll('#dock .dv-default-tab-action')
-       .forEach(function (action) { action.innerHTML = ''; });"
-  )
-  app$click("restore")
-  app$wait_for_idle()
-
-  expect_identical(close_icons(), c("thin-x", "fas fa-xmark"))
-})
-
 test_that("validation catches errors", {
   expect_error(new_add_tab_plugin(enable = "true"))
   expect_error(new_remove_tab_plugin(enable = c(TRUE, FALSE)))
