@@ -22,20 +22,26 @@ class Panel {
     this._element.style = config.params.style
 
     // Tell Shiny which group a pointer interaction landed in, before Shiny gets
-    // to process the click. dockview changes the active group on a tab click but
-    // not on a click inside a panel's content, so an observer reading
-    // `input[["<dock>_active-group"]]` from a button inside a panel would
-    // otherwise see whichever group was active before. Capture phase, so it runs
-    // ahead of the button's own handlers. Deliberately not `setActive()`, which
-    // would steal focus from the click target.
+    // to process the click, so an observer reading
+    // `input[["<dock>_active-group"]]` from a button inside a panel does not
+    // see whichever group was active before. Capture phase, so it runs ahead
+    // of the button's own handlers.
+    //
+    // Then make the panel active. dockview activates a group on a tab click or
+    // when something inside it takes focus, so a click on content that takes
+    // none (a plot, a table) left the panel inactive. The group's
+    // `setActive()` does not move focus, unlike the panel's, so the click
+    // target keeps it.
     this._element.addEventListener('pointerdown', () => {
-      if (typeof HTMLWidgets !== 'undefined' && HTMLWidgets.shinyMode && !config.api.isActive) {
+      if (config.api.isActive) return;
+      if (typeof HTMLWidgets !== 'undefined' && HTMLWidgets.shinyMode) {
         Shiny.setInputValue(
           dockId + '_active-group',
           config.api.group.id,
           { priority: 'event' }
         );
       }
+      config.api.group.api.setActive();
     }, true);
   }
 }
