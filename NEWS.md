@@ -10,6 +10,8 @@
 
 ## New features
 
+- An add tab callback is now called with the click event as well as the group's header config, as `callback(config, event)`. With the config alone a callback could tell which group's "+" was clicked but not where the button is or where the click landed, so an app opening a menu from the "+" had to put it somewhere fixed. The event carries both, through `event.currentTarget` and `event.clientX` / `event.clientY`, and the new example app in `inst/examples/add_tab_menu` uses it to open a menu under the button. The default callback ignores the event, so `input[["<dock_ID>_panel-to-add"]]` is unchanged.
+
 - The close button of a manual-mode tab takes its icon from the new `close_icon` argument of `dock_view()`, a string of HTML or an htmltools tag. It was hard-coded to Font Awesome's xmark, so an app with an icon set of its own could only hide that icon and draw over it. The default, `NULL`, keeps the xmark. The icon belongs to the dock rather than to its panels, so every manual-mode tab the dock builds draws it, whether its panel was added or restored, and a saved layout does not carry it. In auto mode the tab and its close button are dockview's own, and `close_icon` has no effect.
 
 - `set_edge_group_collapsed()` collapses an edge group to its `collapsed_size` from the server, or expands it again, and `is_edge_group_collapsed()` reads that state back. Previously `collapsed` could be named at construction through `edge_group()` but never set afterwards, while its sibling `visible` had both halves. The two states stay independent: a collapsed rail keeps its header strip standing, an invisible one renders at zero, and hiding a collapsed rail leaves it collapsed.

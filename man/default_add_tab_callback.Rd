@@ -13,3 +13,30 @@ An object of class \code{JS_EVAL} representing the JavaScript callback.
 An example of a JavaScript function that can be used as a default
 when adding a new tab/panel.
 }
+\details{
+An add tab callback runs when the "+" button in a group's header is clicked,
+and is called with two arguments: the group's header config and the click
+event. The config carries the dock's id in \code{config.dockId} and the group's
+in \code{config.group.id}. The event tells where the button is, through
+\code{event.currentTarget}, and where it was clicked, through \code{event.clientX} and
+\code{event.clientY}. The default callback ignores the event and sets
+\code{input[["<dock_ID>_panel-to-add"]]} to the group's id. A callback of your
+own can report where the button is as well, for example to open a menu
+under it.
+}
+\examples{
+new_add_tab_plugin(
+  enable = TRUE,
+  callback = htmlwidgets::JS(
+    "(config, event) => {
+      const box = event.currentTarget.getBoundingClientRect();
+      Shiny.setInputValue(
+        `${config.dockId}_add-tab`,
+        { group: config.group.id, left: box.left, bottom: box.bottom },
+        { priority: 'event' }
+      );
+    }"
+  )
+)
+
+}
