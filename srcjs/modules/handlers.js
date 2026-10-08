@@ -1,5 +1,6 @@
 import { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, setRestoring, addEdgeGroup, removeEdgeGroup, setEdgeGroupVisible, setEdgeGroupCollapsed, setEdgeGroupSize } from '../modules/proxy';
 import { layoutFromContainer } from '../modules/dock';
+import { matchTheme } from '../modules/themes';
 
 const deserializeFunction = (obj) => {
   if (obj && typeof obj === 'object' && obj.__IS_FUNCTION__) {
