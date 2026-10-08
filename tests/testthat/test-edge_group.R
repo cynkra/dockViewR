@@ -438,3 +438,111 @@ test_that("set_edge_group_collapsed works", {
   expect_identical(session$lastCustomMessage$message$position, "top")
   expect_true(session$lastCustomMessage$message$collapsed)
 })
+
+test_that("set_edge_group_size works", {
+  dock_proxy <- dock_view_proxy("dock", session = session)
+  expect_snapshot(error = TRUE, {
+    set_edge_group_size(dock_proxy, position = "middle", size = 0.3)
+    set_edge_group_size(dock_proxy, position = "left", size = 300)
+    set_edge_group_size(dock_proxy, position = "left", size = 0)
+    set_edge_group_size(dock_proxy, position = "left", size = NA_real_)
+    set_edge_group_size(dock_proxy, position = "left", size = c(0.2, 0.3))
+  })
+
+  set_edge_group_size(dock_proxy, position = "bottom", size = 0.25)
+  expect_identical(
+    session$lastCustomMessage$type,
+    "dock_set-edge-group-size"
+  )
+  expect_identical(session$lastCustomMessage$message$position, "bottom")
+  expect_identical(session$lastCustomMessage$message$size, 0.25)
+})
+
+test_that("set_edge_group_size resizes a rail as a fraction of the dock", {
+  skip_on_cran()
+  appdir <- system.file(package = "dockViewR", "examples", "edge_group_size")
+  skip_if(!nzchar(appdir))
+
+  app <- AppDriver$new(
+    appdir,
+    name = "edge_group_size",
+    seed = 121,
+    height = 752,
+    width = 1211
+  )
+  on.exit(app$stop(), add = TRUE)
+  app$wait_for_idle()
+  app$wait_for_value(input = "dock_state")
+
+  # The dock is the container, rails included. Not `api.width` / `api.height`,
+  # which measure the grid between the rails and shrink as a rail grows.
+  dock <- app$get_js(
+    "(() => {
+      const el = document.getElementById('dock');
+      return { width: el.clientWidth, height: el.clientHeight };
+    })()"
+  )
+
+  # What is on screen, so a `_state` that moved while the rail did not fails.
+  rendered <- function(group, dim) {
+    app$get_js(sprintf(
+      "HTMLWidgets.find('#dock').getWidget().getGroup('%s')
+        .element.getBoundingClientRect().%s",
+      group,
+      dim
+    ))
+  }
+
+  app$click("left_wide")
+  app$wait_for_idle()
+  expect_equal(
+    app$get_value(export = "left_size"),
+    0.4 * dock$width,
+    tolerance = 0.02
+  )
+  expect_equal(
+    rendered("left-edge", "width"),
+    0.4 * dock$width,
+    tolerance = 0.03
+  )
+
+  app$click("left_narrow")
+  app$wait_for_idle()
+  expect_equal(
+    app$get_value(export = "left_size"),
+    0.2 * dock$width,
+    tolerance = 0.02
+  )
+
+  # A bottom rail is sized along the dock's height, not its width.
+  app$click("bottom_tall")
+  app$wait_for_idle()
+  expect_equal(
+    app$get_value(export = "bottom_size"),
+    0.5 * dock$height,
+    tolerance = 0.02
+  )
+  expect_equal(
+    rendered("bottom-edge", "height"),
+    0.5 * dock$height,
+    tolerance = 0.03
+  )
+
+  # On a collapsed rail the size is the one it expands to: it stays collapsed
+  # until expanded, then opens at the new size.
+  app$click("collapse_left")
+  app$wait_for_idle()
+  app$click("left_wide")
+  app$wait_for_idle()
+  expect_true(app$get_value(export = "left_collapsed"))
+  expect_lt(rendered("left-edge", "width"), 0.2 * dock$width)
+
+  app$click("expand_left")
+  app$wait_for_idle()
+  expect_false(app$get_value(export = "left_collapsed"))
+  expect_equal(
+    rendered("left-edge", "width"),
+    0.4 * dock$width,
+    tolerance = 0.03
+  )
+})

@@ -358,4 +358,32 @@ const setEdgeGroupCollapsed = (m, mode, api) => {
   }, mode, 'set_edge_group_collapsed()');
 }
 
-export { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, isRestoring, setRestoring, isSeeded, setSeeded, addEdgeGroup, removeEdgeGroup, setEdgeGroupVisible, setEdgeGroupCollapsed };
+// The server sends a fraction of the dock, as `set_size()` does for grid groups,
+// since it does not know the container's pixel size. A rail is sized along its
+// own axis only: a left or right one takes a share of the dock's width, a top or
+// bottom one of its height. dockview clamps the pixels to the rail's constraints,
+// and on a collapsed rail they become the size it expands to.
+//
+// The dock is the widget's container, rails included. `api.width` / `api.height`
+// would not do: they measure the grid between the rails, which shrinks as a rail
+// grows, so a fraction of it lands short and a repeated call drifts.
+//
+// `setSize` lives on the group's api, and `api.getEdgeGroup()` hands back the
+// rail's view (the one with `collapse()` / `expand()`) rather than the group, so
+// the group is found by its location. A position with no rail is a no-op, as
+// for `setEdgeGroupCollapsed`.
+const setEdgeGroupSize = (m, mode, api, container) => {
+  evalDockView(() => {
+    const group = api.groups.find((g) => {
+      const loc = g.api.location;
+      return loc && loc.type === 'edge' && loc.position === m.position;
+    });
+    if (!group) return;
+    const horizontal = m.position === 'left' || m.position === 'right';
+    const size = m.size *
+      (horizontal ? container.clientWidth : container.clientHeight);
+    group.api.setSize(horizontal ? { width: size } : { height: size });
+  }, mode, 'set_edge_group_size()');
+}
+
+export { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, isRestoring, setRestoring, isSeeded, setSeeded, addEdgeGroup, removeEdgeGroup, setEdgeGroupVisible, setEdgeGroupCollapsed, setEdgeGroupSize };

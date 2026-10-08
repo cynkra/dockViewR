@@ -34,7 +34,8 @@
 #'
 #'   Everything else about an edge group is core, including collapsing. Clicking
 #'   the active tab of a rail collapses it to `collapsed_size` and clicking again
-#'   expands it, and it can be resized with the sash. Note that collapsing and
+#'   expands it, and it can be resized with the sash, or from the server with
+#'   [set_edge_group_size()]. Note that collapsing and
 #'   [set_edge_group_visible()] are different: a collapsed rail leaves its header
 #'   strip standing, while an invisible one renders at zero and leaves the
 #'   collapsed state untouched.
@@ -46,7 +47,7 @@
 #'   - `options`: a list of options forwarded to `api.addEdgeGroup()`.
 #'
 #' @seealso [add_edge_group()], [remove_edge_group()],
-#'   [set_edge_group_visible()].
+#'   [set_edge_group_visible()], [set_edge_group_size()].
 #'
 #' @export
 edge_group <- function(
