@@ -58,6 +58,24 @@
   tab and its close button are dockview’s own, and `close_icon` has no
   effect.
 
+- [`set_edge_group_size()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md)
+  resizes an edge group from the server, to a fraction of the dock’s
+  width for a left or right rail and of its height for a top or bottom
+  one ([\#112](https://github.com/cynkra/dockViewR/issues/112)). A
+  fraction rather than pixels, as for
+  [`set_size()`](https://cynkra.github.io/dockViewR/reference/panel-operations.md),
+  since the server does not know how large the dock is; it is converted
+  when the call lands, and the rail then keeps that width as the dock
+  resizes, as rails do. Until now a rail’s size was fixed at its
+  `initial_size` for the life of the dock, short of a sash drag or a
+  full
+  [`restore_dock()`](https://cynkra.github.io/dockViewR/reference/dock-state.md),
+  because dockview’s `setSize()` did nothing on an edge group until
+  8.3.0. The new size reaches `input[["<dock_ID>_state"]]`, so
+  [`get_edge_groups()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
+  reports it in pixels. On a collapsed rail it is the size the rail
+  expands to.
+
 - [`set_edge_group_collapsed()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md)
   collapses an edge group to its `collapsed_size` from the server, or
   expands it again, and
@@ -122,14 +140,19 @@
   console naming the missing module.
 
 - Upgraded the bundled dockview from `dockview-core` 4.13.1 to
-  `dockview` 8.0.0, spanning four major versions. The stylesheet moved
-  packages upstream, which is why the dependency is now `dockview`
-  rather than `dockview-core`. Layouts serialised by the previous
-  version still restore: dockview 8’s serialisation format is the 4.13.1
-  format plus optional fields, so a stored `input[["<dock_ID>_state"]]`
-  needs no migration, whether it was persisted through
+  `dockview` 8.4.1, spanning four major versions. 8.4.1 rather than
+  8.0.0 because 8.3.0 wires `setSize()` on an edge group’s api to the
+  layout, which
+  [`set_edge_group_size()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md)
+  needs ([\#112](https://github.com/cynkra/dockViewR/issues/112)). The
+  stylesheet moved packages upstream, which is why the dependency is now
+  `dockview` rather than `dockview-core`. Layouts serialised by the
+  previous version still restore: dockview 8’s serialisation format is
+  the 4.13.1 format plus optional fields, so a stored
+  `input[["<dock_ID>_state"]]` needs no migration, whether it was
+  persisted through
   [`save_dock()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
-  or read off the input directly. The bundle grows from 214 KB to 500
+  or read off the input directly. The bundle grows from 214 KB to 523
   KB, roughly a third of which is the stylesheet now carrying 18 themes
   instead of 8.
 

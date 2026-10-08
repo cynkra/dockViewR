@@ -71,8 +71,10 @@ edge_group(
 
   Everything else about an edge group is core, including collapsing.
   Clicking the active tab of a rail collapses it to `collapsed_size` and
-  clicking again expands it, and it can be resized with the sash. Note
-  that collapsing and
+  clicking again expands it, and it can be resized with the sash, or
+  from the server with
+  [`set_edge_group_size()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md).
+  Note that collapsing and
   [`set_edge_group_visible()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md)
   are different: a collapsed rail leaves its header strip standing,
   while an invisible one renders at zero and leaves the collapsed state
@@ -107,4 +109,5 @@ round-trip a rail along with the rest of the dock.
 
 [`add_edge_group()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md),
 [`remove_edge_group()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md),
-[`set_edge_group_visible()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md).
+[`set_edge_group_visible()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md),
+[`set_edge_group_size()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md).

@@ -40,6 +40,7 @@
   [`remove_edge_group()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md)
   [`set_edge_group_collapsed()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md)
   [`set_edge_group_visible()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md)
+  [`set_edge_group_size()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md)
   : Dockview edge group operations
 - [`edge_group()`](https://cynkra.github.io/dockViewR/reference/edge_group.md)
   : Edge group

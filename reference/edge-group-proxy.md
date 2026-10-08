@@ -14,6 +14,8 @@ remove_edge_group(dock, position)
 set_edge_group_collapsed(dock, position, collapsed)
 
 set_edge_group_visible(dock, position, visible)
+
+set_edge_group_size(dock, position, size)
 ```
 
 ## Arguments
@@ -39,6 +41,11 @@ set_edge_group_visible(dock, position, visible)
 - visible:
 
   Whether the edge group should be visible.
+
+- size:
+
+  Target size of the edge group, as a fraction between 0 and 1 of the
+  dock's width (left and right rails) or height (top and bottom ones).
 
 ## Value
 
@@ -70,10 +77,23 @@ chained.
   which carries `collapsed` beside `size` and `visible` and is honoured
   on restore.
 
+- `set_edge_group_size()`: resizes the edge group at `position` along
+  its own axis, to `size` of the dock: of its width for a `"left"` or
+  `"right"` rail, of its height for a `"top"` or `"bottom"` one. A
+  fraction rather than pixels, as for
+  [`set_size()`](https://cynkra.github.io/dockViewR/reference/panel-operations.md),
+  since the server does not know how large the dock is. It is converted
+  to pixels when the call lands, and the rail then holds that width as
+  the dock resizes, as rails do. dockview clamps it to the rail's
+  `minimum_size` / `maximum_size` and to the space available. On a
+  collapsed rail the size is the one it expands to.
+
 Read either state back with
 [`is_edge_group_visible()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
 and
-[`is_edge_group_collapsed()`](https://cynkra.github.io/dockViewR/reference/dock-state.md).
+[`is_edge_group_collapsed()`](https://cynkra.github.io/dockViewR/reference/dock-state.md),
+and the size, in pixels, from
+[`get_edge_groups()`](https://cynkra.github.io/dockViewR/reference/dock-state.md).
 
 ## See also
 

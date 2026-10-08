@@ -52,7 +52,9 @@ dock, from the server. See
 <span></span>
 <span><span class="fu">set_edge_group_collapsed</span><span class="op">(</span><span class="va">dock</span>, <span class="va">position</span>, <span class="va">collapsed</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">set_edge_group_visible</span><span class="op">(</span><span class="va">dock</span>, <span class="va">position</span>, <span class="va">visible</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">set_edge_group_visible</span><span class="op">(</span><span class="va">dock</span>, <span class="va">position</span>, <span class="va">visible</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">set_edge_group_size</span><span class="op">(</span><span class="va">dock</span>, <span class="va">position</span>, <span class="va">size</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -79,6 +81,11 @@ dock, from the server. See
 <dt id="arg-visible">visible<a class="anchor" aria-label="anchor" href="#arg-visible"></a></dt>
 <dd><p>Whether the edge group should be visible.</p></dd>
 
+
+<dt id="arg-size">size<a class="anchor" aria-label="anchor" href="#arg-size"></a></dt>
+<dd><p>Target size of the edge group, as a fraction between 0 and 1 of
+the dock's width (left and right rails) or height (top and bottom ones).</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -104,8 +111,17 @@ running. The state can also be <em>declared</em> two other ways, neither of whic
 needs this: <code>edge_group(collapsed = TRUE)</code> at construction, and the
 <code>edgeGroups</code> entry of a payload handed to <code><a href="dock-state.html">restore_dock()</a></code>, which carries
 <code>collapsed</code> beside <code>size</code> and <code>visible</code> and is honoured on restore.</p></li>
+<li><p><code>set_edge_group_size()</code>: resizes the edge group at <code>position</code> along its
+own axis, to <code>size</code> of the dock: of its width for a <code>"left"</code> or <code>"right"</code>
+rail, of its height for a <code>"top"</code> or <code>"bottom"</code> one. A fraction rather than
+pixels, as for <code><a href="panel-operations.html">set_size()</a></code>, since the server does not know how large the
+dock is. It is converted to pixels when the call lands, and the rail then
+holds that width as the dock resizes, as rails do. dockview clamps it to
+the rail's <code>minimum_size</code> / <code>maximum_size</code> and to the space available. On a
+collapsed rail the size is the one it expands to.</p></li>
 </ul><p>Read either state back with <code><a href="dock-state.html">is_edge_group_visible()</a></code> and
-<code><a href="dock-state.html">is_edge_group_collapsed()</a></code>.</p>
+<code><a href="dock-state.html">is_edge_group_collapsed()</a></code>, and the size, in pixels, from
+<code><a href="dock-state.html">get_edge_groups()</a></code>.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
