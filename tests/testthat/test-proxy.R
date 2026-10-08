@@ -440,6 +440,24 @@ test_that("update theme app works", {
   app$run_js("$('#app_theme').attr('mode', 'light')")
   Sys.sleep(2)
   app$expect_values(input = FALSE, output = FALSE, export = TRUE)
+
+  # The snapshots above compare exports, which do not depend on the theme, so
+  # they passed while `update_dock_view()` threw on every theme change. Assert
+  # on the dock itself: its shell carries the theme class, and it must follow
+  # the toggle both ways. `wait_for_js()` fails when the class never arrives.
+  has_theme <- function(theme) {
+    sprintf(
+      "document.querySelector('#dock .dv-shell')
+        .classList.contains('dockview-theme-%s')",
+      theme
+    )
+  }
+
+  app$run_js("$('#app_theme').attr('mode', 'dark')")
+  app$wait_for_js(has_theme("dark"), timeout = 5000)
+  app$run_js("$('#app_theme').attr('mode', 'light')")
+  app$wait_for_js(has_theme("light"), timeout = 5000)
+  expect_false(app$get_js(has_theme("dark")))
 })
 
 test_that("set_panel_title works", {
