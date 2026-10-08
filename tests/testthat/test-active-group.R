@@ -54,4 +54,11 @@ test_that("active_group app works", {
   groups_panels <- app$get_value(export = "groups_panels")
   expect_setequal(groups_panels[["1"]], "1")
   expect_setequal(groups_panels[["2"]], c("2", "3", "4", "5"))
+
+  # The input reports the group dockview has active: the one the last panel
+  # was added to.
+  expect_identical(
+    app$get_value(input = "dock_active-group"),
+    app$get_js("HTMLWidgets.find('#dock').getWidget().activeGroup.id")
+  )
 })

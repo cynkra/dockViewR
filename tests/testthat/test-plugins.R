@@ -80,3 +80,48 @@ test_that("plugins validate callbacks when enabled", {
   expect_error(new_add_tab_plugin(enable = TRUE, callback = "invalid"))
   expect_silent(new_add_tab_plugin(enable = FALSE, callback = "invalid"))
 })
+
+test_that("an add tab callback gets the button to anchor a menu on", {
+  skip_on_cran()
+
+  appdir <- system.file(package = "dockViewR", "examples", "add_tab_menu")
+
+  app <- shinytest2::AppDriver$new(
+    appdir,
+    name = "add_tab_menu",
+    seed = 121,
+    height = 752,
+    width = 1211
+  )
+  on.exit(app$stop(), add = TRUE)
+  app$wait_for_idle()
+
+  box <- function(selector) {
+    app$get_js(
+      sprintf(
+        "document.querySelector(\"%s\").getBoundingClientRect().toJSON()",
+        selector
+      )
+    )
+  }
+
+  plus <- paste0(
+    ".dv-groupview:has([data-tab-panel-id='2']) ",
+    ".dv-left-actions-container > div"
+  )
+  button <- box(plus)
+
+  app$click(selector = plus)
+  app$wait_for_idle()
+
+  clicked <- app$get_value(input = "dock_add-tab")
+
+  expect_equal(clicked$box$left, button$left)
+  expect_equal(clicked$box$bottom, button$bottom)
+  expect_setequal(app$get_value(export = "groups_panels")[[clicked$group]], "2")
+
+  # The button sits in the right half of the window, so the menu hangs from its
+  # right edge rather than its left.
+  menu <- box("#add-tab-menu")
+  expect_equal(c(menu$right, menu$top), c(button$right, button$bottom))
+})
