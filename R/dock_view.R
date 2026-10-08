@@ -26,6 +26,11 @@
 #' See [default_add_tab_callback()]. By default, the callback
 #' sets a Shiny input `input[["<dock_ID>_panel-to-add"]]`
 #' so you can create observers with custom logic.
+#' @param close_icon Icon of the close button on each tab in "manual" remove
+#' mode (see [new_remove_tab_plugin()]), as a string of HTML or an htmltools tag
+#' such as [shiny::icon()]. The default, `NULL`, keeps Font Awesome's xmark. In
+#' "auto" mode the tab is dockview's own, close button included, so `close_icon`
+#' has no effect there.
 #' @param width Widget width.
 #' @param height Widget height.
 #' @param elementId When used outside Shiny.
@@ -123,6 +128,7 @@ dock_view <- function(
   ),
   edge_groups = list(),
   add_tab = new_add_tab_plugin(),
+  close_icon = NULL,
   width = NULL,
   height = NULL,
   elementId = NULL
@@ -144,6 +150,16 @@ dock_view <- function(
     )
   }
 
+  if (inherits(close_icon, c("shiny.tag", "shiny.tag.list"))) {
+    close_icon <- as.character(close_icon)
+  }
+
+  if (!is.null(close_icon) && !(is.character(close_icon) && length(close_icon) == 1L)) {
+    stop(
+      "`close_icon` must be a single string of HTML or an htmltools tag."
+    )
+  }
+
   if (length(names(panels))) {
     warning(
       "Panels should be an unnamed list.",
@@ -162,9 +178,13 @@ dock_view <- function(
   )
 
   # Only carried when there is something to carry, so a dock with no edge groups
-  # sends the same payload it always did.
+  # and no close icon sends the same payload it always did.
   if (length(edge_groups) > 0) {
     x[["edgeGroups"]] <- unname(edge_groups)
+  }
+
+  if (!is.null(close_icon)) {
+    x[["closeIcon"]] <- close_icon
   }
 
   # create widget
