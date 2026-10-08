@@ -6,7 +6,8 @@
 #' @param type Character string specifying the plugin type.
 #' @param enable Logical, whether the plugin functionality is enabled.
 #' @param callback Optional JavaScript function. If `NULL` and `enable = TRUE`,
-#'   a default callback is used.
+#'   a default callback is used. See [default_add_tab_callback()] for the
+#'   arguments an add_tab callback is called with.
 #' @param mode For remove_tab plugins only. One of "auto" or "manual".
 #' @param ... Additional plugin configuration arguments.
 #'
@@ -181,8 +182,36 @@ validate_js_callback <- function(callback) {
 #'
 #' An example of a JavaScript function that can be used as a default
 #' when adding a new tab/panel.
-#' 
+#'
+#' An add tab callback runs when the "+" button in a group's header is clicked,
+#' and is called with three arguments: the group's header config, the click
+#' event and the button itself. The config carries the dock's id in
+#' `config.dockId` and the group's in `config.group.id`. To place something at
+#' the button, such as a menu, use the button's box,
+#' `button.getBoundingClientRect()`. The button stays available to a callback
+#' that defers its work, whereas the browser resets `event.currentTarget` to
+#' `null` once the event has been handled, and the click point,
+#' `event.clientX` and `event.clientY`, is 0, 0 when the click does not come
+#' from a pointer, as for `element.click()` and some assistive technology. The
+#' default callback uses neither and sets `input[["<dock_ID>_panel-to-add"]]`
+#' to the group's id.
+#'
 #' @return An object of class `JS_EVAL` representing the JavaScript callback.
+#'
+#' @examples
+#' new_add_tab_plugin(
+#'   enable = TRUE,
+#'   callback = htmlwidgets::JS(
+#'     "(config, event, button) => {
+#'       const box = button.getBoundingClientRect();
+#'       Shiny.setInputValue(
+#'         `${config.dockId}_add-tab`,
+#'         { group: config.group.id, left: box.left, bottom: box.bottom },
+#'         { priority: 'event' }
+#'       );
+#'     }"
+#'   )
+#' )
 #'
 #' @export
 default_add_tab_callback <- function() {
