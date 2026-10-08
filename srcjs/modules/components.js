@@ -22,20 +22,41 @@ class Panel {
     this._element.style = config.params.style
 
     // Tell Shiny which group a pointer interaction landed in, before Shiny gets
-    // to process the click. dockview changes the active group on a tab click but
-    // not on a click inside a panel's content, so an observer reading
-    // `input[["<dock>_active-group"]]` from a button inside a panel would
-    // otherwise see whichever group was active before. Capture phase, so it runs
-    // ahead of the button's own handlers. Deliberately not `setActive()`, which
-    // would steal focus from the click target.
+    // to process the click, so an observer reading
+    // `input[["<dock>_active-group"]]` from a button inside a panel does not
+    // see whichever group was active before. Capture phase, so it runs ahead
+    // of the button's own handlers.
+    //
+    // Then make the panel active. dockview activates a group on a tab click or
+    // when something inside it takes focus, and a press on most content focuses
+    // the group's content container. Content that cancels the press's default
+    // action never moves focus, though, and plotly does that to drive its
+    // drag-zoom, so a click on such a chart left the panel inactive. The
+    // group's `setActive()` does not move focus, unlike the panel's, so the
+    // click target keeps it.
+    //
+    // Activation waits for the press to end, wherever the pointer is released:
+    // it persists the layout and dispatches a window resize to every widget,
+    // which on pointerdown would land in the middle of the drag-zoom this
+    // press is starting.
     this._element.addEventListener('pointerdown', () => {
-      if (typeof HTMLWidgets !== 'undefined' && HTMLWidgets.shinyMode && !config.api.isActive) {
+      if (config.api.isActive) return;
+      if (typeof HTMLWidgets !== 'undefined' && HTMLWidgets.shinyMode) {
         Shiny.setInputValue(
           dockId + '_active-group',
           config.api.group.id,
           { priority: 'event' }
         );
       }
+
+      const press = new AbortController();
+      const opts = { capture: true, signal: press.signal };
+      window.addEventListener('pointerup', () => {
+        press.abort();
+        const group = config.api.group;
+        if (group && !config.api.isActive) group.api.setActive();
+      }, opts);
+      window.addEventListener('pointercancel', () => press.abort(), opts);
     }, true);
   }
 }
