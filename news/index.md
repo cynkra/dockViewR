@@ -203,6 +203,17 @@
 
 ### Bug fixes
 
+- In dev mode, the notification for a failed proxy call now names the
+  operation that failed. It derived the name from a stack trace before,
+  which reported the bundle’s URL: every failure read
+  `Error in http: ...` regardless of what had gone wrong. Three things
+  were against that derivation, so the name is now passed in from the
+  call site instead: the stack was built inside the `catch` and so
+  described where the error was handled rather than thrown, the frame it
+  read was at a fixed index, and the bundle is minified so most frames
+  carry no function name at all. The message names the R function the
+  caller used, `Error in select_panel(): panel with ID 'x' not found`.
+
 - Dropped the re-entrancy guard around the `_state` flush. Up to
   dockview-core 6.1.1, `api.toJSON()` re-fired
   `onDidMaximizedGroupChange` while a group was maximized, so reading
