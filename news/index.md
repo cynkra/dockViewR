@@ -203,6 +203,15 @@
 
 ### Bug fixes
 
+- Dropped the re-entrancy guard around the `_state` flush. Up to
+  dockview-core 6.1.1, `api.toJSON()` re-fired
+  `onDidMaximizedGroupChange` while a group was maximized, so reading
+  the layout inside a flush scheduled another one and the persist fed
+  itself. The bundled dockview has been past that fix for a while and is
+  now on 8.0.0, where `toJSON()` fires nothing: measured, maximizing a
+  group emits exactly one `_state` update with the guard removed. No
+  user-visible change, one less piece of machinery in the hottest path.
+
 - A rail restored by
   [`restore_dock()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
   now comes back at the pixel size it was saved with. Sizing an edge
