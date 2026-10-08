@@ -5,6 +5,7 @@
 \alias{remove_edge_group}
 \alias{set_edge_group_collapsed}
 \alias{set_edge_group_visible}
+\alias{set_edge_group_size}
 \title{Dockview edge group operations}
 \usage{
 add_edge_group(dock, edge_group)
@@ -14,6 +15,8 @@ remove_edge_group(dock, position)
 set_edge_group_collapsed(dock, position, collapsed)
 
 set_edge_group_visible(dock, position, visible)
+
+set_edge_group_size(dock, position, size)
 }
 \arguments{
 \item{dock}{Dock proxy object created with \code{\link[=dock_view_proxy]{dock_view_proxy()}}.}
@@ -26,6 +29,9 @@ set_edge_group_visible(dock, position, visible)
 \item{collapsed}{Whether the edge group should be collapsed.}
 
 \item{visible}{Whether the edge group should be visible.}
+
+\item{size}{Target size of the edge group, as a fraction between 0 and 1 of
+the dock's width (left and right rails) or height (top and bottom ones).}
 }
 \value{
 All functions return the dock proxy object invisibly, so they can be
@@ -55,10 +61,19 @@ running. The state can also be \emph{declared} two other ways, neither of which
 needs this: \code{edge_group(collapsed = TRUE)} at construction, and the
 \code{edgeGroups} entry of a payload handed to \code{\link[=restore_dock]{restore_dock()}}, which carries
 \code{collapsed} beside \code{size} and \code{visible} and is honoured on restore.
+\item \code{set_edge_group_size()}: resizes the edge group at \code{position} along its
+own axis, to \code{size} of the dock: of its width for a \code{"left"} or \code{"right"}
+rail, of its height for a \code{"top"} or \code{"bottom"} one. A fraction rather than
+pixels, as for \code{\link[=set_size]{set_size()}}, since the server does not know how large the
+dock is. It is converted to pixels when the call lands, and the rail then
+holds that width as the dock resizes, as rails do. dockview clamps it to
+the rail's \code{minimum_size} / \code{maximum_size} and to the space available. On a
+collapsed rail the size is the one it expands to.
 }
 
 Read either state back with \code{\link[=is_edge_group_visible]{is_edge_group_visible()}} and
-\code{\link[=is_edge_group_collapsed]{is_edge_group_collapsed()}}.
+\code{\link[=is_edge_group_collapsed]{is_edge_group_collapsed()}}, and the size, in pixels, from
+\code{\link[=get_edge_groups]{get_edge_groups()}}.
 }
 \seealso{
 \code{\link[=edge_group]{edge_group()}}, \code{\link[=is_edge_group_visible]{is_edge_group_visible()}},
