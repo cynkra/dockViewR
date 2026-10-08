@@ -87,6 +87,9 @@ test_that("add_panel app works", {
     width = 1211
   )
   app$wait_for_idle()
+  # Exports derive from `_state`, which waits on the ResizeObserver; that
+  # settle drives no output, so `wait_for_idle()` can return before it.
+  app$wait_for_value(input = "dock_state")
   app$expect_values(input = c("obs", "variable"), output = FALSE, export = TRUE)
   app$click("btn")
   app$set_inputs(dist = "norm")
@@ -144,6 +147,9 @@ test_that("move_group app works", {
     width = 1211
   )
   app$wait_for_idle()
+  # Exports derive from `_state`, which waits on the ResizeObserver; that
+  # settle drives no output, so `wait_for_idle()` can return before it.
+  app$wait_for_value(input = "dock_state")
   app$expect_values(input = FALSE, output = FALSE, export = TRUE)
   app$click("move")
   app$wait_for_idle()
@@ -179,6 +185,9 @@ test_that("move_group2 app works", {
     width = 1211
   )
   app$wait_for_idle()
+  # Exports derive from `_state`, which waits on the ResizeObserver; that
+  # settle drives no output, so `wait_for_idle()` can return before it.
+  app$wait_for_value(input = "dock_state")
   app$expect_values(input = FALSE, output = FALSE, export = TRUE)
   app$click("move")
   app$wait_for_idle()
@@ -295,6 +304,9 @@ test_that("move_panel app works", {
     width = 1211
   )
   app$wait_for_idle()
+  # Exports derive from `_state`, which waits on the ResizeObserver; that
+  # settle drives no output, so `wait_for_idle()` can return before it.
+  app$wait_for_value(input = "dock_state")
   app$expect_values(input = c("obs", "variable"), output = FALSE, export = TRUE)
   app$click("move")
   app$wait_for_idle()
@@ -326,6 +338,9 @@ test_that("remove_panel app works", {
     width = 1211
   )
   app$wait_for_idle()
+  # Exports derive from `_state`, which waits on the ResizeObserver; that
+  # settle drives no output, so `wait_for_idle()` can return before it.
+  app$wait_for_value(input = "dock_state")
   app$expect_values(
     input = c("obs", "variable", "selimp"),
     output = FALSE,
@@ -386,6 +401,9 @@ test_that("select_panel app works", {
     width = 1211
   )
   app$wait_for_idle()
+  # Exports derive from `_state`, which waits on the ResizeObserver; that
+  # settle drives no output, so `wait_for_idle()` can return before it.
+  app$wait_for_value(input = "dock_state")
   app$expect_values(input = c("obs", "variable"), output = FALSE, export = TRUE)
   app$set_inputs(selected = "3")
   app$wait_for_idle()
@@ -414,6 +432,9 @@ test_that("update theme app works", {
     width = 1211
   )
   Sys.sleep(2)
+  # Exports derive from `_state`, which waits on the ResizeObserver; that
+  # settle drives no output, so `wait_for_idle()` can return before it.
+  app$wait_for_value(input = "dock_state")
   app$expect_values(input = FALSE, output = FALSE, export = TRUE)
   # Classic set_inputs or click fails ...
   app$run_js("$('#app_theme').attr('mode', 'light')")
@@ -442,6 +463,9 @@ test_that("set_panel_title app works", {
     width = 1211
   )
   app$wait_for_idle()
+  # Exports derive from `_state`, which waits on the ResizeObserver; that
+  # settle drives no output, so `wait_for_idle()` can return before it.
+  app$wait_for_value(input = "dock_state")
   app$expect_values(input = FALSE, output = TRUE, export = TRUE)
   app$set_inputs(panel_title = "My new title")
   app$wait_for_idle()
@@ -478,6 +502,9 @@ test_that("set_size app works", {
     width = 1211
   )
   app$wait_for_idle()
+  # Exports derive from `_state`, which waits on the ResizeObserver; that
+  # settle drives no output, so `wait_for_idle()` can return before it.
+  app$wait_for_value(input = "dock_state")
 
   fractions <- function() {
     leaves <- app$get_value(export = "grid")$root$data
