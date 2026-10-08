@@ -47,6 +47,8 @@
 
 ## Bug fixes
 
+- Dropped the re-entrancy guard around the `_state` flush. Up to dockview-core 6.1.1, `api.toJSON()` re-fired `onDidMaximizedGroupChange` while a group was maximized, so reading the layout inside a flush scheduled another one and the persist fed itself. The bundled dockview has been past that fix for a while and is now on 8.0.0, where `toJSON()` fires nothing: measured, maximizing a group emits exactly one `_state` update with the guard removed. No user-visible change, one less piece of machinery in the hottest path.
+
 - A rail restored by `restore_dock()` now comes back at the pixel size it was saved with. Sizing an edge group divides the splitview's available space, and dockview's `fromJSON` lays the shell out from the grid's width rather than the container's, so a restore landing before the ResizeObserver had seeded the grid divided the 100x100 default between the rail and the centre: a rail asking for 260px came back at 87px, and nothing re-flowed it once the grid reached its real width. The restore path now seeds the grid from the container first, the same guard construction already applied, so `initial_size` means pixels on both paths. A consumer that hides a rail's contents below a width threshold was the visible symptom, since the undersized rail rendered present, visible and blank.
 
 - Collapsing or expanding an edge group now reaches `input$<dock_id>_state`. It changes what dockview serialises but fires none of the events the widget hooks, so the input kept reporting the rail's previous collapsed state until some unrelated gesture happened to flush. Expanding back to the stale value hid the divergence, which is why it went unnoticed.
