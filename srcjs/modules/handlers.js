@@ -1,4 +1,4 @@
-import { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, setRestoring, addEdgeGroup, removeEdgeGroup, setEdgeGroupVisible, setEdgeGroupCollapsed } from '../modules/proxy';
+import { addPanel, removePanel, selectPanel, movePanel, saveDock, moveGroup, moveGroup2, setSize, setRestoring, addEdgeGroup, removeEdgeGroup, setEdgeGroupVisible, setEdgeGroupCollapsed, setEdgeGroupSize } from '../modules/proxy';
 import { layoutFromContainer } from '../modules/dock';
 
 const deserializeFunction = (obj) => {
@@ -145,6 +145,16 @@ const setShinyHandlers = (id, mode, api) => {
   // the flush is already handled -- no explicit saveDock here.
   Shiny.addCustomMessageHandler(id + '_set-edge-group-collapsed', (m) => {
     setEdgeGroupCollapsed(m, mode, api);
+  })
+
+  // Resizing a rail fires none of the events the callbacks watch, so persist
+  // explicitly, then re-fit widgets, as `_set-size` does for a grid group.
+  // Without the persist `_state` keeps the previous size, which is where
+  // `get_edge_groups()` reads it.
+  Shiny.addCustomMessageHandler(id + '_set-edge-group-size', (m) => {
+    setEdgeGroupSize(m, mode, api, document.getElementById(id));
+    saveDock(id, api);
+    window.dispatchEvent(new Event('resize'));
   })
 }
 

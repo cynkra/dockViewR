@@ -102,3 +102,31 @@
       Error in `set_edge_group_collapsed()`:
       ! <EdgeGroup (position: left)>: `collapsed` must be a single boolean value.
 
+# set_edge_group_size works
+
+    Code
+      set_edge_group_size(dock_proxy, position = "middle", size = 0.3)
+    Condition
+      Error in `validate_edge_position()`:
+      ! <EdgeGroup>: invalid value (middle) for `position`. `position` must be one of left, right, top, bottom.
+    Code
+      set_edge_group_size(dock_proxy, position = "left", size = 300)
+    Condition
+      Error in `set_edge_group_size()`:
+      ! <EdgeGroup (position: left)>: `size` must be a single fraction between 0 and 1.
+    Code
+      set_edge_group_size(dock_proxy, position = "left", size = 0)
+    Condition
+      Error in `set_edge_group_size()`:
+      ! <EdgeGroup (position: left)>: `size` must be a single fraction between 0 and 1.
+    Code
+      set_edge_group_size(dock_proxy, position = "left", size = NA_real_)
+    Condition
+      Error in `set_edge_group_size()`:
+      ! <EdgeGroup (position: left)>: `size` must be a single fraction between 0 and 1.
+    Code
+      set_edge_group_size(dock_proxy, position = "left", size = c(0.2, 0.3))
+    Condition
+      Error in `set_edge_group_size()`:
+      ! <EdgeGroup (position: left)>: `size` must be a single fraction between 0 and 1.
+
