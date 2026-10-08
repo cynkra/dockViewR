@@ -262,6 +262,52 @@ test_that("a rail survives a save and restore round-trip", {
   app$stop()
 })
 
+test_that("A restore sizes a rail against the container, not the grid", {
+  skip_on_cran()
+  appdir <- system.file(package = "dockViewR", "examples", "edge_groups")
+  skip_if(!nzchar(appdir))
+
+  app <- AppDriver$new(
+    appdir,
+    name = "edge_group_unseeded_restore",
+    seed = 121,
+    height = 752,
+    width = 1211
+  )
+  app$wait_for_idle()
+  app$wait_for_value(input = "dock_state")
+
+  rail_width <- function() {
+    unlist(app$get_js(
+      "HTMLWidgets.find('#dock').getWidget().getEdgeGroup('left').width"
+    ))
+  }
+
+  # The rail has to start above its `minimum_size` of 150 for the assertions
+  # below to have anything to catch: a restore that divides the wrong width
+  # bottoms out at the minimum rather than at zero, so a rail already sitting
+  # there would pass either way.
+  before <- rail_width()
+  expect_gt(before, 150)
+
+  app$click("save")
+  app$wait_for_idle()
+
+  # Inside `fromJSON`, dockview lays the shell out from the grid's width rather
+  # than the container's, so a restore landing before the ResizeObserver has
+  # seeded the grid divides the 100x100 default. The observer watches the
+  # container, whose size has not changed, so nothing re-flows it afterwards --
+  # shrinking the grid by hand is what makes that race reproducible here.
+  app$run_js("HTMLWidgets.find('#dock').getWidget().layout(100, 100)")
+  expect_equal(rail_width(), 150)
+
+  app$click("restore")
+  app$wait_for_idle()
+  expect_equal(rail_width(), before)
+
+  app$stop()
+})
+
 test_that("collapsing a rail reaches `_state`", {
   skip_on_cran()
   appdir <- system.file(package = "dockViewR", "examples", "edge_groups")

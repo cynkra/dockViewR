@@ -27,7 +27,8 @@ new_remove_tab_plugin(enable = FALSE, callback = NULL, mode = "auto", ...)
 \item{enable}{Logical, whether the plugin functionality is enabled.}
 
 \item{callback}{Optional JavaScript function. If \code{NULL} and \code{enable = TRUE},
-a default callback is used.}
+a default callback is used. See \code{\link[=default_add_tab_callback]{default_add_tab_callback()}} for the
+arguments an add_tab callback is called with.}
 
 \item{mode}{For remove_tab plugins only. One of "auto" or "manual".}
 }

@@ -13,6 +13,7 @@ dock_view(
     "github-light", "github-light-spaced"),
   edge_groups = list(),
   add_tab = new_add_tab_plugin(),
+  close_icon = NULL,
   width = NULL,
   height = NULL,
   elementId = NULL
@@ -43,6 +44,12 @@ JavaScript function passed with \link[htmlwidgets]{JS}.
 See \code{\link[=default_add_tab_callback]{default_add_tab_callback()}}. By default, the callback
 sets a Shiny input \code{input[["<dock_ID>_panel-to-add"]]}
 so you can create observers with custom logic.}
+
+\item{close_icon}{Icon of the close button on each tab in "manual" remove
+mode (see \code{\link[=new_remove_tab_plugin]{new_remove_tab_plugin()}}), as a string of HTML or an htmltools tag
+such as \code{\link[shiny:icon]{shiny::icon()}}. The default, \code{NULL}, keeps Font Awesome's xmark. In
+"auto" mode the tab is dockview's own, close button included, so \code{close_icon}
+has no effect there.}
 
 \item{width}{Widget width.}
 
