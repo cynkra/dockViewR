@@ -36,7 +36,9 @@ new_remove_tab_plugin(enable = FALSE, callback = NULL, mode = "auto", ...)
 - callback:
 
   Optional JavaScript function. If `NULL` and `enable = TRUE`, a default
-  callback is used.
+  callback is used. See
+  [`default_add_tab_callback()`](https://cynkra.github.io/dockViewR/reference/default_add_tab_callback.md)
+  for the arguments an add_tab callback is called with.
 
 - mode:
 

@@ -36,6 +36,16 @@
 
 ### New features
 
+- An add tab callback is now called with the click event and the “+”
+  button itself as well as the group’s header config, as
+  `callback(config, event, button)`. With the config alone a callback
+  could tell which group’s “+” was clicked but not where the button is,
+  so an app opening a menu from the “+” had to put it somewhere fixed.
+  The new example app in `inst/examples/add_tab_menu` anchors a menu on
+  the button’s box, which unlike `event.currentTarget` stays available
+  to a callback that defers its work. The default callback ignores both,
+  so `input[["<dock_ID>_panel-to-add"]]` is unchanged.
+
 - The close button of a manual-mode tab takes its icon from the new
   `close_icon` argument of
   [`dock_view()`](https://cynkra.github.io/dockViewR/reference/dock_view.md),

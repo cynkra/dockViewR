@@ -50,7 +50,51 @@ when adding a new tab/panel.</p>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>An object of class <code>JS_EVAL</code> representing the JavaScript callback.</p>
     </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>An add tab callback runs when the "+" button in a group's header is clicked,
+and is called with three arguments: the group's header config, the click
+event and the button itself. The config carries the dock's id in
+<code>config.dockId</code> and the group's in <code>config.group.id</code>. To place something at
+the button, such as a menu, use the button's box,
+<code>button.getBoundingClientRect()</code>. The button stays available to a callback
+that defers its work, whereas the browser resets <code>event.currentTarget</code> to
+<code>null</code> once the event has been handled, and the click point,
+<code>event.clientX</code> and <code>event.clientY</code>, is 0, 0 when the click does not come
+from a pointer, as for <code>element.click()</code> and some assistive technology. The
+default callback uses neither and sets <code>input[["&lt;dock_ID&gt;_panel-to-add"]]</code>
+to the group's id.</p>
+    </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="dock_view_plugins.html">new_add_tab_plugin</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  enable <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>  callback <span class="op">=</span> <span class="fu">htmlwidgets</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/htmlwidgets/man/JS.html" class="external-link">JS</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="st">"(config, event, button) =&gt; {</span></span></span>
+<span class="r-in"><span><span class="st">      const box = button.getBoundingClientRect();</span></span></span>
+<span class="r-in"><span><span class="st">      Shiny.setInputValue(</span></span></span>
+<span class="r-in"><span><span class="st">        `${config.dockId}_add-tab`,</span></span></span>
+<span class="r-in"><span><span class="st">        { group: config.group.id, left: box.left, bottom: box.bottom },</span></span></span>
+<span class="r-in"><span><span class="st">        { priority: 'event' }</span></span></span>
+<span class="r-in"><span><span class="st">      );</span></span></span>
+<span class="r-in"><span><span class="st">    }"</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $enable</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $callback</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "(config, event, button) =&gt; {\n      const box = button.getBoundingClientRect();\n      Shiny.setInputValue(\n        `${config.dockId}_add-tab`,\n        { group: config.group.id, left: box.left, bottom: box.bottom },\n        { priority: 'event' }\n      );\n    }"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "JS_EVAL"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "dock_view_plugin_add_tab" "dock_view_plugin"        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3] "list"                    </span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
