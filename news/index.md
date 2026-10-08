@@ -226,6 +226,15 @@
 
 ### Bug fixes
 
+- `update_dock_view(dock, list(theme = ...))` changes the theme again.
+  Since 0.3.0 the handler behind it called `matchTheme()` without
+  importing it, so every theme update threw
+  `ReferenceError: matchTheme is not defined` in the browser and the
+  dock kept its theme; other options passed alongside the theme were
+  dropped with it. The test over the `update_theme` example snapshotted
+  exports, which do not depend on the theme, so it kept passing. It now
+  waits for the dock’s theme class to follow the toggle both ways.
+
 - Edge groups no longer show a notch where the tab strip meets the
   content in the spaced themes. dockview’s spaced themes round a group’s
   header on top and its content at the bottom, which is right for a grid
