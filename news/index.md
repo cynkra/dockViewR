@@ -223,8 +223,23 @@
   button added panels to the wrong group, alternating instead of
   consistently targeting the group holding the button. The widget now
   sets the input from a capture-phase `pointerdown` on the panel body,
-  ahead of Shiny processing the click. It deliberately does not activate
-  the group, which would steal focus from the click target.
+  ahead of Shiny processing the click.
+
+- A click on a plotly chart, or on any content that cancels the press’s
+  default action, now makes its panel active
+  ([\#125](https://github.com/cynkra/dockViewR/issues/125)). dockview
+  activates a group on a tab click or when something inside it takes
+  focus, and a press on most content focuses the group, but such content
+  never moves focus, so its panel stayed inactive: the tab stayed grey
+  and `input[["<dock_ID>_active-panel"]]` kept the previous panel. The
+  panel body’s `pointerdown` handler now activates the group once the
+  press ends, wherever the pointer is released, so a drag-zoom that
+  starts in an inactive panel is not interrupted by the layout sync and
+  widget re-fit that activation triggers. The group’s `setActive()` does
+  not move focus, so the click target keeps it. As a side effect
+  `input[["<dock_ID>_active-group"]]` no longer goes stale after a
+  button click inside a panel: the group dockview moved to afterwards
+  was dropped as a repeat of the value sent before the click.
 
 - A layout gesture no longer rebinds every panel in the dock. Each
   `Shiny.bindAll()` ends by scheduling a walk over every bound output on
