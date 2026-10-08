@@ -1,0 +1,36 @@
+/*
+ * The spaced themes round a group's header on top and its content at the
+ * bottom, which is right for a grid group, whose header sits on top. An edge
+ * group's header sits on its own edge, so the same corners leave a notch where
+ * the tab strip meets the content and the group's background shows through.
+ * Round the corners on the side the header is on instead.
+ *
+ * Every theme defines --dv-border-radius, 0px outside the spaced ones, so these
+ * rules leave the other themes square. Loaded after dockview's stylesheet with
+ * the same specificity, so they win. Remove once upstream fixes it:
+ * https://github.com/dockview/dockview/issues/1672
+ */
+
+.dv-groupview.dv-groupview-header-left > .dv-tabs-and-actions-container {
+  border-radius: var(--dv-border-radius) 0 0 var(--dv-border-radius);
+}
+
+.dv-groupview.dv-groupview-header-left > .dv-content-container {
+  border-radius: 0 var(--dv-border-radius) var(--dv-border-radius) 0;
+}
+
+.dv-groupview.dv-groupview-header-right > .dv-tabs-and-actions-container {
+  border-radius: 0 var(--dv-border-radius) var(--dv-border-radius) 0;
+}
+
+.dv-groupview.dv-groupview-header-right > .dv-content-container {
+  border-radius: var(--dv-border-radius) 0 0 var(--dv-border-radius);
+}
+
+.dv-groupview.dv-groupview-header-bottom > .dv-tabs-and-actions-container {
+  border-radius: 0 0 var(--dv-border-radius) var(--dv-border-radius);
+}
+
+.dv-groupview.dv-groupview-header-bottom > .dv-content-container {
+  border-radius: var(--dv-border-radius) var(--dv-border-radius) 0 0;
+}
