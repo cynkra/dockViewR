@@ -26,11 +26,14 @@ server <- function(input, output, session) {
       add_tab = new_add_tab_plugin(
         enable = TRUE,
         callback = htmlwidgets::JS(
-          "(config, event) => {
-            const box = event.currentTarget.getBoundingClientRect();
+          "(config, event, button) => {
             Shiny.setInputValue(
               `${config.dockId}_add-tab`,
-              { group: config.group.id, left: box.left, bottom: box.bottom },
+              {
+                group: config.group.id,
+                box: button.getBoundingClientRect().toJSON(),
+                window: { width: innerWidth, height: innerHeight }
+              },
               { priority: 'event' }
             );
           }"
@@ -43,21 +46,40 @@ server <- function(input, output, session) {
     at <- input[["dock_add-tab"]]
     target(at$group)
 
+    # The menu hangs below the button from its left edge, and flips above it or
+    # onto its right edge in the lower or right half of the window, so that it
+    # stays inside the window.
+    flip_x <- at$box$left > at$window$width / 2
+    flip_y <- at$box$top > at$window$height / 2
+
     removeUI("#add-tab-menu")
     insertUI(
       "body",
       ui = div(
         id = "add-tab-menu",
         class = "card p-2 shadow",
-        style = sprintf(
-          "position: fixed; left: %spx; top: %spx; z-index: 1000;",
-          at$left,
-          at$bottom
+        style = css(
+          position = "fixed",
+          z_index = 1000,
+          left = validateCssUnit(if (flip_x) at$box$right else at$box$left),
+          top = validateCssUnit(if (flip_y) at$box$top else at$box$bottom),
+          transform = sprintf(
+            "translate(%s, %s)",
+            if (flip_x) "-100%" else "0",
+            if (flip_y) "-100%" else "0"
+          )
         ),
         actionLink("add", "Add a panel"),
         actionLink("cancel", "Cancel")
       )
     )
+  })
+
+  observe({
+    req(target())
+    if (!target() %in% get_groups_ids(dock_proxy)) {
+      removeUI("#add-tab-menu")
+    }
   })
 
   observeEvent(input$add, {

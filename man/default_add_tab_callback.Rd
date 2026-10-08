@@ -15,21 +15,24 @@ when adding a new tab/panel.
 }
 \details{
 An add tab callback runs when the "+" button in a group's header is clicked,
-and is called with two arguments: the group's header config and the click
-event. The config carries the dock's id in \code{config.dockId} and the group's
-in \code{config.group.id}. The event tells where the button is, through
-\code{event.currentTarget}, and where it was clicked, through \code{event.clientX} and
-\code{event.clientY}. The default callback ignores the event and sets
-\code{input[["<dock_ID>_panel-to-add"]]} to the group's id. A callback of your
-own can report where the button is as well, for example to open a menu
-under it.
+and is called with three arguments: the group's header config, the click
+event and the button itself. The config carries the dock's id in
+\code{config.dockId} and the group's in \code{config.group.id}. To place something at
+the button, such as a menu, use the button's box,
+\code{button.getBoundingClientRect()}. The button stays available to a callback
+that defers its work, whereas the browser resets \code{event.currentTarget} to
+\code{null} once the event has been handled, and the click point,
+\code{event.clientX} and \code{event.clientY}, is 0, 0 when the click does not come
+from a pointer, as for \code{element.click()} and some assistive technology. The
+default callback uses neither and sets \code{input[["<dock_ID>_panel-to-add"]]}
+to the group's id.
 }
 \examples{
 new_add_tab_plugin(
   enable = TRUE,
   callback = htmlwidgets::JS(
-    "(config, event) => {
-      const box = event.currentTarget.getBoundingClientRect();
+    "(config, event, button) => {
+      const box = button.getBoundingClientRect();
       Shiny.setInputValue(
         `${config.dockId}_add-tab`,
         { group: config.group.id, left: box.left, bottom: box.bottom },

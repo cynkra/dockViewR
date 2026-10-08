@@ -81,7 +81,7 @@ test_that("plugins validate callbacks when enabled", {
   expect_silent(new_add_tab_plugin(enable = FALSE, callback = "invalid"))
 })
 
-test_that("an add tab callback receives the click event", {
+test_that("an add tab callback gets the button to anchor a menu on", {
   skip_on_cran()
 
   appdir <- system.file(package = "dockViewR", "examples", "add_tab_menu")
@@ -105,18 +105,23 @@ test_that("an add tab callback receives the click event", {
     )
   }
 
-  plus <- ".dv-groupview:has([data-tab-panel-id='2']) .dv-left-actions-container > div"
+  plus <- paste0(
+    ".dv-groupview:has([data-tab-panel-id='2']) ",
+    ".dv-left-actions-container > div"
+  )
+  button <- box(plus)
 
   app$click(selector = plus)
   app$wait_for_idle()
 
   clicked <- app$get_value(input = "dock_add-tab")
-  button <- box(plus)
 
-  expect_equal(clicked$left, button$left)
-  expect_equal(clicked$bottom, button$bottom)
+  expect_equal(clicked$box$left, button$left)
+  expect_equal(clicked$box$bottom, button$bottom)
   expect_setequal(app$get_value(export = "groups_panels")[[clicked$group]], "2")
 
+  # The button sits in the right half of the window, so the menu hangs from its
+  # right edge rather than its left.
   menu <- box("#add-tab-menu")
-  expect_equal(c(menu$left, menu$top), c(button$left, button$bottom))
+  expect_equal(c(menu$right, menu$top), c(button$right, button$bottom))
 })
