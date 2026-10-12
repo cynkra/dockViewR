@@ -140,19 +140,19 @@
   console naming the missing module.
 
 - Upgraded the bundled dockview from `dockview-core` 4.13.1 to
-  `dockview` 8.4.1, spanning four major versions. 8.4.1 rather than
+  `dockview` 8.5.1, spanning four major versions. 8.5.1 rather than
   8.0.0 because 8.3.0 wires `setSize()` on an edge group’s api to the
   layout, which
   [`set_edge_group_size()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md)
-  needs ([\#112](https://github.com/cynkra/dockViewR/issues/112)). The
-  stylesheet moved packages upstream, which is why the dependency is now
-  `dockview` rather than `dockview-core`. Layouts serialised by the
-  previous version still restore: dockview 8’s serialisation format is
-  the 4.13.1 format plus optional fields, so a stored
-  `input[["<dock_ID>_state"]]` needs no migration, whether it was
-  persisted through
+  needs ([\#112](https://github.com/cynkra/dockViewR/issues/112)), and
+  8.5.1 fixes the two spaced-theme rail defects below. The stylesheet
+  moved packages upstream, which is why the dependency is now `dockview`
+  rather than `dockview-core`. Layouts serialised by the previous
+  version still restore: dockview 8’s serialisation format is the 4.13.1
+  format plus optional fields, so a stored `input[["<dock_ID>_state"]]`
+  needs no migration, whether it was persisted through
   [`save_dock()`](https://cynkra.github.io/dockViewR/reference/dock-state.md)
-  or read off the input directly. The bundle grows from 214 KB to 523
+  or read off the input directly. The bundle grows from 214 KB to 531
   KB, roughly a third of which is the stylesheet now carrying 18 themes
   instead of 8.
 
@@ -236,14 +236,22 @@
   waits for the dock’s theme class to follow the toggle both ways.
 
 - Edge groups no longer show a notch where the tab strip meets the
-  content in the spaced themes. dockview’s spaced themes round a group’s
-  header on top and its content at the bottom, which is right for a grid
-  group but leaves a left, right or bottom rail with the wrong corners
-  rounded, so the group’s background shows through at the seam. A small
-  stylesheet bundled with the widget rounds the corners on the side the
-  header is on, for all spaced themes and every rail position, and
-  leaves the other themes square. It stands in for an upstream fix,
-  reported as dockview/dockview#1672.
+  content in the spaced themes. dockview’s spaced themes rounded a
+  group’s header on top and its content at the bottom, which is right
+  for a grid group but left a left, right or bottom rail with the wrong
+  corners rounded, so the group’s background showed through at the seam.
+  Fixed upstream in dockview 8.5.1 (dockview/dockview#1672), which the
+  bundled dockview now is.
+
+- Collapsing and expanding an edge group no longer shrinks it in the
+  spaced themes. Each round trip, by clicking the rail’s active tab or
+  with
+  [`set_edge_group_collapsed()`](https://cynkra.github.io/dockViewR/reference/edge-group-proxy.md),
+  brought the rail back 5px narrower, and the lost width was carried
+  into `input[["<dock_ID>_state"]]` and so into anything saved from it.
+  dockview recorded the rail’s rendered size, which excludes its share
+  of the theme’s gap, as the size to expand back to. Fixed upstream in
+  dockview 8.5.1 (dockview/dockview#1673).
 
 - In dev mode, the notification for a failed proxy call now names the
   operation that failed. It derived the name from a stack trace before,
