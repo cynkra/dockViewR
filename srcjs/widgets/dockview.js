@@ -1,6 +1,5 @@
 import 'widgets';
 import 'dockview/dist/styles/dockview.css';
-import '../styles/edge-groups.css';
 import { setDockViewCallbacks } from '../modules/callbacks';
 import { setShinyHandlers } from '../modules/handlers';
 import { instantiateDock, initDockPanels, initEdgeGroups } from '../modules/dock';
